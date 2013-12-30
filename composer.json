@@ -1,0 +1,24 @@
+{
+	"name": "rusporting/yii2-website",
+	"type": "yii2-extension",
+	"description": "Website manager extension for Yii2.",
+	"authors": [
+        {
+            "name": "Vitaliy Syrchikov",
+            "email": "maddoger@gmail.com"
+        }
+    ],
+	"autoload": {
+        "psr-0": {
+            "rusporting\\website\\": ""
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0",
+        "yiisoft/yii2": "*",
+	    "rusporting/yii2-core": "*",
+	    "rusporting/yii2-admin": "*"
+    },
+	"target-dir": "rusporting/website"
+}
