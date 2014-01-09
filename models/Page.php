@@ -46,6 +46,7 @@ class Page extends ActiveRecord
 		return [
 			[['slug', 'title', 'text'], 'required'],
 			[['published'], 'integer'],
+			[['published'], 'default', 'value'=>3],
 			[['text', 'layout'], 'string'],
 			[['title'], 'string', 'max' => 50],
 			[['slug', 'window_title'], 'string', 'max' => 150],

@@ -19,7 +19,7 @@
         "yiisoft/yii2": "*",
 	    "rusporting/yii2-core": "*",
 	    "rusporting/yii2-admin": "*",
-	    "asofter/yii2-imperavi-redactor": "*"
+	    "rusporting/yii2-redactor": "*"
     },
 	"target-dir": "rusporting/website"
 }

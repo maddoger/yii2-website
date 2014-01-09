@@ -5,8 +5,16 @@ namespace rusporting\website\modules\backend\controllers;
 use rusporting\website\models\Page;
 use rusporting\website\modules\backend\models\PageSearch;
 use rusporting\core\BackendController;
+use yii\base\InvalidCallException;
+use yii\helpers\FileHelper;
+use yii\helpers\Inflector;
+use yii\validators\FileValidator;
+use yii\validators\ImageValidator;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use yii\web\VerbFilter;
+use Yii;
 
 /**
  * PagesController implements the CRUD actions for Page model.
@@ -25,12 +33,12 @@ class PagesController extends BackendController
 						'roles' => ['page.read'],
 					],
 					[
-						'actions' => ['create'],
+						'actions' => ['create', 'file-upload', 'image-upload'],
 						'allow' => true,
 						'roles' => ['page.create'],
 					],
 					[
-						'actions' => ['update'],
+						'actions' => ['update', 'file-upload', 'image-upload'],
 						'allow' => true,
 						'roles' => ['page.update'],
 					],
@@ -127,6 +135,77 @@ class PagesController extends BackendController
 	{
 		$this->findModel($id)->delete();
 		return $this->redirect(['index']);
+	}
+
+	public function actionFileUpload()
+	{
+		$validator = new FileValidator();
+		$error = null;
+
+		$file = UploadedFile::getInstanceByName('file');
+
+		if($validator->validate($file, $error))
+		{
+			$base = rtrim(dirname(Yii::$app->urlManager->baseUrl), '/').'/uploads/pages';
+			$fileName =
+				Inflector::slug(pathinfo($file->name, PATHINFO_FILENAME)).'_'.
+				time().'.'.strtolower(pathinfo($file->name, PATHINFO_EXTENSION));
+
+			$fileLink = $base.'/'.$fileName;
+			//$fileLink = FileHelper::normalizePath($fileLink);
+
+			$fileDir = realpath(Yii::$app->basePath.'/../../uploads/pages');
+			if (!is_dir($fileDir)) {
+				FileHelper::createDirectory($fileDir);
+			}
+
+			if($file->saveAs($fileDir.'/'.$fileName))
+			{
+				$array = array(
+					'filelink' => $fileLink,
+					'filename' => $file->name
+				);
+				return json_encode($array);
+			}
+		}
+
+		//Yii::$app->response->setStatusCode('400');
+		return json_encode(['error'=>\Yii::t('rusporting/website', 'Bad file.')]);
+	}
+
+	public function actionImageUpload()
+	{
+		$image = new ImageValidator();
+		$error = null;
+
+		$file = UploadedFile::getInstanceByName('file');
+
+		if($image->validate($file, $error))
+		{
+			$base = rtrim(dirname(Yii::$app->urlManager->baseUrl), '/').'/uploads/pages';
+			$fileName =
+				Inflector::slug(pathinfo($file->name, PATHINFO_FILENAME)).'_'.
+				time().'.'.strtolower(pathinfo($file->name, PATHINFO_EXTENSION));
+
+			$fileLink = $base.'/'.$fileName;
+			//$fileLink = FileHelper::normalizePath($fileLink);
+
+			$fileDir = realpath(Yii::$app->basePath.'/../../uploads/pages');
+			if (!is_dir($fileDir)) {
+				FileHelper::createDirectory($fileDir);
+			}
+
+			if($file->saveAs($fileDir.'/'.$fileName))
+			{
+				$array = array(
+					'filelink' => $fileLink
+				);
+				return json_encode($array);
+			}
+		}
+
+		//Yii::$app->response->setStatusCode('400');
+		return json_encode(['error'=>\Yii::t('rusporting/website', 'Bad file.')]);
 	}
 
 	/**

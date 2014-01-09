@@ -30,7 +30,27 @@ use yii\widgets\ActiveForm;
 		<?= $form->field($model, 'slug')->textInput(['maxlength' => 150])->
 			hint(Yii::t('rusporting/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo])); ?>
 
-		<?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
+		<?php
+			echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', [
+			// You can either use it for model attribute
+			'model' => $model,
+			'attribute' => 'text',
+			// Some options, see http://imperavi.com/redactor/docs/
+			'options' => [
+				'lang' => Yii::$app->language,
+				'minHeight' => '100',
+				'imageUpload' => Yii::$app->urlManager->createUrl('/website/pages/image-upload'),
+				'fileUpload' => Yii::$app->urlManager->createUrl('/website/pages/file-upload'),
+				'imageUploadErrorCallback' => 'function(json) { alert(json.error); }',
+
+				// if you are using CSRF protection – add following:
+				'uploadFields'=>array(
+					Yii::$app->request->csrfVar => Yii::$app->request->getMaskedCsrfToken(),
+				),
+			]
+			]);
+			//echo $form->field($model, 'text')->textarea(['rows' => 6]);
+		?>
 
 		<?= $form->field($model, 'published')->textInput() ?>
 

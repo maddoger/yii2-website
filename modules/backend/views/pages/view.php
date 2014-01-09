@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			'published',
 			'title',
 			'window_title',
-			'text:ntext',
 			'meta_keywords',
 			'meta_description',
 			'create_time:datetime',
@@ -41,5 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			'update_user_id',
 		],
 	]); ?>
+
+	<?php
+		echo $model->text;
+	?>
 
 </div>
