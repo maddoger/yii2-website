@@ -13,7 +13,7 @@ class m131230_084441_create_menu_table extends \yii\db\Migration
 
 		$this->createTable('{{%website_menu}}', [
 			'id' => Schema::TYPE_PK,
-			'parent_id' => Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0',
+			'parent_id' => Schema::TYPE_INTEGER,
 			'link' => Schema::TYPE_STRING.'(150) NOT NULL',
 			'preg' => Schema::TYPE_STRING.'(150) NOT NULL',
 			'title' => Schema::TYPE_STRING.'(150) NOT NULL',
@@ -21,10 +21,10 @@ class m131230_084441_create_menu_table extends \yii\db\Migration
 			'enabled' => Schema::TYPE_BOOLEAN.' NOT NULL DEFAULT TRUE',
 			'sort' => Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0',
 
-			'create_time' => Schema::TYPE_INTEGER.' NOT NULL',
-			'create_user_id' => Schema::TYPE_INTEGER.' NOT NULL',
-			'update_time' => Schema::TYPE_INTEGER.' NOT NULL',
-			'update_user_id' => Schema::TYPE_INTEGER.' NOT NULL',
+			'create_time' => Schema::TYPE_INTEGER,
+			'create_user_id' => Schema::TYPE_INTEGER,
+			'update_time' => Schema::TYPE_INTEGER,
+			'update_user_id' => Schema::TYPE_INTEGER,
 		], $tableOptions);
 
 		$this->createIndex($this->db->tablePrefix.'website_menu_sort_ix', '{{%website_menu}}', 'sort');
