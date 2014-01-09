@@ -114,17 +114,14 @@ class WebsiteModule extends Module
 			'page.manager' => [
 				'type' => Item::TYPE_ROLE,
 				'description' => Yii::t('rusporting/website', 'Pages manager'),
-				'children' => [ 'page.create','page.read','page.update','pages.delete' ]
+				'children' => [ 'page.create','page.read','page.update','page.delete' ]
 			],
 
-			'menu.create' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Create new pages')],
-			'menu.read' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'View pages')],
-			'menu.update' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Update pages')],
-			'menu.delete' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Delete pages')],
+			'menu.manage' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Manage menu')],
 			'menu.manager' => [
 				'type' => Item::TYPE_ROLE,
-				'description' => Yii::t('rusporting/website', 'Pages manager'),
-				'children' => [ 'menu.create','menu.read','menu.update','pages.delete' ]
+				'description' => Yii::t('rusporting/website', 'Menu manager'),
+				'children' => [ 'menu.manage' ]
 			],
 		];
 	}
@@ -137,7 +134,7 @@ class WebsiteModule extends Module
 	{
 		return [
 			[
-				'label' => Yii::t('rusporting/website', 'Website'), 'fa' => 'users',
+				'label' => Yii::t('rusporting/website', 'Website'), 'fa' => 'books',
 				//'url' => 'user/user-backend/index',
 				'items' => [
 					['label' => Yii::t('rusporting/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/pages/index'], 'activeUrl'=> ['/website/pages/*']],
