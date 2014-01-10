@@ -33,7 +33,7 @@ class PagesController extends BackendController
 						'roles' => ['page.read'],
 					],
 					[
-						'actions' => ['create', 'file-upload', 'image-upload'],
+						'actions' => ['create', 'copy', 'file-upload', 'image-upload'],
 						'allow' => true,
 						'roles' => ['page.create'],
 					],
@@ -107,6 +107,27 @@ class PagesController extends BackendController
 	}
 
 	/**
+	 * Creates a new Page model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionCopy($id)
+	{
+		$model = new Page;
+		$copyModel = $this->findModel($id);
+		$model->setAttributes($copyModel->getAttributes(), false);
+		$model->id = null;
+
+		if ($model->load($_POST) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->id]);
+		} else {
+			return $this->render('create', [
+				'model' => $model,
+			]);
+		}
+	}
+
+	/**
 	 * Updates an existing Page model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
@@ -146,15 +167,14 @@ class PagesController extends BackendController
 
 		if($validator->validate($file, $error))
 		{
-			$base = rtrim(dirname(Yii::$app->urlManager->baseUrl), '/').'/uploads/pages';
+			$path = '/uploads/pages/'.date('Y/m/d');
 			$fileName =
 				Inflector::slug(pathinfo($file->name, PATHINFO_FILENAME)).'_'.
 				time().'.'.strtolower(pathinfo($file->name, PATHINFO_EXTENSION));
 
-			$fileLink = $base.'/'.$fileName;
-			//$fileLink = FileHelper::normalizePath($fileLink);
+			$base = Yii::getAlias('@frontendUrl'.$path);
 
-			$fileDir = realpath(Yii::$app->basePath.'/../../uploads/pages');
+			$fileDir = Yii::getAlias('@frontendPath'.$path);
 			if (!is_dir($fileDir)) {
 				FileHelper::createDirectory($fileDir);
 			}
@@ -162,7 +182,7 @@ class PagesController extends BackendController
 			if($file->saveAs($fileDir.'/'.$fileName))
 			{
 				$array = array(
-					'filelink' => $fileLink,
+					'filelink' => $base.'/'.$fileName,
 					'filename' => $file->name
 				);
 				return json_encode($array);
@@ -182,15 +202,14 @@ class PagesController extends BackendController
 
 		if($image->validate($file, $error))
 		{
-			$base = rtrim(dirname(Yii::$app->urlManager->baseUrl), '/').'/uploads/pages';
+			$path = '/uploads/pages/'.date('Y/m/d');
 			$fileName =
 				Inflector::slug(pathinfo($file->name, PATHINFO_FILENAME)).'_'.
 				time().'.'.strtolower(pathinfo($file->name, PATHINFO_EXTENSION));
 
-			$fileLink = $base.'/'.$fileName;
-			//$fileLink = FileHelper::normalizePath($fileLink);
+			$base = Yii::getAlias('@frontendUrl'.$path);
 
-			$fileDir = realpath(Yii::$app->basePath.'/../../uploads/pages');
+			$fileDir = Yii::getAlias('@frontendPath'.$path);
 			if (!is_dir($fileDir)) {
 				FileHelper::createDirectory($fileDir);
 			}
@@ -198,7 +217,7 @@ class PagesController extends BackendController
 			if($file->saveAs($fileDir.'/'.$fileName))
 			{
 				$array = array(
-					'filelink' => $fileLink
+					'filelink' => $base.'/'.$fileName,
 				);
 				return json_encode($array);
 			}

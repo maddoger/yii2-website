@@ -82,4 +82,21 @@ class Page extends ActiveRecord
 	{
 		return static::find(['slug' => $slug]);
 	}
+
+	public static function publishListValues()
+	{
+		return [
+			0 => Yii::t('rusporting/website', 'Unpublished'),
+			1 => Yii::t('rusporting/website', 'Only for administrators'),
+			2 => Yii::t('rusporting/website', 'Only for authorized users'),
+			3 => Yii::t('rusporting/website', 'For all'),
+		];
+	}
+
+	public function getPublishedValue()
+	{
+		static $values = null;
+		if ($values === null) $values = static::publishListValues();
+		return $values[$this->published];
+	}
 }

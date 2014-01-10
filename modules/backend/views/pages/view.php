@@ -27,13 +27,18 @@ $this->params['breadcrumbs'][] = $this->title;
 		'model' => $model,
 		'attributes' => [
 			'id',
-			'slug',
-			'locale',
-			'published',
 			'title',
 			'window_title',
+			'slug',
+			[
+				'label' => Yii::t('rusporting/website', 'Published'),
+				'format' => 'text',
+				'value' => $model->getPublishedValue()
+			],
 			'meta_keywords',
 			'meta_description',
+			'locale',
+			'layout',
 			'create_time:datetime',
 			'create_user_id',
 			'update_time:datetime',

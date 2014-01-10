@@ -14,6 +14,12 @@ use yii\rbac\Item;
 
 class WebsiteModule extends Module
 {
+	public $siteTitle = null;
+	public $metaKeywords = null;
+	public $metaDescription = null;
+	public $layouts = null;
+	public $locales = null;
+
 	protected $hasBackend = true;
 	protected $hasFrontend = true;
 
@@ -84,7 +90,17 @@ class WebsiteModule extends Module
 	 */
 	public function getConfigurationModel()
 	{
-		return null;
+		$model = parent::getConfigurationModel();
+		$model->addAttributes([
+			'siteTitle' => ['label' => Yii::t('rusporting/website', 'Window title for website')],
+			'metaKeywords' => ['label' => Yii::t('rusporting/website', 'Meta keywords for all website'), 'type' => 'textarea'],
+			'metaDescription' => ['label' => Yii::t('rusporting/website', 'Meta description for all website'), 'type' => 'textarea'],
+			'layouts' => ['label' => Yii::t('rusporting/website', 'Available layouts for pages'),
+				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>default, narrow</code>')],
+			'locales' => ['label' => Yii::t('rusporting/website', 'Available locales'),
+				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>ru, en</code>')],
+		]);
+		return $model;
 	}
 
 	/**
@@ -94,7 +110,7 @@ class WebsiteModule extends Module
 	{
 		return [
 			[
-				['user/<action:(login|logout|captcha|request-password-reset|reset-password)>' => 'user/backend-auth/<action>'],
+				['*' => 'user/backend-auth/<action>'],
 				Yii::t('rusporting/website', 'Backend authorization route'),
 				Yii::t('rusporting/website', 'Provides authorization and password reset (with captcha) for backend application.')
 			]
@@ -134,13 +150,46 @@ class WebsiteModule extends Module
 	{
 		return [
 			[
-				'label' => Yii::t('rusporting/website', 'Website'), 'fa' => 'books',
+				'label' => Yii::t('rusporting/website', 'Website'), 'fa' => 'book',
 				//'url' => 'user/user-backend/index',
 				'items' => [
 					['label' => Yii::t('rusporting/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/pages/index'], 'activeUrl'=> ['/website/pages/*']],
 					['label' => Yii::t('rusporting/website', 'Menu'), 'fa'=>'bars', 'url'=> ['/website/menu/index'], 'activeUrl'=> ['/website/menu/*']],
+					['label' => Yii::t('rusporting/website', 'Settings'), 'fa'=>'gear', 'url'=> ['/admin/modules/config?module=website'], 'activeUrl'=> ['/website/menu/*']],
 				],
 			]
 		];
+	}
+
+	public function getAvailableLayouts()
+	{
+		if ($this->layouts) {
+			$res = [];
+			foreach (explode(',', $this->layouts) as $layout) {
+				$layout = trim($layout);
+				if (!empty($layout)) {
+					$res[$layout] = $layout;
+				}
+			}
+			return $res;
+		} else {
+			return [];
+		}
+	}
+
+	public function getAvailableLocales()
+	{
+		if ($this->locales) {
+			$res = [];
+			foreach (explode(',', $this->locales) as $locale) {
+				$locale = trim($locale);
+				if (!empty($locale)) {
+					$res[$locale] = $locale;
+				}
+			}
+			return $res;
+		} else {
+			return [];
+		}
 	}
 }
