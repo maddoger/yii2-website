@@ -124,7 +124,7 @@ HERE
 
 				// if you are using CSRF protection – add following:
 				'uploadFields'=>array(
-					Yii::$app->request->csrfVar => Yii::$app->request->getMaskedCsrfToken(),
+					Yii::$app->request->csrfVar => Yii::$app->request->getCsrfToken(),
 				),
 			]
 			]);
