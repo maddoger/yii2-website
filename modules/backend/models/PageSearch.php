@@ -61,6 +61,8 @@ class PageSearch extends Model
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
 		]);
+		$query->orderBy('slug');
+
 
 		if (!($this->load($params) && $this->validate())) {
 			return $dataProvider;

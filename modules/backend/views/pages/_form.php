@@ -100,6 +100,10 @@ HERE
 		]
 	); ?>
 
+		<p>
+			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		</p>
+
 		<?= $form->field($model, 'title')->textInput(['id'=>'page-caption', 'maxlength' => 150])->hint(Yii::t
 			('rusporting/website',
 			'Page title.')) ?>
@@ -107,7 +111,7 @@ HERE
 		<?= $form->field($model, 'window_title')->textInput(['id'=>'page-title', 'maxlength' => 150])->hint(Yii::t('rusporting/website', 'Window title. May be longer than page title.')) ?>
 
 		<?= $form->field($model, 'slug')->textInput(['id'=>'page-url', 'maxlength' => 150])->
-			hint(Yii::t('rusporting/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo])); ?>
+			hint(Yii::t('rusporting/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl')])); ?>
 
 		<?php
 			echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', [
@@ -144,9 +148,9 @@ HERE
 		['prompt' => Yii::t('rusporting/website', 'Default')]) ?>
 
 
-		<div class="form-group">
+		<p>
 			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-		</div>
+		</p>
 
 	<?php ActiveForm::end(); ?>
 

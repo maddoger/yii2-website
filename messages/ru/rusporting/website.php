@@ -73,7 +73,7 @@ return array (
   'Text' => 'Текст',
   'The requested page does not exist.' => 'Запрашиваемая страница не существует.',
   'Title' => 'Заголовок',
-  'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.' => 'URL по которуму будет доступна страница. Пример: <code>/index</code> будет доступна по адресу <code>{domain}/index</code>.',
+  'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.' => 'URL по которому будет доступна страница. Пример: <code>/index</code> будет доступна по адресу <code>{domain}/index</code>.',
   'Unpublished' => 'Скрыто',
   'Update' => 'Обновить',
   'Update Page: {name}' => 'Обновить страницу: {name}',
