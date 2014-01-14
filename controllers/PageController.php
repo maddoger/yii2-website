@@ -40,7 +40,23 @@ class PageController extends FrontendController
 		$this->metaKeywords = $page->meta_keywords;
 		$this->metaDescription = $page->meta_description;
 
+		if ($page->layout !== null && !empty($page->layout)) {
+			$this->layout = $page->layout;
+		} else {
+			/**
+			 * @var $this->module WebsiteModule
+			 */
+			if ($this->module->defaultLayout !== null) {
+				$this->layout = $this->module->defaultLayout;
+			}
+		}
+
 		$layoutFile = $this->findLayoutFile($this->getView());
+		if ($this->layout && !file_exists($layoutFile)) {
+			$this->layout = '/'.$this->layout;
+			$layoutFile = $this->findLayoutFile($this->getView());
+		}
+
 		if ($layoutFile !== false) {
 			return $this->renderFile($layoutFile, ['content' => $page->text], $this);
 		} else {

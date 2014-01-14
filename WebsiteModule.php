@@ -18,6 +18,7 @@ class WebsiteModule extends Module
 	public $metaKeywords = null;
 	public $metaDescription = null;
 	public $layouts = null;
+	public $defaultLayout = null;
 	public $locales = null;
 
 	protected $hasBackend = true;
@@ -97,6 +98,7 @@ class WebsiteModule extends Module
 			'metaDescription' => ['label' => Yii::t('rusporting/website', 'Meta description for all website'), 'type' => 'textarea'],
 			'layouts' => ['label' => Yii::t('rusporting/website', 'Available layouts for pages'),
 				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>default, narrow</code>')],
+			'defaultLayout' => ['label' => Yii::t('rusporting/website', 'Default layout')],
 			'locales' => ['label' => Yii::t('rusporting/website', 'Available locales'),
 				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>ru, en</code>')],
 		]);

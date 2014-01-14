@@ -26,7 +26,13 @@ $this->params['breadcrumbs'][] = $this->title;
 		'columns' => [
 			['class' => 'yii\grid\SerialColumn'],
 
-			'slug',
+			[
+				'value' => function ($model, $index, $widget){
+						return '<a target="_blank" href="'.Html::encode(Yii::getAlias('@frontendUrl'.$model->slug)).'">'.Html::encode($model->slug).'</a>';
+					},
+				'format' => 'html',
+				'attribute' => 'slug',
+			],
 			'title',
 			[
 				'value' => function ($model, $index, $widget){
