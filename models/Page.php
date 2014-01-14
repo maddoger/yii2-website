@@ -78,6 +78,10 @@ class Page extends ActiveRecord
 		];
 	}
 
+	/**
+	 * @param $slug
+	 * @return null|Page
+	 */
 	public static function findBySlug($slug)
 	{
 		return static::find(['slug' => $slug]);

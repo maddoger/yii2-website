@@ -2,13 +2,13 @@
 
 namespace rusporting\website\controllers;
 
-use yii\web\Controller;
+use rusporting\core\FrontendController;
 use Yii;
 use yii\web\HttpException;
 use yii\base\Exception;
 use yii\base\UserException;
 
-class ErrorController extends Controller
+class ErrorController extends FrontendController
 {
 	/**
 	 * @var string the view file to be rendered. If not set, it will take the value of [[id]].
@@ -68,6 +68,9 @@ class ErrorController extends Controller
 		} else {
 			$message = $this->defaultMessage ?: Yii::t('rusporting/website', 'An internal server error occurred.');
 		}
+
+		//$this->title = $name . ' #' . $code;
+		$this->windowTitle = $name . ' #' . $code;
 
 
 		if (Yii::$app->getRequest()->getIsAjax()) {
