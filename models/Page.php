@@ -30,6 +30,12 @@ class Page extends ActiveRecord
 		return Yii::$app->db->tablePrefix.'website_page';
 	}
 
+	public function init()
+	{
+		parent::init();
+		$this->setAttribute('published', 3);
+	}
+
 	public function behaviors()
 	{
 		return [
