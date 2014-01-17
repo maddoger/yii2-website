@@ -45,7 +45,7 @@ return array (
   'ID' => 'ID',
   'Layout' => 'Шаблон',
   'Link' => 'Ссылка',
-  'List separated by commas. Example: <code>default, narrow</code>' => 'Список через запятую. Например: <code>default, narrow</code>',
+  'List separated by commas. Example: <code>default, narrow</code>. Also you can use labels: <code>default:Default layout, base:Base without container</code>.' => 'Список через запятую. Например: <code>default, narrow</code>. Также можно дать названия шаблонам: <code>default:Стандартный, base:Базовый без контейнера</code>',
   'List separated by commas. Example: <code>ru, en</code>' => 'Список через запятую. Например: <code>ru, en</code>',
   'Locale' => 'Локаль',
   'Manage menu' => 'Управление меню',

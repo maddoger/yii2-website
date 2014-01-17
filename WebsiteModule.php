@@ -97,7 +97,7 @@ class WebsiteModule extends Module
 			'metaKeywords' => ['label' => Yii::t('rusporting/website', 'Meta keywords for all website'), 'type' => 'textarea'],
 			'metaDescription' => ['label' => Yii::t('rusporting/website', 'Meta description for all website'), 'type' => 'textarea'],
 			'layouts' => ['label' => Yii::t('rusporting/website', 'Available layouts for pages'),
-				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>default, narrow</code>')],
+				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>default, narrow</code>. Also you can use labels: <code>default:Default layout, base:Base without container</code>.')],
 			'defaultLayout' => ['label' => Yii::t('rusporting/website', 'Default layout')],
 			'locales' => ['label' => Yii::t('rusporting/website', 'Available locales'),
 				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>ru, en</code>')],
@@ -175,7 +175,13 @@ class WebsiteModule extends Module
 			$res = [];
 			foreach (explode(',', $this->layouts) as $layout) {
 				$layout = trim($layout);
-				if (!empty($layout)) {
+				if (empty($layout)) continue;
+				$i = strpos($layout, ':');
+				if ($i !== false) {
+					$layoutKey = substr($layout, 0, $i);
+					$layoutTitle = substr($layout, $i+1);
+					$res[$layoutKey] = $layoutTitle;
+				} else {
 					$res[$layout] = $layout;
 				}
 			}
