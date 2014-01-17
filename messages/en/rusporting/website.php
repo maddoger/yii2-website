@@ -39,6 +39,7 @@ return array (
   'Default layout' => '',
   'Delete' => '',
   'Delete pages' => '',
+  'Element ID' => '',
   'Enabled' => '',
   'Error' => '',
   'For all' => '',

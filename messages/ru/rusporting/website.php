@@ -39,6 +39,7 @@ return array (
   'Default layout' => 'Шаблон для страниц по-умолчанию',
   'Delete' => 'Удалить',
   'Delete pages' => 'Удалить страницы',
+  'Element ID' => 'ID элемента',
   'Enabled' => 'Активность',
   'Error' => 'Ошибка',
   'For all' => 'Для всех',
