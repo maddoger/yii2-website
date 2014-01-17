@@ -104,50 +104,63 @@ HERE
 			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 		</p>
 
-		<?= $form->field($model, 'title')->textInput(['id'=>'page-caption', 'maxlength' => 150])->hint(Yii::t
-			('rusporting/website',
-			'Page title.')) ?>
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#common" data-toggle="tab"><?= Yii::t('rusporting/website', 'Common') ?></a></li>
+			<li><a href="#additional" data-toggle="tab"><?= Yii::t('rusporting/website', 'Additional') ?></a></li>
+		</ul>
+		<br />
+		<div class="tab-content">
 
-		<?= $form->field($model, 'window_title')->textInput(['id'=>'page-title', 'maxlength' => 150])->hint(Yii::t('rusporting/website', 'Window title. May be longer than page title.')) ?>
+			<div class="tab-pane active" id="common">
+				<?= $form->field($model, 'title')->textInput(['id'=>'page-caption', 'maxlength' => 150])->hint(Yii::t
+					('rusporting/website',
+																													  'Page title.')) ?>
 
-		<?= $form->field($model, 'slug')->textInput(['id'=>'page-url', 'maxlength' => 150])->
-			hint(Yii::t('rusporting/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl')])); ?>
+				<?= $form->field($model, 'window_title')->textInput(['id'=>'page-title', 'maxlength' => 150])->hint(Yii::t('rusporting/website', 'Window title. May be longer than page title.')) ?>
 
-		<?php
-			echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', [
-			// You can either use it for model attribute
-			'model' => $model,
-			'attribute' => 'text',
-			// Some options, see http://imperavi.com/redactor/docs/
-			'options' => [
-				'lang' => Yii::$app->language,
-				'convertDivs' => false,
-				'minHeight' => '100',
-				'imageUpload' => Yii::$app->urlManager->createUrl('/website/pages/image-upload'),
-				'fileUpload' => Yii::$app->urlManager->createUrl('/website/pages/file-upload'),
-				'imageUploadErrorCallback' => 'function(json) { alert(json.error); }',
+				<?= $form->field($model, 'slug')->textInput(['id'=>'page-url', 'maxlength' => 150])->
+					hint(Yii::t('rusporting/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl')])); ?>
 
-				// if you are using CSRF protection – add following:
-				'uploadFields'=>array(
-					Yii::$app->request->csrfVar => Yii::$app->request->getCsrfToken(),
-				),
-			]
-			]);
-			//echo $form->field($model, 'text')->textarea(['rows' => 6]);
-		?>
+				<?php
+				echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', [
+					// You can either use it for model attribute
+					'model' => $model,
+					'attribute' => 'text',
+					// Some options, see http://imperavi.com/redactor/docs/
+					'options' => [
+						'lang' => Yii::$app->language,
+						'convertDivs' => false,
+						'minHeight' => '100',
+						'imageUpload' => Yii::$app->urlManager->createUrl('/website/pages/image-upload'),
+						'fileUpload' => Yii::$app->urlManager->createUrl('/website/pages/file-upload'),
+						'imageUploadErrorCallback' => 'function(json) { alert(json.error); }',
 
-		<?= $form->field($model, 'published')->dropDownList(\rusporting\website\models\Page::publishListValues()) ?>
+						// if you are using CSRF protection – add following:
+						'uploadFields'=>array(
+							Yii::$app->request->csrfVar => Yii::$app->request->getCsrfToken(),
+						),
+					]
+				]);
+				//echo $form->field($model, 'text')->textarea(['rows' => 6]);
+				?>
+			</div>
 
-		<?= $form->field($model, 'meta_keywords')->textarea() ?>
+			<div class="tab-pane" id="additional">
+				<?= $form->field($model, 'published')->dropDownList(\rusporting\website\models\Page::publishListValues()) ?>
 
-		<?= $form->field($model, 'meta_description')->textarea() ?>
+				<?= $form->field($model, 'meta_keywords')->textarea()->hint(Yii::t('rusporting/website', 'Keywords separated by commas. Example: <code>bread, cookies</code>.')) ?>
 
-		<?= $form->field($model, 'locale')->dropDownList(Yii::$app->getModule('website')->getAvailableLocales(),
-			['prompt' => Yii::t('rusporting/website', 'All')]) ?>
+				<?= $form->field($model, 'meta_description')->textarea()->hint(Yii::t('rusporting/website', 'Short description of page content.')) ?>
 
-		<?= $form->field($model, 'layout')->dropDownList(Yii::$app->getModule('website')->getAvailableLayouts(),
-		['prompt' => Yii::t('rusporting/website', 'Default')]) ?>
+				<?= $form->field($model, 'locale')->dropDownList(Yii::$app->getModule('website')->getAvailableLocales(),
+					['prompt' => Yii::t('rusporting/website', 'All')])->hint(Yii::t('rusporting/website', 'Language of page.')) ?>
 
+				<?= $form->field($model, 'layout')->dropDownList(Yii::$app->getModule('website')->getAvailableLayouts(),
+					['prompt' => Yii::t('rusporting/website', 'Default')])->hint(Yii::t('rusporting/website', 'Layout using for page output.')) ?>
+
+			</div>
+
+		</div>
 
 		<p>
 			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -23,7 +23,15 @@ $this->params['breadcrumbs'][] = $this->title;
 		]); ?>
 	</p>
 
-	<?php echo DetailView::widget([
+	<?php
+	/**
+	 * @var $createdUser null|\rusporting\user\models\User
+	 * @var $updatedUser null|\rusporting\user\models\User
+	 */
+	$createdUser = $model->create_user_id > 0 ? \rusporting\user\models\User::find($model->create_user_id) : null;
+	$updatedUser = $model->update_user_id > 0 ? \rusporting\user\models\User::find($model->update_user_id) : null;
+
+		echo DetailView::widget([
 		'model' => $model,
 		'attributes' => [
 			'id',
@@ -44,9 +52,17 @@ $this->params['breadcrumbs'][] = $this->title;
 			'locale',
 			'layout',
 			'create_time:datetime',
-			'create_user_id',
+			[
+				'name' => 'create_user_id',
+				'format' => 'html',
+				'value' => $createdUser ? Html::a($createdUser->username, ['/user/users/view', 'id' => $createdUser->id]) : '-',
+			],
 			'update_time:datetime',
-			'update_user_id',
+			[
+				'name' => 'update_user_id',
+				'format' => 'html',
+				'value' => $updatedUser ? Html::a($updatedUser->username, ['/user/users/view', 'id' => $updatedUser->id]) : '-',
+			]
 		],
 	]); ?>
 

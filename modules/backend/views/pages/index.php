@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'filter' => \rusporting\website\models\Page::publishListValues(),
 				'attribute' => 'published',
 			],
-			'locale',
+			//'locale',
 			// 'window_title',
 			// 'text:ntext',
 			// 'meta_keywords',
