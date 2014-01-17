@@ -18,6 +18,7 @@ class m131230_084441_create_menu_table extends \yii\db\Migration
 			'preg' => Schema::TYPE_STRING.'(150) NOT NULL',
 			'title' => Schema::TYPE_STRING.'(150) NOT NULL',
 			'css_class' => Schema::TYPE_STRING.'(150) NOT NULL',
+			'element_id' => Schema::TYPE_STRING.'(150) NOT NULL',
 			'enabled' => Schema::TYPE_BOOLEAN.' NOT NULL DEFAULT TRUE',
 			'sort' => Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0',
 

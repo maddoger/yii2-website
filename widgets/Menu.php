@@ -93,6 +93,13 @@ class Menu extends BaseMenu
 			if (isset($item['children']) && (count($item['children'])>0)) {
 				$item['items'] = &$item['children'];
 			}
+			if (!isset($item['options'])) $item['options'] = [];
+			if (isset($item['css_class'])) {
+				$item['options']['class'] = $item['css_class'];
+			}
+			if (isset($item['element_id'])) {
+				$item['options']['id'] = $item['element_id'];
+			}
 			$items[$i] = $item;
 
 			if (isset($item['visible']) && !$item['visible']) {

@@ -44,6 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
 						<span class="hidden">
 							<input class="form-control" style="width: 100px;"  type="text" title="<?= Yii::t('rusporting/website', 'CSS Class') ?>" placeholder="<?= Yii::t('rusporting/website', 'CSS Class') ?>" name="css_class[]"
 								   value="<?php echo Html::encode($ar['css_class']);?>"/>
+
+							<input class="form-control" style="width: 100px;"  type="text" title="<?= Yii::t('rusporting/website', 'Element ID') ?>" placeholder="<?= Yii::t('rusporting/website', 'Element ID') ?>" name="element_id[]"
+								   value="<?php echo Html::encode($ar['element_id']);?>"/>
+
 							<input class="form-control" style="width: 200px;"  type="text"  title="<?= Yii::t('rusporting/website', 'Active regular expression') ?>"
 								   placeholder="<?= Yii::t('rusporting/website', 'Active regular expression') ?>" name="preg[]" value="<?php echo Html::encode($ar['preg']);?>"/>
 						</span>
@@ -82,6 +86,8 @@ $this->params['breadcrumbs'][] = $this->title;
 						   onclick="$(this).next().toggleClass('hidden');"><?= Yii::t('rusporting/website', 'Additional') ?></a>
 						<span class="hidden">
 							<input class="form-control" style="width: 100px;"  type="text" title="<?= Yii::t('rusporting/website', 'CSS Class') ?>" placeholder="<?= Yii::t('rusporting/website', 'CSS Class') ?>" name="css_class[]"
+								   value=""/>
+							<input class="form-control" style="width: 100px;"  type="text" title="<?= Yii::t('rusporting/website', 'Element ID') ?>" placeholder="<?= Yii::t('rusporting/website', 'Element ID') ?>" name="element_id[]"
 								   value=""/>
 							<input class="form-control" style="width: 200px;"  type="text"  title="<?= Yii::t('rusporting/website', 'Active regular expression') ?>"
 								   placeholder="<?= Yii::t('rusporting/website', 'Active regular expression') ?>" name="preg[]" value=""/>

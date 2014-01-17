@@ -14,6 +14,7 @@ use Yii;
  * @property string $preg
  * @property string $title
  * @property string $css_class
+ * @property string $element_id
  * @property boolean $enabled
  * @property integer $sort
  * @property integer $create_time
@@ -49,7 +50,7 @@ class Menu extends ActiveRecord
 
 			[['title'], 'required'],
 			[['enabled'], 'boolean'],
-			[['link', 'preg', 'title', 'css_class'], 'string', 'max' => 150]
+			[['link', 'preg', 'title', 'css_class', 'element_id'], 'string', 'max' => 150]
 		];
 	}
 
@@ -65,6 +66,7 @@ class Menu extends ActiveRecord
 			'preg' => Yii::t('rusporting/website', 'Preg'),
 			'title' => Yii::t('rusporting/website', 'Title'),
 			'css_class' => Yii::t('rusporting/website', 'CSS Class'),
+			'element_id' => Yii::t('rusporting/website', 'Element ID'),
 			'enabled' => Yii::t('rusporting/website', 'Enabled'),
 			'sort' => Yii::t('rusporting/website', 'Sort'),
 			'create_time' => Yii::t('rusporting/website', 'Create Time'),

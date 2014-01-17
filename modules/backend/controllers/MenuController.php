@@ -39,6 +39,7 @@ class MenuController extends BackendController
 
 	/**
 	 * Menu tree
+	 *
 	 * @return mixed
 	 */
 	public function actionIndex()
@@ -56,14 +57,15 @@ class MenuController extends BackendController
 				$level = $_POST['level'][$i];
 
 				$array = array(
-					'id'        => $_POST['id'][$i],
-					'link'      => $_POST['link'][$i],
-					'preg'      => $_POST['preg'][$i],
-					'title'     => $_POST['title'][$i],
+					'id' => $_POST['id'][$i],
+					'link' => $_POST['link'][$i],
+					'preg' => $_POST['preg'][$i],
+					'title' => $_POST['title'][$i],
 					'css_class' => $_POST['css_class'][$i],
+					'element_id' => $_POST['element_id'][$i],
 					'enabled' => $_POST['enabled'][$i],
 					'parent_id' => $id_by_level[$level],
-					'sort'      => $i
+					'sort' => $i
 				);
 				if ($array['parent_id'] == 0) {
 					$array['parent_id'] = null;
