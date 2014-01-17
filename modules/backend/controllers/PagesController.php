@@ -115,8 +115,7 @@ class PagesController extends BackendController
 	{
 		$model = new Page;
 		$copyModel = $this->findModel($id);
-		$model->setAttributes($copyModel->getAttributes(), false);
-		$model->id = null;
+		$model->setAttributes($copyModel->getAttributes(null, ['id']), false);
 
 		if ($model->load($_POST) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);

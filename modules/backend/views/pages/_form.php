@@ -121,6 +121,7 @@ HERE
 			// Some options, see http://imperavi.com/redactor/docs/
 			'options' => [
 				'lang' => Yii::$app->language,
+				'convertDivs' => false,
 				'minHeight' => '100',
 				'imageUpload' => Yii::$app->urlManager->createUrl('/website/pages/image-upload'),
 				'fileUpload' => Yii::$app->urlManager->createUrl('/website/pages/file-upload'),

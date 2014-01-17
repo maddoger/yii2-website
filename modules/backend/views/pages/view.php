@@ -29,7 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
 			'id',
 			'title',
 			'window_title',
-			'slug',
+			[
+				'name' => 'slug',
+				'format' => 'html',
+				'value' => '<a target="_blank" href="'.Html::encode(Yii::getAlias('@frontendUrl'.$model->slug)).'">'.Html::encode($model->slug).'</a>',
+			],
 			[
 				'label' => Yii::t('rusporting/website', 'Published'),
 				'format' => 'text',
