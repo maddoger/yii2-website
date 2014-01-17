@@ -21,7 +21,7 @@ use Yii;
  * @property integer $update_time
  * @property integer $update_user_id
  *
- * @property Menu $parent
+ * @property Menu $parentTitle
  * @property Menu[] $menus
  */
 class Menu extends ActiveRecord
@@ -91,7 +91,7 @@ class Menu extends ActiveRecord
 	}
 
 	/**
-	 * Returns array tree from parent (without itself).
+	 * Returns array tree from parentTitle (without itself).
 	 * Children are in children field.
 	 * @param int $parentId
 	 * @return null|array
@@ -123,6 +123,40 @@ class Menu extends ActiveRecord
 
 		if (isset($items[$parentId])) {
 			return $items[$parentId]['children'];
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns array tree from parentTitle (without itself).
+	 * Children are in children field.
+	 *
+	 * @param string $parentTitle
+	 * @return null|array
+	 */
+	public static function getTreeByParentTitle($parentTitle)
+	{
+		static $itemsNameToId = null;
+		if ($itemsNameToId === null) {
+			$itemsNameToId = array();
+		}
+
+		$parentId = null;
+
+		if (isset($itemsNameToId[$parentTitle])) {
+			$parentId = $itemsNameToId[$parentTitle];
+		} else {
+
+			$model = self::find()->where(['title' => $parentTitle])->select(['id'])->limit(1)->one();
+			if ($model) {
+				$parentId = $model->id;
+				$itemsNameToId[$parentTitle] = $parentId;
+			}
+		}
+
+		if ($parentId !== null) {
+			return static::getTreeByParentId($parentId);
 		} else {
 			return null;
 		}
