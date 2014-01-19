@@ -21,10 +21,10 @@ class m140113_084237_create_route_table extends \yii\db\Migration
 			'enabled' => Schema::TYPE_BOOLEAN.' NOT NULL DEFAULT TRUE',
 			'sort' => Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0',
 
-			'create_time' => Schema::TYPE_INTEGER,
-			'create_user_id' => Schema::TYPE_INTEGER,
-			'update_time' => Schema::TYPE_INTEGER,
-			'update_user_id' => Schema::TYPE_INTEGER,
+			'created_at' => Schema::TYPE_INTEGER,
+			'created_by_user_id' => Schema::TYPE_INTEGER,
+			'updated_at' => Schema::TYPE_INTEGER,
+			'updated_by_user_id' => Schema::TYPE_INTEGER,
 		], $tableOptions);
 
 		$this->createIndex($this->db->tablePrefix.'website_menu_sort_ix', '{{%website_menu}}', 'sort');

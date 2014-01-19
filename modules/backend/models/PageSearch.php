@@ -20,15 +20,15 @@ class PageSearch extends Model
 	public $text;
 	public $meta_keywords;
 	public $meta_description;
-	public $create_time;
-	public $create_user_id;
-	public $update_time;
-	public $update_user_id;
+	public $created_at;
+	public $created_by_user_id;
+	public $updated_at;
+	public $updated_by_user_id;
 
 	public function rules()
 	{
 		return [
-			[['id', 'published', 'create_time', 'create_user_id', 'update_time', 'update_user_id'], 'integer'],
+			[['id', 'published', 'created_at', 'created_by_user_id', 'updated_at', 'updated_by_user_id'], 'integer'],
 			[['slug', 'locale', 'title', 'window_title', 'text', 'meta_keywords', 'meta_description'], 'safe'],
 		];
 	}
@@ -48,10 +48,10 @@ class PageSearch extends Model
 			'text' => \Yii::t('rusporting/website', 'Text'),
 			'meta_keywords' => \Yii::t('rusporting/website', 'Meta Keywords'),
 			'meta_description' => \Yii::t('rusporting/website', 'Meta Description'),
-			'create_time' => \Yii::t('rusporting/website', 'Create Time'),
-			'create_user_id' => \Yii::t('rusporting/website', 'Create User ID'),
-			'update_time' => \Yii::t('rusporting/website', 'Update Time'),
-			'update_user_id' => \Yii::t('rusporting/website', 'Update User ID'),
+			'created_at' => \Yii::t('rusporting/website', 'Create Time'),
+			'created_by_user_id' => \Yii::t('rusporting/website', 'Create User ID'),
+			'updated_at' => \Yii::t('rusporting/website', 'Update Time'),
+			'updated_by_user_id' => \Yii::t('rusporting/website', 'Update User ID'),
 		];
 	}
 
@@ -77,10 +77,10 @@ class PageSearch extends Model
 		$this->addCondition($query, 'text', true);
 		$this->addCondition($query, 'meta_keywords', true);
 		$this->addCondition($query, 'meta_description', true);
-		$this->addCondition($query, 'create_time');
-		$this->addCondition($query, 'create_user_id');
-		$this->addCondition($query, 'update_time');
-		$this->addCondition($query, 'update_user_id');
+		$this->addCondition($query, 'created_at');
+		$this->addCondition($query, 'created_by_user_id');
+		$this->addCondition($query, 'updated_at');
+		$this->addCondition($query, 'updated_by_user_id');
 		return $dataProvider;
 	}
 

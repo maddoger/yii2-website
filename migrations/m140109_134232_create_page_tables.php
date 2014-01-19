@@ -26,10 +26,10 @@ class m140109_134232_create_page_tables extends \yii\db\Migration
 
 			'layout' => Schema::TYPE_STRING.'(50)',
 
-			'create_time' => Schema::TYPE_INTEGER,
-			'create_user_id' => Schema::TYPE_INTEGER,
-			'update_time' => Schema::TYPE_INTEGER,
-			'update_user_id' => Schema::TYPE_INTEGER,
+			'created_at' => Schema::TYPE_INTEGER,
+			'created_by_user_id' => Schema::TYPE_INTEGER,
+			'updated_at' => Schema::TYPE_INTEGER,
+			'updated_by_user_id' => Schema::TYPE_INTEGER,
 		], $tableOptions);
 
 		$this->createIndex($this->db->tablePrefix.'website_menu_slug_ix', '{{%website_page}}', 'slug');
