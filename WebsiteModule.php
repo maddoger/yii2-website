@@ -178,8 +178,8 @@ class WebsiteModule extends Module
 				if (empty($layout)) continue;
 				$i = strpos($layout, ':');
 				if ($i !== false) {
-					$layoutKey = substr($layout, 0, $i);
-					$layoutTitle = substr($layout, $i+1);
+					$layoutKey = trim(substr($layout, 0, $i));
+					$layoutTitle = trim(substr($layout, $i+1));
 					$res[$layoutKey] = $layoutTitle;
 				} else {
 					$res[$layout] = $layout;

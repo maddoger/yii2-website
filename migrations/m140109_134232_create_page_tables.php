@@ -32,12 +32,12 @@ class m140109_134232_create_page_tables extends \yii\db\Migration
 			'updated_by_user_id' => Schema::TYPE_INTEGER,
 		], $tableOptions);
 
-		$this->createIndex($this->db->tablePrefix.'website_menu_slug_ix', '{{%website_page}}', 'slug');
+		$this->createIndex($this->db->tablePrefix.'website_page_slug_ix', '{{%website_page}}', 'slug');
 	}
 
 	public function safeDown()
 	{
-		$this->dropIndex($this->db->tablePrefix.'website_menu_slug_ix', '{{%website_page}}');
+		$this->dropIndex($this->db->tablePrefix.'website_page_slug_ix', '{{%website_page}}');
 		$this->dropTable('{{%website_page}}');
 	}
 }

@@ -88,7 +88,7 @@ class Menu extends BaseMenu
 				$item['label'] = $item['title'];
 			}
 			if (isset($item['link'])) {
-				$item['url'] = Yii::$app->urlManager->baseUrl . $item['link'];
+				$item['url'] = Html::url( trim($item['link'], '/'));
 			}
 			if (isset($item['children']) && (count($item['children'])>0)) {
 				$item['items'] = &$item['children'];
@@ -151,9 +151,9 @@ class Menu extends BaseMenu
 	{
 		$preg = null;
 		if (isset($item['preg']) && !empty($item['preg'])) {
-			$preg = Yii::$app->urlManager->baseUrl . $item['preg'];
+			$preg = Html::url( trim($item['preg'], '/') );
 		} else {
-			$preg = rtrim($item['url'], '/') . ($item['url'] != '/' ? '/*' : '');
+			$preg = $item['url'] . ($item['url'] != '/' ? '/*' : '');
 		}
 
 		if ($preg !== null && !empty($preg)) {
