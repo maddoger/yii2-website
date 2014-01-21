@@ -153,17 +153,20 @@ class WebsiteModule extends Module
 		return [
 			[
 				'label' => Yii::t('rusporting/website', 'Website'), 'fa' => 'book',
+				'roles' => ['menu.read', 'pages.read'],
 				//'url' => 'user/user-backend/index',
 				'items' => [
 					/*['label' => Yii::t('rusporting/website', 'Structure'), 'fa'=>'book',
 						'url'=> ['/website/structure/index'], 'activeUrl'=> ['/website/structure/*']],*/
 					['label' => Yii::t('rusporting/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/pages/index'],
-						'activeUrl'=> ['/website/pages/*']],
+						'activeUrl'=> ['/website/pages/*'], 'roles' => ['pages.read']],
 					['label' => Yii::t('rusporting/website', 'Menu'), 'fa'=>'bars', 'url'=> ['/website/menu/index'],
-						'activeUrl'=> ['/website/menu/*']],
+						'activeUrl'=> ['/website/menu/*'], 'roles' => ['menu.read'],],
 					['label' => Yii::t('rusporting/website', 'Settings'), 'fa'=>'gear',
 						'url'=> ['/admin/modules/config?module=website&back_url='.urlencode(Yii::$app->request->url)],
-						'activeUrl'=> ['/admin/modules/config?module=website']],
+						'activeUrl'=> ['/admin/modules/config?module=website'],
+						'roles' => ['admin.modulesConfiguration'],
+					],
 				],
 			]
 		];
