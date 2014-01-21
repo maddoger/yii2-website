@@ -33,12 +33,12 @@ class PagesController extends BackendController
 						'roles' => ['page.read'],
 					],
 					[
-						'actions' => ['create', 'copy', 'file-upload', 'image-upload', 'clipboard-upload'],
+						'actions' => ['create', 'copy'],
 						'allow' => true,
 						'roles' => ['page.create'],
 					],
 					[
-						'actions' => ['update', 'file-upload', 'image-upload', 'clipboard-upload'],
+						'actions' => ['update'],
 						'allow' => true,
 						'roles' => ['page.update'],
 					],
@@ -155,105 +155,6 @@ class PagesController extends BackendController
 	{
 		$this->findModel($id)->delete();
 		return $this->redirect(['index']);
-	}
-
-	public function actionFileUpload()
-	{
-		$validator = new FileValidator();
-		$error = null;
-
-		$file = UploadedFile::getInstanceByName('file');
-
-		if($validator->validate($file, $error))
-		{
-			$path = '/uploads/pages/'.date('Y/m/d');
-			$fileName =
-				Inflector::slug(pathinfo($file->name, PATHINFO_FILENAME)).'_'.
-				time().'.'.strtolower(pathinfo($file->name, PATHINFO_EXTENSION));
-
-			$base = Yii::getAlias('@frontendUrl'.$path);
-
-			$fileDir = Yii::getAlias('@frontendPath'.$path);
-			if (!is_dir($fileDir)) {
-				FileHelper::createDirectory($fileDir);
-			}
-
-			if($file->saveAs($fileDir.'/'.$fileName))
-			{
-				$array = array(
-					'filelink' => $base.'/'.$fileName,
-					'filename' => $file->name
-				);
-				return json_encode($array);
-			}
-		}
-
-		//Yii::$app->response->setStatusCode('400');
-		return json_encode(['error'=>\Yii::t('rusporting/website', 'Bad file.')]);
-	}
-
-	public function actionImageUpload()
-	{
-		$image = new ImageValidator();
-		$error = null;
-
-		$file = UploadedFile::getInstanceByName('file');
-
-		if($image->validate($file, $error))
-		{
-			$path = '/uploads/pages/'.date('Y/m/d');
-			$fileName =
-				Inflector::slug(pathinfo($file->name, PATHINFO_FILENAME)).'_'.
-				time().'.'.strtolower(pathinfo($file->name, PATHINFO_EXTENSION));
-
-			$base = Yii::getAlias('@frontendUrl'.$path);
-
-			$fileDir = Yii::getAlias('@frontendPath'.$path);
-			if (!is_dir($fileDir)) {
-				FileHelper::createDirectory($fileDir);
-			}
-
-			if($file->saveAs($fileDir.'/'.$fileName))
-			{
-				$array = array(
-					'filelink' => $base.'/'.$fileName,
-				);
-				return json_encode($array);
-			}
-		}
-
-		//Yii::$app->response->setStatusCode('400');
-		return json_encode(['error'=>\Yii::t('rusporting/website', 'Bad file.')]);
-	}
-
-	public function actionClipboardUpload()
-	{
-		if (!isset($_POST['contentType']) || !isset($_POST['data'])) {
-			throw new BadRequestHttpException();
-		}
-
-		$contentType = $_POST['contentType'];
-		$data = base64_decode($_POST['data']);
-		$fileName = md5($data).'.png';
-
-		$path = '/uploads/pages/'.date('Y/m/d');
-		$base = Yii::getAlias('@frontendUrl'.$path);
-
-		$fileDir = Yii::getAlias('@frontendPath'.$path);
-		if (!is_dir($fileDir)) {
-			FileHelper::createDirectory($fileDir);
-		}
-
-		if(file_put_contents($fileDir.'/'.$fileName, $data))
-		{
-			$array = array(
-				'filelink' => $base.'/'.$fileName,
-			);
-			return json_encode($array);
-		}
-
-		//Yii::$app->response->setStatusCode('400');
-		return json_encode(['error'=>\Yii::t('rusporting/website', 'Bad file.')]);
 	}
 
 	/**

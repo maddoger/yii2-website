@@ -123,7 +123,7 @@ HERE
 
 				<?php
 
-				$options = [
+				/*$options = [
 					// You can either use it for model attribute
 					'model' => $model,
 					'attribute' => 'text',
@@ -132,31 +132,28 @@ HERE
 						'lang' => Yii::$app->language,
 						'convertDivs' => false,
 						'minHeight' => '100',
-						'imageUpload' => Yii::$app->urlManager->createUrl('/website/pages/image-upload'),
-						'clipboardUploadUrl' => Yii::$app->urlManager->createUrl('/website/pages/clipboard-upload'),
-						'fileUpload' => Yii::$app->urlManager->createUrl('/website/pages/file-upload'),
+						'imageUpload' => Yii::$app->urlManager->createUrl('/admin/files/image-upload'),
+						'clipboardUploadUrl' => Yii::$app->urlManager->createUrl('admin/files/clipboard-upload'),
+						'fileUpload' => Yii::$app->urlManager->createUrl('/admin/files/file-upload'),
 						'imageUploadErrorCallback' => 'function(json) { alert(json.error); }',
 
 						// if you are using CSRF protection – add following:
 						'uploadFields'=>array(
 							Yii::$app->request->csrfVar => Yii::$app->request->getCsrfToken(),
+							//Internal folder for file uploading
+							'folder' => empty($model->slug) ? '/page/'.date('Y/m/d') : '/page'.$model->slug
 						),
 					]
-				];
+				];*/
 
-				//Media module
-				$mediaModule = Yii::$app->getModule('media');
-				if ($mediaModule !== null) {
-					if (Yii::$app->user->checkAccess('image.upload')) {
-						$options['options']['imageUpload'] = Yii::$app->urlManager->createUrl('/media/redactor/image-upload');
-						$options['options']['clipboardUploadUrl'] = Yii::$app->urlManager->createUrl('/media/redactor/clipboard-upload');
-					}
-					if (Yii::$app->user->checkAccess('file.upload')) {
-						$options['options']['fileUpload'] = Yii::$app->urlManager->createUrl('/media/redactor/file-upload');
-					}
-				}
-
-				echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', $options);
+				//echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', $options);
+				echo $form->field($model, 'text')->widget('rusporting\admin\widgets\TextEditor', [
+					'model' => $model,
+					'attribute' => 'text',
+					'config' => [
+						'rows' => 100,
+					]
+				]);
 				//echo $form->field($model, 'text')->textarea(['rows' => 6]);
 				?>
 			</div>
