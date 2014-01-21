@@ -122,7 +122,8 @@ HERE
 					hint(Yii::t('rusporting/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl')])); ?>
 
 				<?php
-				echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', [
+
+				$options = [
 					// You can either use it for model attribute
 					'model' => $model,
 					'attribute' => 'text',
@@ -132,6 +133,7 @@ HERE
 						'convertDivs' => false,
 						'minHeight' => '100',
 						'imageUpload' => Yii::$app->urlManager->createUrl('/website/pages/image-upload'),
+						'clipboardUploadUrl' => Yii::$app->urlManager->createUrl('/website/pages/clipboard-upload'),
 						'fileUpload' => Yii::$app->urlManager->createUrl('/website/pages/file-upload'),
 						'imageUploadErrorCallback' => 'function(json) { alert(json.error); }',
 
@@ -140,7 +142,21 @@ HERE
 							Yii::$app->request->csrfVar => Yii::$app->request->getCsrfToken(),
 						),
 					]
-				]);
+				];
+
+				//Media module
+				$mediaModule = Yii::$app->getModule('media');
+				if ($mediaModule !== null) {
+					if (Yii::$app->user->checkAccess('image.upload')) {
+						$options['options']['imageUpload'] = Yii::$app->urlManager->createUrl('/media/redactor/image-upload');
+						$options['options']['clipboardUploadUrl'] = Yii::$app->urlManager->createUrl('/media/redactor/clipboard-upload');
+					}
+					if (Yii::$app->user->checkAccess('file.upload')) {
+						$options['options']['fileUpload'] = Yii::$app->urlManager->createUrl('/media/redactor/file-upload');
+					}
+				}
+
+				echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', $options);
 				//echo $form->field($model, 'text')->textarea(['rows' => 6]);
 				?>
 			</div>
