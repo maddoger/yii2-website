@@ -98,6 +98,6 @@ return array (
   'Window title for website' => '',
   'Window title. May be longer than page title.' => '',
   'You must be authenticated to view this page.' => '',
-  '_module_description_' => '',
-  '_module_name_' => '',
+  '_module_description_' => 'Manage menus and static pages.',
+  '_module_name_' => 'Website',
 );
