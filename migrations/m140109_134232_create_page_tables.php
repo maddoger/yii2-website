@@ -19,7 +19,7 @@ class m140109_134232_create_page_tables extends \yii\db\Migration
 
 			'title' => Schema::TYPE_STRING.'(150) NOT NULL',
 			'window_title' => Schema::TYPE_STRING.'(150)',
-			'text' => Schema::TYPE_TEXT.' NOT NULL',
+			'text' => ($this->db->driverName === 'mysql' ? 'longtext' : Schema::TYPE_TEXT).' NOT NULL',
 
 			'meta_keywords' => Schema::TYPE_STRING.'(255)',
 			'meta_description' => Schema::TYPE_STRING.'(255)',
