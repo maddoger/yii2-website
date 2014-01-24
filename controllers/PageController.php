@@ -4,7 +4,7 @@ namespace rusporting\website\controllers;
 
 use rusporting\core\FrontendController;
 use rusporting\website\models\Page;
-use yii\web\AccessDeniedHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use Yii;
 
@@ -30,7 +30,7 @@ class PageController extends FrontendController
 				break;
 			case 2: //Auth only
 				if (Yii::$app->user->isGuest()) {
-					throw new AccessDeniedHttpException(Yii::t('rusporting/website', 'You must be authenticated to view this page.'));
+					throw new ForbiddenHttpException(Yii::t('rusporting/website', 'You must be authenticated to view this page.'));
 				}
 				break;
 		}
