@@ -96,10 +96,10 @@ class Page extends ActiveRecord
 	public static function publishListValues()
 	{
 		return [
-			0 => Yii::t('rusporting/website', 'Unpublished'),
-			1 => Yii::t('rusporting/website', 'Only for administrators'),
-			2 => Yii::t('rusporting/website', 'Only for authorized users'),
-			3 => Yii::t('rusporting/website', 'For all'),
+			0 => Yii::t('rusporting/news', 'Unpublished'),
+			1 => Yii::t('rusporting/news', 'Only for administrators'),
+			2 => Yii::t('rusporting/news', 'Only for authorized users'),
+			3 => Yii::t('rusporting/news', 'For all'),
 		];
 	}
 
