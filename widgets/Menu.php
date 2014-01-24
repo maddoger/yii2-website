@@ -79,6 +79,9 @@ class Menu extends BaseMenu
 	 */
 	protected function normalizeItems($items, &$active)
 	{
+		if (!$items) {
+			return [];
+		}
 		foreach ($items as $i => $item) {
 
 			if (isset($item['enabled'])) {
