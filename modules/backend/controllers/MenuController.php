@@ -75,7 +75,7 @@ class MenuController extends BackendController
 				if ($_POST['delete'][$i]) {
 					//И id задан, то удаляем
 					if ($array['id']) {
-						Menu::find($array['id'])->delete();
+						Menu::deleteAll(['id' => $array['id']]);
 					}
 				} else {
 					if (!$array['id']) {
