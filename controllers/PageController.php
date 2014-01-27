@@ -4,6 +4,7 @@ namespace rusporting\website\controllers;
 
 use rusporting\core\FrontendController;
 use rusporting\website\models\Page;
+use yii\helpers\Html;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use Yii;
@@ -57,8 +58,13 @@ class PageController extends FrontendController
 			$layoutFile = $this->findLayoutFile($this->getView());
 		}
 
+		$isAdmin = !Yii::$app->user->isGuest && Yii::$app->user->checkAccess('pages.update');
+		$content = ($isAdmin) ?
+			Html::a(\Yii::t('rusporting/website', 'Edit'), ['/administrator/website/pages/update', 'id' => $page->id], ['class' => 'btn-edit']) . $page->text :
+			$page->text;
+
 		if ($layoutFile !== false) {
-			return $this->renderFile($layoutFile, ['content' => $page->text], $this);
+			return $this->renderFile($layoutFile, ['content' => $content], $this);
 		} else {
 			return $page->text;
 		}
