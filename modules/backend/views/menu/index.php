@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					&nbsp;
 					<span class="inline-block">
 						<a href="#" class="btn btn-link"  title="<?= Yii::t('rusporting/website', 'Additional') ?>"
-							  onclick="$(this).next().toggleClass('hidden');"><?= Yii::t('rusporting/website', 'Additional') ?></a>
+							  onclick="$(this).next().toggleClass('hidden'); return false;"><?= Yii::t('rusporting/website', 'Additional') ?></a>
 						<span class="hidden">
 							<input class="form-control" style="width: 100px;"  type="text" title="<?= Yii::t('rusporting/website', 'CSS Class') ?>" placeholder="<?= Yii::t('rusporting/website', 'CSS Class') ?>" name="css_class[]"
 								   value="<?php echo Html::encode($ar['css_class']);?>"/>
@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					&nbsp;
 					<span class="inline-block">
 						<a href="#" class="btn btn-link"  title="<?= Yii::t('rusporting/website', 'Additional') ?>"
-						   onclick="$(this).next().toggleClass('hidden');"><?= Yii::t('rusporting/website', 'Additional') ?></a>
+						   onclick="$(this).next().toggleClass('hidden'); return false;"><?= Yii::t('rusporting/website', 'Additional') ?></a>
 						<span class="hidden">
 							<input class="form-control" style="width: 100px;"  type="text" title="<?= Yii::t('rusporting/website', 'CSS Class') ?>" placeholder="<?= Yii::t('rusporting/website', 'CSS Class') ?>" name="css_class[]"
 								   value=""/>
