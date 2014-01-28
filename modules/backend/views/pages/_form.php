@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
 	); ?>
 
 		<p>
-			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 		</p>
 
 		<ul class="nav nav-tabs">
@@ -100,7 +100,7 @@ use yii\widgets\ActiveForm;
 		</div>
 
 		<p>
-			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 		</p>
 
 	<?php ActiveForm::end(); ?>
