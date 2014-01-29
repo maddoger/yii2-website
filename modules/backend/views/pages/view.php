@@ -44,8 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 			[
 				'label' => Yii::t('rusporting/website', 'Published'),
-				'format' => 'text',
-				'value' => $model->getPublishedValue()
+				'format' => 'html',
+				'value' => '<span class="label '.
+					($model->published == 0 ? 'label-danger' : ($model->published == 3 ? 'label-success' : 'label-warning')).'">'.
+					$model->getPublishedValue().'</span>'
 			],
 			'meta_keywords',
 			'meta_description',

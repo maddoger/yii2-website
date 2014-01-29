@@ -35,8 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 			'title',
 			[
+				'contentOptions' => ['width'=>150],
+				'format' => 'html',
 				'value' => function ($model, $index, $widget){
-						return $model->getPublishedValue();
+						return '<span class="label '.
+						($model->published == 0 ? 'label-danger' : ($model->published == 3 ? 'label-success' : 'label-warning')).'">'.
+						$model->getPublishedValue().'</span>';
 					},
 				'filter' => \rusporting\website\models\Page::publishListValues(),
 				'attribute' => 'published',
