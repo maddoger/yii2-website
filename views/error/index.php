@@ -9,7 +9,7 @@
 		<a href="<?= Yii::$app->request->getReferrer(); ?>" class="btn">
 			<i class="fa fa-arrow-left"></i> <?= Yii::t('rusporting/website', 'Return back') ?>
 		</a> &nbsp;
-		<a href="<?php echo Yii::$app->urlManager->baseUrl ?>" class="btn">
+		<a href="<?php echo Yii::$app->urlManager->createUrl('/') ?>" class="btn">
 			<i class=fa fa-home"></i> <?= Yii::t('rusporting/website', 'Back to index') ?>
 		</a>
 	</div>
