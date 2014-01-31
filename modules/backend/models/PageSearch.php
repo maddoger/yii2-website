@@ -64,10 +64,10 @@ class PageSearch extends Model
 
 
 		if (!($this->load($params) && $this->validate())) {
+			if (count($query->orderBy) == 0) {
+				$query->addOrderBy('slug');
+			}
 			return $dataProvider;
-		}
-		if (count($query->orderBy) == 0) {
-			$query->addOrderBy('slug');
 		}
 
 		$this->addCondition($query, 'id');
