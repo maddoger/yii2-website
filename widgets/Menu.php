@@ -48,6 +48,11 @@ class Menu extends BaseMenu
 	public $hideEmptyItems = false;
 
 	/**
+	 * @var string
+	 */
+	public $currentUrl = null;
+
+	/**
 	 * Renders the menu.
 	 */
 	public function run()
@@ -67,6 +72,9 @@ class Menu extends BaseMenu
 			if ($children) {
 				$this->items = $children;
 			}
+		}
+		if ($this->currentUrl === null) {
+			$this->currentUrl = rtrim(str_replace('?', '/?', Yii::$app->request->url), '/') . '/';
 		}
 		parent::run();
 	}
@@ -161,12 +169,11 @@ class Menu extends BaseMenu
 
 		if ($preg !== null && !empty($preg)) {
 
-			$route = rtrim(Yii::$app->request->url, '/') . '/';
 			$preg = '/^'.str_replace('*', '(.*?)',  str_replace('/', '\/', $preg)).'$/is';
 
 			//var_dump($preg, $route);
 
-			return preg_match($preg, $route);
+			return preg_match($preg, $this->currentUrl);
 		} else {
 			return parent::isItemActive($item);
 		}
