@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							$model->getPublishedValue().'</span>', ['publish', 'id' => $model->id, 'value' => $model->published == 0 ? 3 : 0],
 							['data-method' => 'get', 'title' => $model->published == 0 ? Yii::t('rusporting/website', 'Publish') : Yii::t('rusporting/website', 'Hide')]);
 					},
-				'filter' => \rusporting\news\models\News::publishedValues(),
+				'filter' => \rusporting\website\models\Page::publishListValues(),
 				'attribute' => 'published',
 			],
 			//'locale',
