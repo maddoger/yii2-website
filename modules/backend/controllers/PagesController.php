@@ -12,6 +12,7 @@ use yii\validators\FileValidator;
 use yii\validators\ImageValidator;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\web\VerbFilter;
 use Yii;
@@ -38,7 +39,7 @@ class PagesController extends BackendController
 						'roles' => ['page.create'],
 					],
 					[
-						'actions' => ['update'],
+						'actions' => ['update', 'publish'],
 						'allow' => true,
 						'roles' => ['page.update'],
 					],
@@ -156,6 +157,27 @@ class PagesController extends BackendController
 		$this->findModel($id)->delete();
 		return $this->redirect(['index']);
 	}
+
+	/**
+	 * Publish an existing Page model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @param integer $value
+	 * @return mixed
+	 */
+	public function actionPublish($id, $value)
+	{
+		$model = $this->findModel($id);
+		$model->published = $value;
+		$model->save(false);
+		if (Yii::$app->request->isAjax) {
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return 'ok';
+		} else {
+			return $this->redirect(['index']);
+		}
+	}
+
 
 	/**
 	 * Finds the Page model based on its primary key value.

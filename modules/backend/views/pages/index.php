@@ -38,11 +38,12 @@ $this->params['breadcrumbs'][] = $this->title;
 				'contentOptions' => ['width'=>150],
 				'format' => 'html',
 				'value' => function ($model, $index, $widget){
-						return '<span class="label '.
-						($model->published == 0 ? 'label-danger' : ($model->published == 3 ? 'label-success' : 'label-warning')).'">'.
-						$model->getPublishedValue().'</span>';
+						return Html::a('<span class="label '.
+							($model->published == 0 ? 'label-danger' : ($model->published == 3 ? 'label-success' : 'label-warning')).'">'.
+							$model->getPublishedValue().'</span>', ['publish', 'id' => $model->id, 'value' => $model->published == 0 ? 3 : 0],
+							['data-method' => 'get', 'title' => $model->published == 0 ? Yii::t('rusporting/website', 'Publish') : Yii::t('rusporting/website', 'Hide')]);
 					},
-				'filter' => \rusporting\website\models\Page::publishListValues(),
+				'filter' => \rusporting\news\models\News::publishedValues(),
 				'attribute' => 'published',
 			],
 			//'locale',
