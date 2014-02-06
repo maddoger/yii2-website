@@ -21,6 +21,10 @@ class WebsiteModule extends Module
 	public $defaultLayout = null;
 	public $locales = null;
 
+	public $headEndString = null;
+	public $bodyBeginString = null;
+	public $bodyEndString = null;
+
 	protected $hasBackend = true;
 	protected $hasFrontend = true;
 
@@ -96,6 +100,13 @@ class WebsiteModule extends Module
 			'siteTitle' => ['label' => Yii::t('rusporting/website', 'Window title for website')],
 			'metaKeywords' => ['label' => Yii::t('rusporting/website', 'Meta keywords for all website'), 'type' => 'textarea'],
 			'metaDescription' => ['label' => Yii::t('rusporting/website', 'Meta description for all website'), 'type' => 'textarea'],
+
+			'headEndString' => ['label' => Yii::t('rusporting/website', 'Code before </head> closing tag.'), 'type' => 'textarea'],
+			'bodyBeginString' => ['label' => Yii::t('rusporting/website', 'Code right after <body> opening tag.'), 'type' => 'textarea'],
+			'bodyEndString' => ['label' => Yii::t('rusporting/website', 'Code before </body> closing tag.'), 'type' => 'textarea',
+				'hint' => Yii::t('rusporting/website', 'Use it for Google Analytics or Yandex Metrika counters.')
+			],
+
 			'layouts' => ['label' => Yii::t('rusporting/website', 'Available layouts for pages'),
 				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>default, narrow</code>. Also you can use labels: <code>default:Default layout, base:Base without container</code>.')],
 			'defaultLayout' => ['label' => Yii::t('rusporting/website', 'Default layout')],
