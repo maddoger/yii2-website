@@ -20,6 +20,10 @@ class PageController extends FrontendController
 			throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
 		}
 
+		if (!empty($page->locale)) {
+			Yii::$app->language = $page->locale;
+		}
+
 		switch ($page->published) {
 			case 0: //Hiden
 				throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));

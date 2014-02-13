@@ -74,6 +74,11 @@ $this->params['breadcrumbs'][] = $this->title;
 						   value=""/>&nbsp;
 					<input class="form-control" style="width: 250px;"  type="text" title="<?= Yii::t('maddoger/website', 'Link') ?>" placeholder="<?= Yii::t('maddoger/website', 'Link') ?>" name="link[]" value=""/>
 					&nbsp;
+
+					<label title="<?= Yii::t('maddoger/website', 'Enabled') ?>" class="btn btn-default checkbox-hidden">
+						<input type="hidden" name="enabled[]" data-default="1" value="1" checked />
+					</label>&nbsp;
+
 					<a href="#" title="<?= Yii::t('maddoger/website', 'Move up') ?>" onclick="return treeUp(this)" class="btn btn-primary"><i class="fa fa-arrow-up"></i></a>
 					<a href="#" title="<?= Yii::t('maddoger/website', 'Mode down') ?>" onclick="return treeDown(this)" class="btn btn-primary"><i class="fa fa-arrow-down"></i></a> &nbsp;
 
