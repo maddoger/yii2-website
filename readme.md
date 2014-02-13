@@ -1,14 +1,14 @@
-Yii2 Website manager by Rusporting
+Yii2 Website manager by maddoger
 
 ## Installation
 
 1) clone
-2) migrate: ##yii migrate --migrationPath=@rusporting/website/migrations##
+2) migrate: ##yii migrate --migrationPath=@maddoger/website/migrations##
 3) modules:
 
 'modules' => [
 		...
-		'website' => 'rusporting\website\WebsiteModule',
+		'website' => 'maddoger\website\WebsiteModule',
 		...
 	],
 

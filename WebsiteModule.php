@@ -2,14 +2,14 @@
 /**
  * @author Vitaliy Syrchikov <maddoger@gmail.com>
  * @link http://syrchikov.name/
- * @copyright Copyright (c) 2013-2014 Rusporting Inc.
+ * @copyright Copyright (c) 2013-2014 maddoger Inc.
  * @since 30.12.13
  */
 
-namespace rusporting\website;
+namespace maddoger\website;
 
 use Yii;
-use rusporting\core\Module;
+use maddoger\core\Module;
 use yii\rbac\Item;
 
 class WebsiteModule extends Module
@@ -32,7 +32,7 @@ class WebsiteModule extends Module
 	 * Translation category for Yii::t function
 	 * @var string
 	 */
-	public $translationCategory = 'rusporting/website';
+	public $translationCategory = 'maddoger/website';
 
 	/**
 	 * @inheritdoc
@@ -46,7 +46,7 @@ class WebsiteModule extends Module
 		Yii::$app->getI18n()->translations[$this->translationCategory] =
 			array(
 				'class' => 'yii\i18n\PhpMessageSource',
-				'basePath' => '@rusporting/website/messages',
+				'basePath' => '@maddoger/website/messages',
 			);
 	}
 
@@ -55,7 +55,7 @@ class WebsiteModule extends Module
 	 */
 	public function getName()
 	{
-		return Yii::t('rusporting/website', '_module_name_');
+		return Yii::t('maddoger/website', '_module_name_');
 	}
 
 	/**
@@ -63,7 +63,7 @@ class WebsiteModule extends Module
 	 */
 	public function getDescription()
 	{
-		return Yii::t('rusporting/website', '_module_description_');
+		return Yii::t('maddoger/website', '_module_description_');
 	}
 
 	/**
@@ -97,21 +97,21 @@ class WebsiteModule extends Module
 	{
 		$model = parent::getConfigurationModel();
 		$model->addAttributes([
-			'siteTitle' => ['label' => Yii::t('rusporting/website', 'Window title for website')],
-			'metaKeywords' => ['label' => Yii::t('rusporting/website', 'Meta keywords for all website'), 'type' => 'textarea'],
-			'metaDescription' => ['label' => Yii::t('rusporting/website', 'Meta description for all website'), 'type' => 'textarea'],
+			'siteTitle' => ['label' => Yii::t('maddoger/website', 'Window title for website')],
+			'metaKeywords' => ['label' => Yii::t('maddoger/website', 'Meta keywords for all website'), 'type' => 'textarea'],
+			'metaDescription' => ['label' => Yii::t('maddoger/website', 'Meta description for all website'), 'type' => 'textarea'],
 
-			'headEndString' => ['label' => Yii::t('rusporting/website', 'Code before </head> closing tag.'), 'type' => 'textarea'],
-			'bodyBeginString' => ['label' => Yii::t('rusporting/website', 'Code right after <body> opening tag.'), 'type' => 'textarea'],
-			'bodyEndString' => ['label' => Yii::t('rusporting/website', 'Code before </body> closing tag.'), 'type' => 'textarea',
-				'hint' => Yii::t('rusporting/website', 'Use it for Google Analytics or Yandex Metrika counters.')
+			'headEndString' => ['label' => Yii::t('maddoger/website', 'Code before </head> closing tag.'), 'type' => 'textarea'],
+			'bodyBeginString' => ['label' => Yii::t('maddoger/website', 'Code right after <body> opening tag.'), 'type' => 'textarea'],
+			'bodyEndString' => ['label' => Yii::t('maddoger/website', 'Code before </body> closing tag.'), 'type' => 'textarea',
+				'hint' => Yii::t('maddoger/website', 'Use it for Google Analytics or Yandex Metrika counters.')
 			],
 
-			'layouts' => ['label' => Yii::t('rusporting/website', 'Available layouts for pages'),
-				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>default, narrow</code>. Also you can use labels: <code>default:Default layout, base:Base without container</code>.')],
-			'defaultLayout' => ['label' => Yii::t('rusporting/website', 'Default layout')],
-			'locales' => ['label' => Yii::t('rusporting/website', 'Available locales'),
-				'hint' => Yii::t('rusporting/website', 'List separated by commas. Example: <code>ru, en</code>')],
+			'layouts' => ['label' => Yii::t('maddoger/website', 'Available layouts for pages'),
+				'hint' => Yii::t('maddoger/website', 'List separated by commas. Example: <code>default, narrow</code>. Also you can use labels: <code>default:Default layout, base:Base without container</code>.')],
+			'defaultLayout' => ['label' => Yii::t('maddoger/website', 'Default layout')],
+			'locales' => ['label' => Yii::t('maddoger/website', 'Available locales'),
+				'hint' => Yii::t('maddoger/website', 'List separated by commas. Example: <code>ru, en</code>')],
 		]);
 		return $model;
 	}
@@ -124,8 +124,8 @@ class WebsiteModule extends Module
 		return [
 			[
 				['*' => 'user/backend-auth/<action>'],
-				Yii::t('rusporting/website', 'Backend authorization route'),
-				Yii::t('rusporting/website', 'Provides authorization and password reset (with captcha) for backend application.')
+				Yii::t('maddoger/website', 'Backend authorization route'),
+				Yii::t('maddoger/website', 'Provides authorization and password reset (with captcha) for backend application.')
 			]
 		];
 	}
@@ -136,20 +136,20 @@ class WebsiteModule extends Module
 	public function getRbacRoles()
 	{
 		return [
-			'page.create' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Create new pages')],
-			'page.read' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'View pages')],
-			'page.update' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Update pages')],
-			'page.delete' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Delete pages')],
+			'page.create' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Create new pages')],
+			'page.read' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'View pages')],
+			'page.update' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Update pages')],
+			'page.delete' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Delete pages')],
 			'page.manager' => [
 				'type' => Item::TYPE_ROLE,
-				'description' => Yii::t('rusporting/website', 'Pages manager'),
+				'description' => Yii::t('maddoger/website', 'Pages manager'),
 				'children' => [ 'page.create','page.read','page.update','page.delete' ]
 			],
 
-			'menu.manage' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('rusporting/website', 'Manage menu')],
+			'menu.manage' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Manage menu')],
 			'menu.manager' => [
 				'type' => Item::TYPE_ROLE,
-				'description' => Yii::t('rusporting/website', 'Menu manager'),
+				'description' => Yii::t('maddoger/website', 'Menu manager'),
 				'children' => [ 'menu.manage' ]
 			],
 		];
@@ -163,17 +163,17 @@ class WebsiteModule extends Module
 	{
 		return [
 			[
-				'label' => Yii::t('rusporting/website', 'Website'), 'fa' => 'book',
+				'label' => Yii::t('maddoger/website', 'Website'), 'fa' => 'book',
 				'roles' => ['menu.read', 'pages.read'],
 				//'url' => 'user/user-backend/index',
 				'items' => [
-					/*['label' => Yii::t('rusporting/website', 'Structure'), 'fa'=>'book',
+					/*['label' => Yii::t('maddoger/website', 'Structure'), 'fa'=>'book',
 						'url'=> ['/website/structure/index'], 'activeUrl'=> ['/website/structure/*']],*/
-					['label' => Yii::t('rusporting/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/pages/index'],
+					['label' => Yii::t('maddoger/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/pages/index'],
 						'activeUrl'=> ['/website/pages/*'], 'roles' => ['pages.read']],
-					['label' => Yii::t('rusporting/website', 'Menu'), 'fa'=>'bars', 'url'=> ['/website/menu/index'],
+					['label' => Yii::t('maddoger/website', 'Menu'), 'fa'=>'bars', 'url'=> ['/website/menu/index'],
 						'activeUrl'=> ['/website/menu/*'], 'roles' => ['menu.read'],],
-					['label' => Yii::t('rusporting/website', 'Settings'), 'fa'=>'gear',
+					['label' => Yii::t('maddoger/website', 'Settings'), 'fa'=>'gear',
 						'url'=> ['/admin/modules/config?module=website&back_url='.urlencode(Yii::$app->request->url)],
 						'activeUrl'=> ['/admin/modules/config?module=website'],
 						'roles' => ['admin.modulesConfiguration'],

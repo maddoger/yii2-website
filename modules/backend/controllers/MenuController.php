@@ -1,9 +1,9 @@
 <?php
 
-namespace rusporting\website\modules\backend\controllers;
+namespace maddoger\website\modules\backend\controllers;
 
-use rusporting\website\models\Menu;
-use rusporting\core\BackendController;
+use maddoger\website\models\Menu;
+use maddoger\core\BackendController;
 use yii\db\Exception;
 use yii\web\VerbFilter;
 use Yii;
@@ -44,7 +44,7 @@ class MenuController extends BackendController
 	 */
 	public function actionIndex()
 	{
-		$this->title = Yii::t('rusporting/website', 'Menu');
+		$this->title = Yii::t('maddoger/website', 'Menu');
 		$items = Menu::getTreeByParentId();
 
 		if (Yii::$app->request->isPost && isset($_POST['level'])) {

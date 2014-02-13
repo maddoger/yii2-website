@@ -6,10 +6,10 @@ use yii\grid\GridView;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
- * @var rusporting\website\modules\backend\models\PageSearch $searchModel
+ * @var maddoger\website\modules\backend\models\PageSearch $searchModel
  */
 
-$this->title = \Yii::t('rusporting/website', 'Pages');
+$this->title = \Yii::t('maddoger/website', 'Pages');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="page-index">
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
 	<p>
-		<?= Html::a(\Yii::t('rusporting/website', 'Create Page'), ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a(\Yii::t('maddoger/website', 'Create Page'), ['create'], ['class' => 'btn btn-success']) ?>
 	</p>
 
 	<?php echo GridView::widget([
@@ -41,9 +41,9 @@ $this->params['breadcrumbs'][] = $this->title;
 						return Html::a('<span class="label '.
 							($model->published == 0 ? 'label-danger' : ($model->published == 3 ? 'label-success' : 'label-warning')).'">'.
 							$model->getPublishedValue().'</span>', ['publish', 'id' => $model->id, 'value' => $model->published == 0 ? 3 : 0],
-							['data-method' => 'get', 'title' => $model->published == 0 ? Yii::t('rusporting/website', 'Publish') : Yii::t('rusporting/website', 'Hide')]);
+							['data-method' => 'get', 'title' => $model->published == 0 ? Yii::t('maddoger/website', 'Publish') : Yii::t('maddoger/website', 'Hide')]);
 					},
-				'filter' => \rusporting\website\models\Page::publishListValues(),
+				'filter' => \maddoger\website\models\Page::publishListValues(),
 				'attribute' => 'published',
 			],
 			//'locale',
@@ -62,20 +62,20 @@ $this->params['breadcrumbs'][] = $this->title;
 					'view' => function ($url, $model) {
 							return \yii\helpers\Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
 								'class' => 'btn btn-info grid-action-view',
-								'title' => Yii::t('rusporting/website', 'View'),
+								'title' => Yii::t('maddoger/website', 'View'),
 							]);
 						},
 					'update' => function ($url, $model) {
 							return \yii\helpers\Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
 								'class' => 'btn btn-success grid-action-update',
-								'title' => Yii::t('rusporting/website', 'Update'),
+								'title' => Yii::t('maddoger/website', 'Update'),
 							]);
 						},
 					'delete' => function ($url, $model) {
 							return \yii\helpers\Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
 								'class' => 'btn btn-danger grid-action-delete',
-								'title' => Yii::t('rusporting/website', 'Delete'),
-								'data-confirm' => Yii::t('rusporting/website', 'Are you sure to delete this item?'),
+								'title' => Yii::t('maddoger/website', 'Delete'),
+								'data-confirm' => Yii::t('maddoger/website', 'Are you sure to delete this item?'),
 								'data-method' => 'post',
 							]);
 						}
@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					'copy' => function ($url, $model) {
 							return \yii\helpers\Html::a('<span class="fa fa-copy"></span>', $url, [
 								'class' => 'btn btn-success grid-action-copy',
-								'title' => Yii::t('rusporting/website', 'Copy'),
+								'title' => Yii::t('maddoger/website', 'Copy'),
 							]);
 						}
 

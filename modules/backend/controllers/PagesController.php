@@ -1,10 +1,10 @@
 <?php
 
-namespace rusporting\website\modules\backend\controllers;
+namespace maddoger\website\modules\backend\controllers;
 
-use rusporting\website\models\Page;
-use rusporting\website\modules\backend\models\PageSearch;
-use rusporting\core\BackendController;
+use maddoger\website\models\Page;
+use maddoger\website\modules\backend\models\PageSearch;
+use maddoger\core\BackendController;
 use yii\base\InvalidCallException;
 use yii\helpers\FileHelper;
 use yii\helpers\Inflector;
@@ -191,7 +191,7 @@ class PagesController extends BackendController
 		if (($model = Page::find($id)) !== null) {
 			return $model;
 		} else {
-			throw new NotFoundHttpException(\Yii::t('rusporting/website', 'The requested page does not exist.'));
+			throw new NotFoundHttpException(\Yii::t('maddoger/website', 'The requested page does not exist.'));
 		}
 	}
 }

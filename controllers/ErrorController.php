@@ -1,8 +1,8 @@
 <?php
 
-namespace rusporting\website\controllers;
+namespace maddoger\website\controllers;
 
-use rusporting\core\FrontendController;
+use maddoger\core\FrontendController;
 use Yii;
 use yii\web\HttpException;
 use yii\base\Exception;
@@ -60,13 +60,13 @@ class ErrorController extends FrontendController
 		if ($exception instanceof Exception) {
 			$name = $exception->getName();
 		} else {
-			$name = $this->defaultName ?: Yii::t('rusporting/website', 'Error');
+			$name = $this->defaultName ?: Yii::t('maddoger/website', 'Error');
 		}
 
 		if ($exception instanceof UserException) {
 			$message = $exception->getMessage();
 		} else {
-			$message = $this->defaultMessage ?: Yii::t('rusporting/website', 'An internal server error occurred.');
+			$message = $this->defaultMessage ?: Yii::t('maddoger/website', 'An internal server error occurred.');
 		}
 
 		//$this->title = $name . ' #' . $code;

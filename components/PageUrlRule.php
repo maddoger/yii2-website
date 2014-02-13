@@ -1,6 +1,6 @@
 <?php
 
-namespace rusporting\website\components;
+namespace maddoger\website\components;
 
 use yii\web\UrlRule;
 

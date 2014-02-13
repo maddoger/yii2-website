@@ -1,10 +1,10 @@
 <?php
 
-namespace rusporting\website\modules\backend\models;
+namespace maddoger\website\modules\backend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use rusporting\website\models\Page;
+use maddoger\website\models\Page;
 
 /**
  * PageSearch represents the model behind the search form about Page.
@@ -39,19 +39,19 @@ class PageSearch extends Model
 	public function attributeLabels()
 	{
 		return [
-			'id' => \Yii::t('rusporting/website', 'ID'),
-			'slug' => \Yii::t('rusporting/website', 'Slug'),
-			'locale' => \Yii::t('rusporting/website', 'Locale'),
-			'published' => \Yii::t('rusporting/website', 'Published'),
-			'title' => \Yii::t('rusporting/website', 'Title'),
-			'window_title' => \Yii::t('rusporting/website', 'Window Title'),
-			'text' => \Yii::t('rusporting/website', 'Text'),
-			'meta_keywords' => \Yii::t('rusporting/website', 'Meta Keywords'),
-			'meta_description' => \Yii::t('rusporting/website', 'Meta Description'),
-			'created_at' => \Yii::t('rusporting/website', 'Create Time'),
-			'created_by_user_id' => \Yii::t('rusporting/website', 'Create User ID'),
-			'updated_at' => \Yii::t('rusporting/website', 'Update Time'),
-			'updated_by_user_id' => \Yii::t('rusporting/website', 'Update User ID'),
+			'id' => \Yii::t('maddoger/website', 'ID'),
+			'slug' => \Yii::t('maddoger/website', 'Slug'),
+			'locale' => \Yii::t('maddoger/website', 'Locale'),
+			'published' => \Yii::t('maddoger/website', 'Published'),
+			'title' => \Yii::t('maddoger/website', 'Title'),
+			'window_title' => \Yii::t('maddoger/website', 'Window Title'),
+			'text' => \Yii::t('maddoger/website', 'Text'),
+			'meta_keywords' => \Yii::t('maddoger/website', 'Meta Keywords'),
+			'meta_description' => \Yii::t('maddoger/website', 'Meta Description'),
+			'created_at' => \Yii::t('maddoger/website', 'Create Time'),
+			'created_by_user_id' => \Yii::t('maddoger/website', 'Create User ID'),
+			'updated_at' => \Yii::t('maddoger/website', 'Update Time'),
+			'updated_by_user_id' => \Yii::t('maddoger/website', 'Update User ID'),
 		];
 	}
 

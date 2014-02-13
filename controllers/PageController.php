@@ -1,9 +1,9 @@
 <?php
 
-namespace rusporting\website\controllers;
+namespace maddoger\website\controllers;
 
-use rusporting\core\FrontendController;
-use rusporting\website\models\Page;
+use maddoger\core\FrontendController;
+use maddoger\website\models\Page;
 use yii\helpers\Html;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -17,21 +17,21 @@ class PageController extends FrontendController
 
 		$page = Page::findBySlug($slug);
 		if (!$page) {
-			throw new NotFoundHttpException(Yii::t('rusporting/website', 'Page "{url}" not found.', ['url' => $slug]));
+			throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
 		}
 
 		switch ($page->published) {
 			case 0: //Hiden
-				throw new NotFoundHttpException(Yii::t('rusporting/website', 'Page "{url}" not found.', ['url' => $slug]));
+				throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
 				break;
 			case 1: //Admin only
 				if (!Yii::$app->user->checkAccess('page.read')) {
-					throw new NotFoundHttpException(Yii::t('rusporting/website', 'Page "{url}" not found.', ['url' => $slug]));
+					throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
 				}
 				break;
 			case 2: //Auth only
 				if (Yii::$app->user->isGuest()) {
-					throw new ForbiddenHttpException(Yii::t('rusporting/website', 'You must be authenticated to view this page.'));
+					throw new ForbiddenHttpException(Yii::t('maddoger/website', 'You must be authenticated to view this page.'));
 				}
 				break;
 		}
@@ -60,7 +60,7 @@ class PageController extends FrontendController
 
 		$isAdmin = !Yii::$app->user->isGuest && Yii::$app->user->checkAccess('pages.update');
 		$content = ($isAdmin) ?
-			Html::a(\Yii::t('rusporting/website', 'Edit'), ['/administrator/website/pages/update', 'id' => $page->id], ['class' => 'btn-edit']) . $page->text :
+			Html::a(\Yii::t('maddoger/website', 'Edit'), ['/administrator/website/pages/update', 'id' => $page->id], ['class' => 'btn-edit']) . $page->text :
 			$page->text;
 
 		if ($layoutFile !== false) {

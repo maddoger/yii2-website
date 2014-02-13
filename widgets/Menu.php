@@ -1,8 +1,8 @@
 <?php
 
-namespace rusporting\website\widgets;
+namespace maddoger\website\widgets;
 
-use rusporting\website\models\Menu as MenuModel;
+use maddoger\website\models\Menu as MenuModel;
 use yii\helpers\Html;
 use yii\widgets\Menu as BaseMenu;
 use Yii;
@@ -11,7 +11,7 @@ use Yii;
  * Class Menu
  * Menu with fa icons support
  *
- * @package rusporting\admin\widgets
+ * @package maddoger\admin\widgets
  */
 class Menu extends BaseMenu
 {

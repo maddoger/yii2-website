@@ -1,9 +1,9 @@
 <?php
 
-namespace rusporting\website\models;
+namespace maddoger\website\models;
 
 use Yii;
-use rusporting\core\ActiveRecord;
+use maddoger\core\ActiveRecord;
 
 /**
  * This is the model class for table "tbl_website_page".
@@ -39,8 +39,8 @@ class Page extends ActiveRecord
 	public function behaviors()
 	{
 		return [
-			'timestamp' => ['class' => 'rusporting\core\behaviors\AutoTimestamp'],
-			'user' => ['class' => 'rusporting\core\behaviors\AutoUser'],
+			'timestamp' => ['class' => 'maddoger\core\behaviors\AutoTimestamp'],
+			'user' => ['class' => 'maddoger\core\behaviors\AutoUser'],
 		];
 	}
 
@@ -67,20 +67,20 @@ class Page extends ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id' => Yii::t('rusporting/website', 'ID'),
-			'slug' => Yii::t('rusporting/website', 'Slug'),
-			'locale' => Yii::t('rusporting/website', 'Locale'),
-			'published' => Yii::t('rusporting/website', 'Publication'),
-			'title' => Yii::t('rusporting/website', 'Title'),
-			'window_title' => Yii::t('rusporting/website', 'Window Title'),
-			'text' => Yii::t('rusporting/website', 'Text'),
-			'meta_keywords' => Yii::t('rusporting/website', 'Meta Keywords'),
-			'meta_description' => Yii::t('rusporting/website', 'Meta Description'),
-			'layout' => Yii::t('rusporting/website', 'Layout'),
-			'created_at' => Yii::t('rusporting/website', 'Create Time'),
-			'created_by_user_id' => Yii::t('rusporting/website', 'Create User ID'),
-			'updated_at' => Yii::t('rusporting/website', 'Update Time'),
-			'updated_by_user_id' => Yii::t('rusporting/website', 'Update User ID'),
+			'id' => Yii::t('maddoger/website', 'ID'),
+			'slug' => Yii::t('maddoger/website', 'Slug'),
+			'locale' => Yii::t('maddoger/website', 'Locale'),
+			'published' => Yii::t('maddoger/website', 'Publication'),
+			'title' => Yii::t('maddoger/website', 'Title'),
+			'window_title' => Yii::t('maddoger/website', 'Window Title'),
+			'text' => Yii::t('maddoger/website', 'Text'),
+			'meta_keywords' => Yii::t('maddoger/website', 'Meta Keywords'),
+			'meta_description' => Yii::t('maddoger/website', 'Meta Description'),
+			'layout' => Yii::t('maddoger/website', 'Layout'),
+			'created_at' => Yii::t('maddoger/website', 'Create Time'),
+			'created_by_user_id' => Yii::t('maddoger/website', 'Create User ID'),
+			'updated_at' => Yii::t('maddoger/website', 'Update Time'),
+			'updated_by_user_id' => Yii::t('maddoger/website', 'Update User ID'),
 		];
 	}
 
@@ -96,10 +96,10 @@ class Page extends ActiveRecord
 	public static function publishListValues()
 	{
 		return [
-			0 => Yii::t('rusporting/website', 'Unpublished'),
-			1 => Yii::t('rusporting/website', 'Only for administrators'),
-			2 => Yii::t('rusporting/website', 'Only for authorized users'),
-			3 => Yii::t('rusporting/website', 'For all'),
+			0 => Yii::t('maddoger/website', 'Unpublished'),
+			1 => Yii::t('maddoger/website', 'Only for administrators'),
+			2 => Yii::t('maddoger/website', 'Only for authorized users'),
+			3 => Yii::t('maddoger/website', 'For all'),
 		];
 	}
 

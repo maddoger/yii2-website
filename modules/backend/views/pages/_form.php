@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var rusporting\website\models\Page $model
+ * @var maddoger\website\models\Page $model
  * @var yii\widgets\ActiveForm $form
  */
 
@@ -25,25 +25,25 @@ use yii\widgets\ActiveForm;
 	); ?>
 
 		<p>
-			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+			<?= Html::submitButton($model->isNewRecord ? \Yii::t('maddoger/website', 'Create') : \Yii::t('maddoger/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 		</p>
 
 		<ul class="nav nav-tabs">
-			<li class="active"><a href="#common" data-toggle="tab"><?= Yii::t('rusporting/website', 'Common') ?></a></li>
-			<li><a href="#additional" data-toggle="tab"><?= Yii::t('rusporting/website', 'Additional') ?></a></li>
+			<li class="active"><a href="#common" data-toggle="tab"><?= Yii::t('maddoger/website', 'Common') ?></a></li>
+			<li><a href="#additional" data-toggle="tab"><?= Yii::t('maddoger/website', 'Additional') ?></a></li>
 		</ul>
 		<br />
 		<div class="tab-content">
 
 			<div class="tab-pane active" id="common">
 				<?= $form->field($model, 'title')->textInput(['id'=>'page-caption', 'maxlength' => 150])->hint(Yii::t
-					('rusporting/website',
+					('maddoger/website',
 																													  'Page title.')) ?>
 
-				<?= $form->field($model, 'window_title')->textInput(['id'=>'page-title', 'maxlength' => 150])->hint(Yii::t('rusporting/website', 'Window title. May be longer than page title.')) ?>
+				<?= $form->field($model, 'window_title')->textInput(['id'=>'page-title', 'maxlength' => 150])->hint(Yii::t('maddoger/website', 'Window title. May be longer than page title.')) ?>
 
 				<?= $form->field($model, 'slug')->textInput(['id'=>'page-url', 'maxlength' => 150])->
-					hint(Yii::t('rusporting/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl')])); ?>
+					hint(Yii::t('maddoger/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl')])); ?>
 
 				<?php
 
@@ -70,8 +70,8 @@ use yii\widgets\ActiveForm;
 					]
 				];*/
 
-				//echo $form->field($model, 'text')->widget('rusporting\redactor\Widget', $options);
-				echo $form->field($model, 'text')->widget('rusporting\admin\widgets\TextEditor', [
+				//echo $form->field($model, 'text')->widget('maddoger\redactor\Widget', $options);
+				echo $form->field($model, 'text')->widget('maddoger\admin\widgets\TextEditor', [
 					'model' => $model,
 					'attribute' => 'text',
 					'config' => [
@@ -83,24 +83,24 @@ use yii\widgets\ActiveForm;
 			</div>
 
 			<div class="tab-pane" id="additional">
-				<?= $form->field($model, 'published')->dropDownList(\rusporting\website\models\Page::publishListValues()) ?>
+				<?= $form->field($model, 'published')->dropDownList(\maddoger\website\models\Page::publishListValues()) ?>
 
-				<?= $form->field($model, 'meta_keywords')->textarea()->hint(Yii::t('rusporting/website', 'Keywords separated by commas. Example: <code>bread, cookies</code>.')) ?>
+				<?= $form->field($model, 'meta_keywords')->textarea()->hint(Yii::t('maddoger/website', 'Keywords separated by commas. Example: <code>bread, cookies</code>.')) ?>
 
-				<?= $form->field($model, 'meta_description')->textarea()->hint(Yii::t('rusporting/website', 'Short description of page content.')) ?>
+				<?= $form->field($model, 'meta_description')->textarea()->hint(Yii::t('maddoger/website', 'Short description of page content.')) ?>
 
 				<?= $form->field($model, 'locale')->dropDownList(Yii::$app->getModule('website')->getAvailableLocales(),
-					['prompt' => Yii::t('rusporting/website', 'All')])->hint(Yii::t('rusporting/website', 'Language of page.')) ?>
+					['prompt' => Yii::t('maddoger/website', 'All')])->hint(Yii::t('maddoger/website', 'Language of page.')) ?>
 
 				<?= $form->field($model, 'layout')->dropDownList(Yii::$app->getModule('website')->getAvailableLayouts(),
-					['prompt' => Yii::t('rusporting/website', 'Default')])->hint(Yii::t('rusporting/website', 'Layout using for page output.')) ?>
+					['prompt' => Yii::t('maddoger/website', 'Default')])->hint(Yii::t('maddoger/website', 'Layout using for page output.')) ?>
 
 			</div>
 
 		</div>
 
 		<p>
-			<?= Html::submitButton($model->isNewRecord ? \Yii::t('rusporting/website', 'Create') : \Yii::t('rusporting/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+			<?= Html::submitButton($model->isNewRecord ? \Yii::t('maddoger/website', 'Create') : \Yii::t('maddoger/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 		</p>
 
 	<?php ActiveForm::end(); ?>

@@ -1,8 +1,8 @@
 <?php
 
-namespace rusporting\website\models;
+namespace maddoger\website\models;
 
-use rusporting\core\ActiveRecord;
+use maddoger\core\ActiveRecord;
 use Yii;
 
 /**
@@ -35,8 +35,8 @@ class Menu extends ActiveRecord
 	public function behaviors()
 	{
 		return [
-			'timestamp' => ['class' => 'rusporting\core\behaviors\AutoTimestamp'],
-			'user' => ['class' => 'rusporting\core\behaviors\AutoUser'],
+			'timestamp' => ['class' => 'maddoger\core\behaviors\AutoTimestamp'],
+			'user' => ['class' => 'maddoger\core\behaviors\AutoUser'],
 		];
 	}
 
@@ -60,19 +60,19 @@ class Menu extends ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id' => Yii::t('rusporting/website', 'ID'),
-			'parent_id' => Yii::t('rusporting/website', 'Parent ID'),
-			'link' => Yii::t('rusporting/website', 'Link'),
-			'preg' => Yii::t('rusporting/website', 'Preg'),
-			'title' => Yii::t('rusporting/website', 'Title'),
-			'css_class' => Yii::t('rusporting/website', 'CSS Class'),
-			'element_id' => Yii::t('rusporting/website', 'Element ID'),
-			'enabled' => Yii::t('rusporting/website', 'Enabled'),
-			'sort' => Yii::t('rusporting/website', 'Sort'),
-			'created_at' => Yii::t('rusporting/website', 'Create Time'),
-			'created_by_user_id' => Yii::t('rusporting/website', 'Create User ID'),
-			'updated_at' => Yii::t('rusporting/website', 'Update Time'),
-			'updated_by_user_id' => Yii::t('rusporting/website', 'Update User ID'),
+			'id' => Yii::t('maddoger/website', 'ID'),
+			'parent_id' => Yii::t('maddoger/website', 'Parent ID'),
+			'link' => Yii::t('maddoger/website', 'Link'),
+			'preg' => Yii::t('maddoger/website', 'Preg'),
+			'title' => Yii::t('maddoger/website', 'Title'),
+			'css_class' => Yii::t('maddoger/website', 'CSS Class'),
+			'element_id' => Yii::t('maddoger/website', 'Element ID'),
+			'enabled' => Yii::t('maddoger/website', 'Enabled'),
+			'sort' => Yii::t('maddoger/website', 'Sort'),
+			'created_at' => Yii::t('maddoger/website', 'Create Time'),
+			'created_by_user_id' => Yii::t('maddoger/website', 'Create User ID'),
+			'updated_at' => Yii::t('maddoger/website', 'Update Time'),
+			'updated_by_user_id' => Yii::t('maddoger/website', 'Update User ID'),
 		];
 	}
 

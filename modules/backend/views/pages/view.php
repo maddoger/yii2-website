@@ -5,31 +5,31 @@ use yii\widgets\DetailView;
 
 /**
  * @var yii\web\View $this
- * @var rusporting\website\models\Page $model
+ * @var maddoger\website\models\Page $model
  */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('rusporting/website', 'Pages'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('maddoger/website', 'Pages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="page-view">
 
 	<p>
-		<?= Html::a(\Yii::t('rusporting/website', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-		<?php echo Html::a(\Yii::t('rusporting/website', 'Delete'), ['delete', 'id' => $model->id], [
+		<?= Html::a(\Yii::t('maddoger/website', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+		<?php echo Html::a(\Yii::t('maddoger/website', 'Delete'), ['delete', 'id' => $model->id], [
 			'class' => 'btn btn-danger',
-			'data-confirm' => \Yii::t('rusporting/website', 'Are you sure to delete this item?'),
+			'data-confirm' => \Yii::t('maddoger/website', 'Are you sure to delete this item?'),
 			'data-method' => 'post',
 		]); ?>
 	</p>
 
 	<?php
 	/**
-	 * @var $createdUser null|\rusporting\user\models\User
-	 * @var $updatedUser null|\rusporting\user\models\User
+	 * @var $createdUser null|\maddoger\user\models\User
+	 * @var $updatedUser null|\maddoger\user\models\User
 	 */
-	$createdUser = $model->created_by_user_id > 0 ? \rusporting\user\models\User::find($model->created_by_user_id) : null;
-	$updatedUser = $model->updated_by_user_id > 0 ? \rusporting\user\models\User::find($model->updated_by_user_id) : null;
+	$createdUser = $model->created_by_user_id > 0 ? \maddoger\user\models\User::find($model->created_by_user_id) : null;
+	$updatedUser = $model->updated_by_user_id > 0 ? \maddoger\user\models\User::find($model->updated_by_user_id) : null;
 
 		echo DetailView::widget([
 		'model' => $model,
@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value' => '<a target="_blank" href="'.Html::encode(Yii::getAlias('@frontendUrl'.$model->slug)).'">'.Html::encode($model->slug).'</a>',
 			],
 			[
-				'label' => Yii::t('rusporting/website', 'Published'),
+				'label' => Yii::t('maddoger/website', 'Published'),
 				'format' => 'html',
 				'value' => '<span class="label '.
 					($model->published == 0 ? 'label-danger' : ($model->published == 3 ? 'label-success' : 'label-warning')).'">'.
