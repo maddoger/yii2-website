@@ -63,7 +63,7 @@ use yii\widgets\ActiveForm;
 
 						// if you are using CSRF protection – add following:
 						'uploadFields'=>array(
-							Yii::$app->request->csrfVar => Yii::$app->request->getCsrfToken(),
+							Yii::$app->request->csrfParam => Yii::$app->request->getCsrfToken(),
 							//Internal folder for file uploading
 							'folder' => empty($model->slug) ? '/page/'.date('Y/m/d') : '/page'.$model->slug
 						),
