@@ -164,7 +164,7 @@ class WebsiteModule extends Module
 		return [
 			[
 				'label' => Yii::t('maddoger/website', 'Website'), 'fa' => 'book',
-				'roles' => ['menu.read', 'pages.read'],
+				'roles' => ['menu.manage', 'pages.read'],
 				//'url' => 'user/user-backend/index',
 				'items' => [
 					/*['label' => Yii::t('maddoger/website', 'Structure'), 'fa'=>'book',
@@ -172,7 +172,7 @@ class WebsiteModule extends Module
 					['label' => Yii::t('maddoger/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/pages/index'],
 						'activeUrl'=> ['/website/pages/*'], 'roles' => ['pages.read']],
 					['label' => Yii::t('maddoger/website', 'Menu'), 'fa'=>'bars', 'url'=> ['/website/menu/index'],
-						'activeUrl'=> ['/website/menu/*'], 'roles' => ['menu.read'],],
+						'activeUrl'=> ['/website/menu/*'], 'roles' => ['menu.manage'],],
 					['label' => Yii::t('maddoger/website', 'Settings'), 'fa'=>'gear',
 						'url'=> ['/admin/modules/config?module=website&back_url='.urlencode(Yii::$app->request->url)],
 						'activeUrl'=> ['/admin/modules/config?module=website'],
