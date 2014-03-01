@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'title',
 			'window_title',
 			[
-				'name' => 'slug',
+				'attribute' => 'slug',
 				'format' => 'html',
 				'value' => '<a target="_blank" href="'.Html::encode(Yii::getAlias('@frontendUrl'.$model->slug)).'">'.Html::encode($model->slug).'</a>',
 			],
@@ -55,13 +55,13 @@ $this->params['breadcrumbs'][] = $this->title;
 			'layout',
 			'created_at:datetime',
 			[
-				'name' => 'created_by_user_id',
+				'attribute' => 'created_by_user_id',
 				'format' => 'html',
 				'value' => $createdUser ? Html::a($createdUser->username, ['/user/users/view', 'id' => $createdUser->id]) : '-',
 			],
 			'updated_at:datetime',
 			[
-				'name' => 'updated_by_user_id',
+				'attribute' => 'updated_by_user_id',
 				'format' => 'html',
 				'value' => $updatedUser ? Html::a($updatedUser->username, ['/user/users/view', 'id' => $updatedUser->id]) : '-',
 			]
