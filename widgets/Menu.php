@@ -74,7 +74,7 @@ class Menu extends BaseMenu
 			}
 		}
 		if ($this->currentUrl === null) {
-			$this->currentUrl = rtrim(str_replace('?', '/?', Yii::$app->request->url), '/') . '/';
+			$this->currentUrl = rtrim(str_replace('?', '/?', Yii::$app->request->url), '/');
 		}
 		parent::run();
 	}
@@ -171,9 +171,10 @@ class Menu extends BaseMenu
 
 			$preg = '/^'.str_replace('*', '(.*?)',  str_replace('/', '\/', $preg)).'$/is';
 
-			//var_dump($preg);
+			/*var_dump($preg);
+			var_dump($this->currentUrl);*/
 
-			return preg_match($preg, $this->currentUrl);
+			return ( preg_match($preg, $this->currentUrl) || preg_match($preg, $this->currentUrl.'/') );
 		} else {
 			return parent::isItemActive($item);
 		}
