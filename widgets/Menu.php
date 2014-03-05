@@ -162,7 +162,7 @@ class Menu extends BaseMenu
 	{
 		$preg = null;
 		if (isset($item['preg']) && !empty($item['preg'])) {
-			$preg = Html::url( trim($item['preg'], '/') );
+			$preg = $item['preg'];
 		} else {
 			$preg = $item['url'] . ($item['url'] != '/' ? '/*' : '');
 		}
@@ -171,7 +171,7 @@ class Menu extends BaseMenu
 
 			$preg = '/^'.str_replace('*', '(.*?)',  str_replace('/', '\/', $preg)).'$/is';
 
-			//var_dump($preg, $route);
+			//var_dump($preg);
 
 			return preg_match($preg, $this->currentUrl);
 		} else {
