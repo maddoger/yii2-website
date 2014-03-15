@@ -4,6 +4,7 @@ namespace maddoger\website\widgets;
 
 use maddoger\website\models\Menu as MenuModel;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Menu as BaseMenu;
 use Yii;
 
@@ -99,7 +100,7 @@ class Menu extends BaseMenu
 				$item['label'] = $item['title'];
 			}
 			if (isset($item['link'])) {
-				$item['url'] = Html::url( $item['link'] == '/' ? '/' : trim($item['link'], '/') );
+				$item['url'] = Url::to( $item['link'] == '/' ? '/' : trim($item['link'], '/') );
 			}
 			if (isset($item['children']) && (count($item['children'])>0)) {
 				$item['items'] = &$item['children'];
