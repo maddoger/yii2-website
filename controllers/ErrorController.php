@@ -29,7 +29,7 @@ class ErrorController extends FrontendController
 
 	public function run($route, $params=[])
 	{
-		if (($exception = Yii::$app->exception) === null) {
+		if (($exception = Yii::$app->errorHandler->exception) === null) {
 			return '';
 		}
 
@@ -48,7 +48,7 @@ class ErrorController extends FrontendController
 
 	public function actionIndex()
 	{
-		if (($exception = Yii::$app->exception) === null) {
+		if (($exception = Yii::$app->errorHandler->exception) === null) {
 			return '';
 		}
 
