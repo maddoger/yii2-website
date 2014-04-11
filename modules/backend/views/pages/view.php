@@ -28,8 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	 * @var $createdUser null|\maddoger\user\models\User
 	 * @var $updatedUser null|\maddoger\user\models\User
 	 */
-	$createdUser = $model->created_by_user_id > 0 ? \maddoger\user\models\User::find($model->created_by_user_id) : null;
-	$updatedUser = $model->updated_by_user_id > 0 ? \maddoger\user\models\User::find($model->updated_by_user_id) : null;
+	$createdUser = $model->created_by_user_id > 0 ? \maddoger\user\models\User::findOne($model->created_by_user_id) : null;
+	$updatedUser = $model->updated_by_user_id > 0 ? \maddoger\user\models\User::findOne($model->updated_by_user_id) : null;
 
 		echo DetailView::widget([
 		'model' => $model,

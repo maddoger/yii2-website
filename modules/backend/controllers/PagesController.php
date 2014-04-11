@@ -14,7 +14,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
-use yii\web\VerbFilter;
+use yii\filters\VerbFilter;
 use Yii;
 
 /**
@@ -26,7 +26,7 @@ class PagesController extends BackendController
 	{
 		return [
 			'access' => [
-				'class' => 'yii\web\AccessControl',
+				'class' => 'yii\filters\AccessControl',
 				'rules' => [
 					[
 						'actions' => ['index', 'view'],
@@ -188,7 +188,7 @@ class PagesController extends BackendController
 	 */
 	protected function findModel($id)
 	{
-		if (($model = Page::find($id)) !== null) {
+		if (($model = Page::findOne($id)) !== null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException(\Yii::t('maddoger/website', 'The requested page does not exist.'));

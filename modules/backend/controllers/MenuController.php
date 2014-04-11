@@ -5,7 +5,7 @@ namespace maddoger\website\modules\backend\controllers;
 use maddoger\website\models\Menu;
 use maddoger\core\BackendController;
 use yii\db\Exception;
-use yii\web\VerbFilter;
+use yii\filters\VerbFilter;
 use Yii;
 
 /**
@@ -17,7 +17,7 @@ class MenuController extends BackendController
 	{
 		return [
 			'access' => [
-				'class' => 'yii\web\AccessControl',
+				'class' => 'yii\filters\AccessControl',
 				'rules' => [
 					[
 						'allow' => true,
@@ -88,7 +88,7 @@ class MenuController extends BackendController
 						$array['id'] = $model->id;
 					} else {
 						//Заменяем
-						$model = Menu::find($array['id']);
+						$model = Menu::findOne($array['id']);
 						$model->setAttributes($array, false);
 						if (!$model->save()) {
 							throw new Exception('Saving error');

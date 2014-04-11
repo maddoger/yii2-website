@@ -90,7 +90,7 @@ class Page extends ActiveRecord
 	 */
 	public static function findBySlug($slug)
 	{
-		return static::find(['slug' => $slug]);
+		return static::findOne(['slug' => $slug]);
 	}
 
 	public static function publishListValues()
