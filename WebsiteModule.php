@@ -136,17 +136,17 @@ class WebsiteModule extends Module
 	public function getRbacRoles()
 	{
 		return [
-			'page.create' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Create new pages')],
-			'page.read' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'View pages')],
-			'page.update' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Update pages')],
-			'page.delete' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Delete pages')],
+			'page.create' => ['type'=>Item::TYPE_PERMISSION, 'description' => Yii::t('maddoger/website', 'Create new pages')],
+			'page.read' => ['type'=>Item::TYPE_PERMISSION, 'description' => Yii::t('maddoger/website', 'View pages')],
+			'page.update' => ['type'=>Item::TYPE_PERMISSION, 'description' => Yii::t('maddoger/website', 'Update pages')],
+			'page.delete' => ['type'=>Item::TYPE_PERMISSION, 'description' => Yii::t('maddoger/website', 'Delete pages')],
 			'page.manager' => [
 				'type' => Item::TYPE_ROLE,
 				'description' => Yii::t('maddoger/website', 'Pages manager'),
 				'children' => [ 'page.create','page.read','page.update','page.delete' ]
 			],
 
-			'menu.manage' => ['type'=>Item::TYPE_OPERATION, 'description' => Yii::t('maddoger/website', 'Manage menu')],
+			'menu.manage' => ['type'=>Item::TYPE_PERMISSION, 'description' => Yii::t('maddoger/website', 'Manage menu')],
 			'menu.manager' => [
 				'type' => Item::TYPE_ROLE,
 				'description' => Yii::t('maddoger/website', 'Menu manager'),
