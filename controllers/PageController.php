@@ -29,7 +29,7 @@ class PageController extends FrontendController
 				throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
 				break;
 			case 1: //Admin only
-				if (!Yii::$app->user->checkAccess('page.read')) {
+				if (!Yii::$app->user->can('page.read')) {
 					throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
 				}
 				break;
@@ -62,7 +62,7 @@ class PageController extends FrontendController
 			$layoutFile = $this->findLayoutFile($this->getView());
 		}
 
-		$isAdmin = !Yii::$app->user->isGuest && Yii::$app->user->checkAccess('pages.update');
+		$isAdmin = !Yii::$app->user->isGuest && Yii::$app->user->can('pages.update');
 		$content = ($isAdmin) ?
 			Html::a(\Yii::t('maddoger/website', 'Edit'), ['/administrator/website/pages/update', 'id' => $page->id], ['class' => 'btn-edit']) . $page->text :
 			$page->text;
