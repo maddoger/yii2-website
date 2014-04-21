@@ -77,7 +77,7 @@ class Menu extends ActiveRecord
 	}
 
 	/**
-	 * @return \yii\db\ActiveRelation
+	 * @return \yii\db\ActiveQuery
 	 */
 	public function getParent()
 	{
@@ -85,7 +85,7 @@ class Menu extends ActiveRecord
 	}
 
 	/**
-	 * @return \yii\db\ActiveRelation
+	 * @return \yii\db\ActiveQuery
 	 */
 	public function getChildren()
 	{
