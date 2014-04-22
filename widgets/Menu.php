@@ -106,10 +106,10 @@ class Menu extends BaseMenu
 				$item['items'] = &$item['children'];
 			}
 			if (!isset($item['options'])) $item['options'] = [];
-			if (isset($item['css_class'])) {
+			if (isset($item['css_class']) && !empty($item['css_class'])) {
 				$item['options']['class'] = $item['css_class'];
 			}
-			if (isset($item['element_id'])) {
+			if (isset($item['element_id']) && !empty($item['element_id'])) {
 				$item['options']['id'] = $item['element_id'];
 			}
 			$items[$i] = $item;
