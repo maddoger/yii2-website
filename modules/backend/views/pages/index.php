@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 			[
 				'value' => function ($model, $index, $widget){
-						return '<a target="_blank" href="'.Html::encode(Yii::getAlias('@frontendUrl'.$model->slug)).'">'.Html::encode($model->slug).'</a>';
+						return '<a target="_blank" href="'.Html::encode($model->slug).'">'.Html::encode($model->slug).'</a>';
 					},
 				'format' => 'html',
 				'attribute' => 'slug',

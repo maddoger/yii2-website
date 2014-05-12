@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'slug',
 				'format' => 'html',
-				'value' => '<a target="_blank" href="'.Html::encode(Yii::getAlias('@frontendUrl'.$model->slug)).'">'.Html::encode($model->slug).'</a>',
+				'value' => '<a target="_blank" href="'.Html::encode($model->slug).'">'.Html::encode($model->slug).'</a>',
 			],
 			[
 				'label' => Yii::t('maddoger/website', 'Published'),
