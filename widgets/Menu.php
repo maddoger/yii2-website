@@ -100,7 +100,7 @@ class Menu extends BaseMenu
                 $item['label'] = $item['title'];
             }
             if (isset($item['link'])) {
-                $item['url'] = Url::to( $item['link'] == '/' ? '/' : trim($item['link'], '/') );
+                $item['url'] = Url::to( $item['link'] == '/' ? '/' : rtrim($item['link'], '/') );
             }
             if (isset($item['children']) && (count($item['children'])>0)) {
                 $item['items'] = &$item['children'];
