@@ -169,13 +169,12 @@ class WebsiteModule extends Module
 				'items' => [
 					/*['label' => Yii::t('maddoger/website', 'Structure'), 'fa'=>'book',
 						'url'=> ['/website/structure/index'], 'activeUrl'=> ['/website/structure/*']],*/
-					['label' => Yii::t('maddoger/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/pages/index'],
+					['label' => Yii::t('maddoger/website', 'Pages'), 'fa'=>'book', 'url'=> ['/website/backend/pages/index'],
 						'activeUrl'=> ['/website/pages/*'], 'roles' => ['pages.read']],
-					['label' => Yii::t('maddoger/website', 'Menu'), 'fa'=>'bars', 'url'=> ['/website/menu/index'],
+					['label' => Yii::t('maddoger/website', 'Menu'), 'fa'=>'bars', 'url'=> ['/website/backend/menu/index'],
 						'activeUrl'=> ['/website/menu/*'], 'roles' => ['menu.manage'],],
 					['label' => Yii::t('maddoger/website', 'Settings'), 'fa'=>'gear',
-						'url'=> ['/admin/modules/config?module=website&back_url='.urlencode(Yii::$app->request->url)],
-						'activeUrl'=> ['/admin/modules/config?module=website'],
+						'url'=> ['/admin/backend/modules/config', 'module' => 'website', 'back_url' => Yii::$app->request->url],
 						'roles' => ['admin.modulesConfiguration'],
 					],
 				],
