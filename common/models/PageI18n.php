@@ -15,6 +15,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $title
  * @property string $window_title
  * @property string $text
+ * @property string $text_format
  * @property string $meta_keywords
  * @property string $meta_description
  * @property integer $created_at
@@ -48,12 +49,26 @@ class PageI18n extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function formName()
+    {
+        $name = parent::formName();
+        if ($this->language) {
+            $name .= '_'.$this->language;
+        }
+        return $name;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['page_id', 'language', 'title'], 'required'],
+            [['page_id', 'language', 'title', 'text'], 'required'],
             [['page_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['text'], 'string'],
+            [['text_format'], 'string', 'max' => 10],
             [['language'], 'string', 'max' => 10],
             [['title', 'window_title'], 'string', 'max' => 150],
             [['meta_keywords', 'meta_description'], 'string', 'max' => 255],
@@ -61,7 +76,7 @@ class PageI18n extends \yii\db\ActiveRecord
                 ['page_id', 'language'],
                 'unique',
                 'targetAttribute' => ['page_id', 'language'],
-                'message' => 'The combination of Page ID and Language has already been taken.'
+                'message' => 'The combination of Page and Language has already been taken.'
             ]
         ];
     }
@@ -76,10 +91,11 @@ class PageI18n extends \yii\db\ActiveRecord
             'page_id' => Yii::t('maddoger/website', 'Page ID'),
             'language' => Yii::t('maddoger/website', 'Language'),
             'title' => Yii::t('maddoger/website', 'Title'),
-            'window_title' => Yii::t('maddoger/website', 'Window Title'),
+            'window_title' => Yii::t('maddoger/website', 'SEO: Title'),
             'text' => Yii::t('maddoger/website', 'Text'),
-            'meta_keywords' => Yii::t('maddoger/website', 'Meta Keywords'),
-            'meta_description' => Yii::t('maddoger/website', 'Meta Description'),
+            'text_format' => Yii::t('maddoger/website', 'Text format'),
+            'meta_keywords' => Yii::t('maddoger/website', 'SEO: Keywords'),
+            'meta_description' => Yii::t('maddoger/website', 'SEO: Description'),
             'created_at' => Yii::t('maddoger/website', 'Created At'),
             'created_by' => Yii::t('maddoger/website', 'Created By'),
             'updated_at' => Yii::t('maddoger/website', 'Updated At'),

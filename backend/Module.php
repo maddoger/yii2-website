@@ -20,6 +20,21 @@ use yii\rbac\Item;
 class Module extends BackendModule
 {
     /**
+     * @var string page model class
+     */
+    public $pageModelClass = 'maddoger\website\common\models\Page';
+
+    /**
+     * @var array available layouts for pages
+     */
+    public $layouts;
+
+    /**
+     * @var string default text format
+     */
+    public $defaultTextFormat;
+
+    /**
      * Init module
      */
     public function init()

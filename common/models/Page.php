@@ -10,6 +10,12 @@ use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "{{%website_page}}".
  *
+ * @method setLanguage($value)
+ * @method string getLanguage()
+ * @method setTranslationAttribute($attribute, $value)
+ * @method mixed getTranslationAttribute($attribute)
+ * @method PageI18n getTranslation($language=null)
+ *
  * @property integer $id
  * @property string $slug
  * @property integer $status
@@ -28,11 +34,17 @@ use yii\behaviors\TimestampBehavior;
  * @property string $meta_keywords
  * @property string $meta_description
  *
- * @property Menu[] $Menus
- * @property PageI18n[] $PageI18ns
+ * @property Menu[] $menus
+ * @property PageI18n[] $translations
+ * @property array availableLanguages
  */
 class Page extends \yii\db\ActiveRecord
 {
+    const STATUS_DRAFT = 0;
+    const STATUS_HIDDEN = 1;
+    const STATUS_AUTH_ONLY = 3;
+    const STATUS_ACTIVE = 10;
+
     /**
      * @inheritdoc
      */
@@ -49,6 +61,7 @@ class Page extends \yii\db\ActiveRecord
         return [
             'i18n' => [
                 'class' => TranslatableBehavior::className(),
+                'defaultLanguageAttribute' => 'default_language',
                 'translationAttributes' => [
                     'title', 'window_title', 'text', 'meta_keywords', 'meta_description',
                 ],
@@ -68,7 +81,13 @@ class Page extends \yii\db\ActiveRecord
             [['status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['slug'], 'string', 'max' => 150],
             [['layout'], 'string', 'max' => 50],
-            [['default_language'], 'string', 'max' => 10]
+            [['default_language'], 'string', 'max' => 10],
+
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_DRAFT, self::STATUS_HIDDEN, self::STATUS_AUTH_ONLY, self::STATUS_ACTIVE]],
+
+            [['layout', 'default_language'], 'default', 'value' => null],
+
         ];
     }
 
@@ -91,7 +110,7 @@ class Page extends \yii\db\ActiveRecord
             //I18N
             'language' => Yii::t('maddoger/website', 'Language'),
             'title' => Yii::t('maddoger/website', 'Title'),
-            'window_title' => Yii::t('maddoger/website', 'Window Title'),
+            'window_title' => Yii::t('maddoger/website', 'Window title'),
             'text' => Yii::t('maddoger/website', 'Text'),
             'meta_keywords' => Yii::t('maddoger/website', 'Meta Keywords'),
             'meta_description' => Yii::t('maddoger/website', 'Meta Description'),
@@ -112,5 +131,41 @@ class Page extends \yii\db\ActiveRecord
     public function getTranslations()
     {
         return $this->hasMany(PageI18n::className(), ['page_id' => 'id']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAvailableTranslations()
+    {
+        return $this->getTranslations()->select(['language'])->distinct()->orderBy(['language' => SORT_ASC])->column();
+    }
+
+
+    /**
+     * Status sting representation
+     * @return string
+     */
+    public function getStatusDescription()
+    {
+        static $list = null;
+        if ($list === null) {
+            $list = static::getStatusList();
+        }
+        return (isset($list[$this->status])) ? $list[$this->status] : $this->status;
+    }
+
+    /**
+     * List of all possible statuses
+     * @return array
+     */
+    public static function getStatusList()
+    {
+        return [
+            self::STATUS_DRAFT => Yii::t('maddoger/website', 'Draft'),
+            self::STATUS_HIDDEN => Yii::t('maddoger/website', 'Hidden'),
+            self::STATUS_AUTH_ONLY => Yii::t('maddoger/website', 'Auth users only'),
+            self::STATUS_ACTIVE => Yii::t('maddoger/website', 'Active'),
+        ];
     }
 }
