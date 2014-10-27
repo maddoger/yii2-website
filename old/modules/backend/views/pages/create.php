@@ -1,7 +1,5 @@
 <?php
 
-use yii\helpers\Html;
-
 /**
  * @var yii\web\View $this
  * @var maddoger\website\models\Page $model
@@ -12,8 +10,8 @@ $this->params['breadcrumbs'][] = ['label' => \Yii::t('maddoger/website', 'Pages'
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="page-create">
-	<?php echo $this->render('_form', [
-		'model' => $model,
-	]); ?>
+    <?php echo $this->render('_form', [
+        'model' => $model,
+    ]); ?>
 
 </div>

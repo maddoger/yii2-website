@@ -1,7 +1,7 @@
 <?php
 
-use yii\db\Schema;
 use yii\db\Migration;
+use yii\db\Schema;
 
 class m141025_224648_website_menu extends Migration
 {
@@ -16,29 +16,27 @@ class m141025_224648_website_menu extends Migration
         $this->createTable('{{%website_menu}}', [
             'id' => Schema::TYPE_PK,
             'parent_id' => Schema::TYPE_INTEGER,
-            'title' => Schema::TYPE_STRING.'(150) NOT NULL',
-            'link' => Schema::TYPE_STRING.'(150)',
-            'preg' => Schema::TYPE_STRING.'(150)',
-            'target' => Schema::TYPE_STRING.'(50)',
-            'css_class' => Schema::TYPE_STRING.'(50)',
-            'element_id' => Schema::TYPE_STRING.'(50)',
-            'enabled' => Schema::TYPE_BOOLEAN.' NOT NULL DEFAULT TRUE',
-            'sort' => Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0',
-
+            'title' => Schema::TYPE_STRING . '(150) NOT NULL',
+            'link' => Schema::TYPE_STRING . '(150)',
+            'preg' => Schema::TYPE_STRING . '(150)',
+            'target' => Schema::TYPE_STRING . '(50)',
+            'css_class' => Schema::TYPE_STRING . '(50)',
+            'element_id' => Schema::TYPE_STRING . '(50)',
+            'enabled' => Schema::TYPE_BOOLEAN . ' NOT NULL DEFAULT TRUE',
+            'sort' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
             'page_id' => Schema::TYPE_INTEGER,
-
             'created_at' => Schema::TYPE_INTEGER,
             'created_by' => Schema::TYPE_INTEGER,
             'updated_at' => Schema::TYPE_INTEGER,
             'updated_by' => Schema::TYPE_INTEGER,
         ], $tableOptions);
 
-        $this->addForeignKey($this->db->tablePrefix.'website_menu_parent_fk',
+        $this->addForeignKey($this->db->tablePrefix . 'website_menu_parent_fk',
             '{{%website_menu}}', 'parent_id',
             '{{%website_menu}}', 'id',
             'CASCADE', 'CASCADE');
 
-        $this->addForeignKey($this->db->tablePrefix.'website_menu_page_fk',
+        $this->addForeignKey($this->db->tablePrefix . 'website_menu_page_fk',
             '{{%website_menu}}', 'page_id',
             '{{%website_page}}', 'id',
             'CASCADE', 'CASCADE');
@@ -46,8 +44,8 @@ class m141025_224648_website_menu extends Migration
 
     public function safeDown()
     {
-        $this->dropForeignKey($this->db->tablePrefix.'website_menu_parent_fk', '{{%website_menu}}');
-        $this->dropForeignKey($this->db->tablePrefix.'website_menu_page_fk', '{{%website_menu}}');
+        $this->dropForeignKey($this->db->tablePrefix . 'website_menu_parent_fk', '{{%website_menu}}');
+        $this->dropForeignKey($this->db->tablePrefix . 'website_menu_page_fk', '{{%website_menu}}');
         $this->dropTable('{{%website_menu}}');
     }
 }

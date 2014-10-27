@@ -11,105 +11,120 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<div class="page-form">
+    <div class="page-form">
 
-	<?php $form = ActiveForm::begin(
-		[
-			'options' => array('class' => 'form-horizontal'),
-			'fieldConfig' => array(
-				'labelOptions' => ['class' => 'control-label col-lg-2'],
-				'template' => "{label}\n<div class=\"col-lg-10\">{input}\n{error}\n{hint}</div>",
-				'hintOptions' => ['class' => 'hint-block text-muted small'],
-			),
-		]
-	); ?>
+        <?php $form = ActiveForm::begin(
+            [
+                'options' => array('class' => 'form-horizontal'),
+                'fieldConfig' => array(
+                    'labelOptions' => ['class' => 'control-label col-lg-2'],
+                    'template' => "{label}\n<div class=\"col-lg-10\">{input}\n{error}\n{hint}</div>",
+                    'hintOptions' => ['class' => 'hint-block text-muted small'],
+                ),
+            ]
+        ); ?>
 
-		<p>
-			<?= Html::submitButton($model->isNewRecord ? \Yii::t('maddoger/website', 'Create') : \Yii::t('maddoger/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-		</p>
+        <p>
+            <?= Html::submitButton($model->isNewRecord ? \Yii::t('maddoger/website',
+                    'Create') : \Yii::t('maddoger/website', 'Save'),
+                ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </p>
 
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#common" data-toggle="tab"><?= Yii::t('maddoger/website', 'Common') ?></a></li>
-			<li><a href="#additional" data-toggle="tab"><?= Yii::t('maddoger/website', 'Additional') ?></a></li>
-		</ul>
-		<br />
-		<div class="tab-content">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#common" data-toggle="tab"><?= Yii::t('maddoger/website', 'Common') ?></a></li>
+            <li><a href="#additional" data-toggle="tab"><?= Yii::t('maddoger/website', 'Additional') ?></a></li>
+        </ul>
+        <br/>
 
-			<div class="tab-pane active" id="common">
-				<?= $form->field($model, 'title')->textInput(['id'=>'page-caption', 'maxlength' => 150])->hint(Yii::t
-					('maddoger/website',
-																													  'Page title.')) ?>
+        <div class="tab-content">
 
-				<?= $form->field($model, 'window_title')->textInput(['id'=>'page-title', 'maxlength' => 150])->hint(Yii::t('maddoger/website', 'Window title. May be longer than page title.')) ?>
+            <div class="tab-pane active" id="common">
+                <?= $form->field($model, 'title')->textInput(['id' => 'page-caption', 'maxlength' => 150])->hint(Yii::t
+                ('maddoger/website',
+                    'Page title.')) ?>
 
-				<?= $form->field($model, 'slug')->textInput(['id'=>'page-url', 'maxlength' => 150])->
-					hint(Yii::t('maddoger/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.', ['domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl')])); ?>
+                <?= $form->field($model, 'window_title')->textInput([
+                        'id' => 'page-title',
+                        'maxlength' => 150
+                    ])->hint(Yii::t('maddoger/website', 'Window title. May be longer than page title.')) ?>
 
-				<?php
+                <?= $form->field($model, 'slug')->textInput(['id' => 'page-url', 'maxlength' => 150])->
+                hint(Yii::t('maddoger/website',
+                        'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/index</code>.',
+                        ['domain' => Yii::$app->request->hostInfo . Yii::getAlias('@frontendUrl')])); ?>
 
-				/*$options = [
-					// You can either use it for model attribute
-					'model' => $model,
-					'attribute' => 'text',
-					// Some options, see http://imperavi.com/redactor/docs/
-					'options' => [
-						'lang' => Yii::$app->language,
-						'convertDivs' => false,
-						'minHeight' => '100',
-						'imageUpload' => Yii::$app->urlManager->createUrl('/admin/files/image-upload'),
-						'clipboardUploadUrl' => Yii::$app->urlManager->createUrl('admin/files/clipboard-upload'),
-						'fileUpload' => Yii::$app->urlManager->createUrl('/admin/files/file-upload'),
-						'imageUploadErrorCallback' => 'function(json) { alert(json.error); }',
+                <?php
 
-						// if you are using CSRF protection – add following:
-						'uploadFields'=>array(
-							Yii::$app->request->csrfParam => Yii::$app->request->getCsrfToken(),
-							//Internal folder for file uploading
-							'folder' => empty($model->slug) ? '/page/'.date('Y/m/d') : '/page'.$model->slug
-						),
-					]
-				];*/
+                /*$options = [
+                    // You can either use it for model attribute
+                    'model' => $model,
+                    'attribute' => 'text',
+                    // Some options, see http://imperavi.com/redactor/docs/
+                    'options' => [
+                        'lang' => Yii::$app->language,
+                        'convertDivs' => false,
+                        'minHeight' => '100',
+                        'imageUpload' => Yii::$app->urlManager->createUrl('/admin/files/image-upload'),
+                        'clipboardUploadUrl' => Yii::$app->urlManager->createUrl('admin/files/clipboard-upload'),
+                        'fileUpload' => Yii::$app->urlManager->createUrl('/admin/files/file-upload'),
+                        'imageUploadErrorCallback' => 'function(json) { alert(json.error); }',
 
-				//echo $form->field($model, 'text')->widget('maddoger\redactor\Widget', $options);
-				echo $form->field($model, 'text')->widget('maddoger\admin\widgets\TextEditor', [
-					'model' => $model,
-					'attribute' => 'text',
-					'config' => [
-						'rows' => 100,
-					]
-				]);
-				//echo $form->field($model, 'text')->textarea(['rows' => 6]);
-				?>
-			</div>
+                        // if you are using CSRF protection – add following:
+                        'uploadFields'=>array(
+                            Yii::$app->request->csrfParam => Yii::$app->request->getCsrfToken(),
+                            //Internal folder for file uploading
+                            'folder' => empty($model->slug) ? '/page/'.date('Y/m/d') : '/page'.$model->slug
+                        ),
+                    ]
+                ];*/
 
-			<div class="tab-pane" id="additional">
-				<?= $form->field($model, 'published')->dropDownList(\maddoger\website\models\Page::publishListValues()) ?>
+                //echo $form->field($model, 'text')->widget('maddoger\redactor\Widget', $options);
+                echo $form->field($model, 'text')->widget('maddoger\admin\widgets\TextEditor', [
+                    'model' => $model,
+                    'attribute' => 'text',
+                    'config' => [
+                        'rows' => 100,
+                    ]
+                ]);
+                //echo $form->field($model, 'text')->textarea(['rows' => 6]);
+                ?>
+            </div>
 
-				<?= $form->field($model, 'meta_keywords')->textarea()->hint(Yii::t('maddoger/website', 'Keywords separated by commas. Example: <code>bread, cookies</code>.')) ?>
+            <div class="tab-pane" id="additional">
+                <?= $form->field($model,
+                    'published')->dropDownList(\maddoger\website\models\Page::publishListValues()) ?>
 
-				<?= $form->field($model, 'meta_description')->textarea()->hint(Yii::t('maddoger/website', 'Short description of page content.')) ?>
+                <?= $form->field($model, 'meta_keywords')->textarea()->hint(Yii::t('maddoger/website',
+                        'Keywords separated by commas. Example: <code>bread, cookies</code>.')) ?>
 
-				<?= $form->field($model, 'locale')->dropDownList(Yii::$app->getModule('website')->getAvailableLocales(),
-					['prompt' => Yii::t('maddoger/website', 'All')])->hint(Yii::t('maddoger/website', 'Language of page.')) ?>
+                <?= $form->field($model, 'meta_description')->textarea()->hint(Yii::t('maddoger/website',
+                        'Short description of page content.')) ?>
 
-				<?= $form->field($model, 'layout')->dropDownList(Yii::$app->getModule('website')->getAvailableLayouts(),
-					['prompt' => Yii::t('maddoger/website', 'Default')])->hint(Yii::t('maddoger/website', 'Layout using for page output.')) ?>
+                <?= $form->field($model, 'locale')->dropDownList(Yii::$app->getModule('website')->getAvailableLocales(),
+                    ['prompt' => Yii::t('maddoger/website', 'All')])->hint(Yii::t('maddoger/website',
+                        'Language of page.')) ?>
 
-			</div>
+                <?= $form->field($model, 'layout')->dropDownList(Yii::$app->getModule('website')->getAvailableLayouts(),
+                    ['prompt' => Yii::t('maddoger/website', 'Default')])->hint(Yii::t('maddoger/website',
+                        'Layout using for page output.')) ?>
 
-		</div>
+            </div>
 
-		<p>
-			<?= Html::submitButton($model->isNewRecord ? \Yii::t('maddoger/website', 'Create') : \Yii::t('maddoger/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-		</p>
+        </div>
 
-	<?php ActiveForm::end(); ?>
+        <p>
+            <?= Html::submitButton($model->isNewRecord ? \Yii::t('maddoger/website',
+                    'Create') : \Yii::t('maddoger/website', 'Save'),
+                ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </p>
 
-</div>
+        <?php ActiveForm::end(); ?>
+
+    </div>
 <?php
 
 $this->registerJs(
-	 <<<HERE
+    <<<HERE
 		/* Транслит */
 
 	var translitArray = {

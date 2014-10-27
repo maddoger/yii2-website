@@ -2,9 +2,7 @@
 
 use maddoger\website\common\models\Page;
 use maddoger\website\frontend\Module as FrontendModule;
-use maddoger\website\backend\Module as BackendModule;
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model maddoger\website\common\models\Page */
@@ -28,18 +26,23 @@ $activeLanguage = $model->default_language ?: $availableLanguages[0];
                 <?= $model->getAttributeLabel('updated_at'), ': ', Yii::$app->formatter->asDatetime($model->updated_at) ?>
             </div>
 
-            <?= Html::a(Yii::t('maddoger/website', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?> &nbsp;
+            <?= Html::a(Yii::t('maddoger/website', 'Update'), ['update', 'id' => $model->id],
+                ['class' => 'btn btn-primary']) ?> &nbsp;
 
             <div class="btn-group">
-                <button type="button" class="btn btn-<?= $model->status == Page::STATUS_ACTIVE ? 'success' : 'warning' ?> dropdown-toggle" data-toggle="dropdown">
-                    <?= Yii::t('maddoger/website', 'Status').': '. $model->getStatusDescription() ?> <span class="caret"></span>
+                <button type="button"
+                        class="btn btn-<?= $model->status == Page::STATUS_ACTIVE ? 'success' : 'warning' ?> dropdown-toggle"
+                        data-toggle="dropdown">
+                    <?= Yii::t('maddoger/website', 'Status') . ': ' . $model->getStatusDescription() ?> <span
+                        class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <?php foreach ($model->getStatusList() as $key=>$desc) {
+                    <?php foreach ($model->getStatusList() as $key => $desc) {
                         echo Html::tag('li', Html::a($desc, ['status', 'id' => $model->id, 'status' => $key]));
                     } ?>
                 </ul>
-            </div> &nbsp;
+            </div>
+            &nbsp;
 
             <?= Html::a(Yii::t('maddoger/website', 'Delete'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',

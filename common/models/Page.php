@@ -15,7 +15,7 @@ use yii\helpers\Markdown;
  * @method string getLanguage()
  * @method setTranslationAttribute($attribute, $value)
  * @method mixed getTranslationAttribute($attribute)
- * @method PageI18n getTranslation($language=null)
+ * @method PageI18n getTranslation($language = null)
  *
  * @property integer $id
  * @property string $slug
@@ -65,7 +65,12 @@ class Page extends \yii\db\ActiveRecord
                 'class' => TranslatableBehavior::className(),
                 'defaultLanguageAttribute' => 'default_language',
                 'translationAttributes' => [
-                    'title', 'window_title', 'text_format', 'text', 'meta_keywords', 'meta_description',
+                    'title',
+                    'window_title',
+                    'text_format',
+                    'text',
+                    'meta_keywords',
+                    'meta_description',
                 ],
             ],
             TimestampBehavior::className(),
@@ -84,10 +89,12 @@ class Page extends \yii\db\ActiveRecord
             [['slug'], 'string', 'max' => 150],
             [['layout'], 'string', 'max' => 50],
             [['default_language'], 'string', 'max' => 10],
-
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_DRAFT, self::STATUS_HIDDEN, self::STATUS_AUTH_ONLY, self::STATUS_ACTIVE]],
-
+            [
+                'status',
+                'in',
+                'range' => [self::STATUS_DRAFT, self::STATUS_HIDDEN, self::STATUS_AUTH_ONLY, self::STATUS_ACTIVE]
+            ],
             [['layout', 'default_language'], 'default', 'value' => null],
 
         ];
@@ -108,7 +115,6 @@ class Page extends \yii\db\ActiveRecord
             'created_by' => Yii::t('maddoger/website', 'Created By'),
             'updated_at' => Yii::t('maddoger/website', 'Updated At'),
             'updated_by' => Yii::t('maddoger/website', 'Updated By'),
-
             //I18N
             'title' => Yii::t('maddoger/website', 'Title'),
             'window_title' => Yii::t('maddoger/website', 'SEO: Title'),
@@ -143,21 +149,22 @@ class Page extends \yii\db\ActiveRecord
         return $this->getTranslations()->select(['language'])->distinct()->orderBy(['language' => SORT_ASC])->column();
     }
 
-    public function getFormattedText($format=null)
+    public function getFormattedText($format = null)
     {
         if (!$format) {
             $format = $this->text_format;
         }
+        $text = trim($this->text);
         switch ($format) {
             case 'html':
-                return Yii::$app->formatter->asHtml($this->text);
+                return Yii::$app->formatter->asHtml($text);
             case 'text':
-                return Yii::$app->formatter->asNtext($this->text);
+                return Yii::$app->formatter->asNtext($text);
             case 'md':
-                return Markdown::process($this->text, 'extra');
+                return Markdown::process($text, 'extra');
 
             default:
-                return $this->text;
+                return $text;
         }
     }
 
@@ -186,5 +193,19 @@ class Page extends \yii\db\ActiveRecord
             self::STATUS_AUTH_ONLY => Yii::t('maddoger/website', 'Auth users only'),
             self::STATUS_ACTIVE => Yii::t('maddoger/website', 'Active'),
         ];
+    }
+
+    /**
+     * @param $slug
+     * @return null|Page
+     */
+    public static function findBySlug($slug)
+    {
+        $slug = trim($slug, '/\\');
+        $query = static::find();
+        $query->with(['translations']);
+        $query->andWhere(['or', ['slug' => $slug], ['slug' => '/' . $slug]]);
+        $query->limit(1);
+        return $query->one();
     }
 }

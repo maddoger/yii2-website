@@ -4,85 +4,85 @@ namespace maddoger\website\controllers;
 
 use maddoger\core\FrontendController;
 use Yii;
-use yii\web\HttpException;
 use yii\base\Exception;
 use yii\base\UserException;
+use yii\web\HttpException;
 
 class ErrorController extends FrontendController
 {
-	/**
-	 * @var string the view file to be rendered. If not set, it will take the value of [[id]].
-	 * That means, if you name the action as "error" in "SiteController", then the view name
-	 * would be "error", and the corresponding view file would be "views/site/error.php".
-	 */
-	public $view = 'index';
-	/**
-	 * @var string the name of the error when the exception name cannot be determined.
-	 * Defaults to "Error".
-	 */
-	public $defaultName;
-	/**
-	 * @var string the message to be displayed when the exception message contains sensitive information.
-	 * Defaults to "An internal server error occurred.".
-	 */
-	public $defaultMessage;
+    /**
+     * @var string the view file to be rendered. If not set, it will take the value of [[id]].
+     * That means, if you name the action as "error" in "SiteController", then the view name
+     * would be "error", and the corresponding view file would be "views/site/error.php".
+     */
+    public $view = 'index';
+    /**
+     * @var string the name of the error when the exception name cannot be determined.
+     * Defaults to "Error".
+     */
+    public $defaultName;
+    /**
+     * @var string the message to be displayed when the exception message contains sensitive information.
+     * Defaults to "An internal server error occurred.".
+     */
+    public $defaultMessage;
 
-	public function run($route, $params=[])
-	{
-		if (($exception = Yii::$app->errorHandler->exception) === null) {
-			return '';
-		}
+    public function run($route, $params = [])
+    {
+        if (($exception = Yii::$app->errorHandler->exception) === null) {
+            return '';
+        }
 
-		if ($exception instanceof HttpException) {
-			$code = $exception->statusCode;
-		} else {
-			$code = $exception->getCode();
-		}
+        if ($exception instanceof HttpException) {
+            $code = $exception->statusCode;
+        } else {
+            $code = $exception->getCode();
+        }
 
-		$action = $this->createAction($code);
-		if ($action !== null) {
-			$route = $code;
-		}
-		return parent::run($route, $params);
-	}
+        $action = $this->createAction($code);
+        if ($action !== null) {
+            $route = $code;
+        }
+        return parent::run($route, $params);
+    }
 
-	public function actionIndex()
-	{
-		if (($exception = Yii::$app->errorHandler->exception) === null) {
-			return '';
-		}
+    public function actionIndex()
+    {
+        if (($exception = Yii::$app->errorHandler->exception) === null) {
+            return '';
+        }
 
-		if ($exception instanceof HttpException) {
-			$code = $exception->statusCode;
-		} else {
-			$code = $exception->getCode();
-		}
-		if ($exception instanceof Exception) {
-			$name = $exception->getName();
-		} else {
-			$name = $this->defaultName ?: Yii::t('maddoger/website', 'Error');
-		}
+        if ($exception instanceof HttpException) {
+            $code = $exception->statusCode;
+        } else {
+            $code = $exception->getCode();
+        }
+        if ($exception instanceof Exception) {
+            $name = $exception->getName();
+        } else {
+            $name = $this->defaultName ?: Yii::t('maddoger/website', 'Error');
+        }
 
-		if ($exception instanceof UserException) {
-			$message = $exception->getMessage();
-		} else {
-			$message = $this->defaultMessage ?: Yii::t('maddoger/website', 'An internal server error occurred.');
-		}
+        if ($exception instanceof UserException) {
+            $message = $exception->getMessage();
+        } else {
+            $message = $this->defaultMessage ?: Yii::t('maddoger/website', 'An internal server error occurred.');
+        }
 
-		//$this->title = $name . ' #' . $code;
-		$this->windowTitle = $name . ' #' . $code;
+        //$this->title = $name . ' #' . $code;
+        $this->windowTitle = $name . ' #' . $code;
 
 
-		if (Yii::$app->getRequest()->getIsAjax()) {
-			return $name.': '.$message;
-		} else {
+        if (Yii::$app->getRequest()->getIsAjax()) {
+            return $name . ': ' . $message;
+        } else {
 
-			return $this->render($this->view ?: $this->id, [
-				'code' => $code,
-				'name' => $name,
-				'message' => $message,
-				'exception' => $exception,
-			]);
-		}
-	}
+            return $this->render($this->view ?: $this->id, [
+                'code' => $code,
+                'name' => $name,
+                'message' => $message,
+                'exception' => $exception,
+            ]);
+        }
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use maddoger\website\frontend\Module as FrontendModule;
 use maddoger\website\backend\Module as BackendModule;
+use maddoger\website\frontend\Module as FrontendModule;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -15,12 +15,13 @@ $availableLanguagesCombine = array_combine($availableLanguages, $availableLangua
 
 $activeLanguage = $model->default_language ?: $availableLanguages[0];
 $layouts = BackendModule::getInstance()->layouts;
-$layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')], $layouts) : ['' => Yii::t('maddoger/website', 'Default')];
+$layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')],
+    $layouts) : ['' => Yii::t('maddoger/website', 'Default')];
 
 $deleteMessage = Yii::t('maddoger/website', 'Are you sure want to delete this translation?');
 $this->registerJs(
-<<<JS
-$('#delete-translation').click(function(){
+    <<<JS
+    $('#delete-translation').click(function(){
     if (confirm('{$deleteMessage}')) {
         $('#translations .tab-pane.active').find('input, textarea').val('');
     }
@@ -40,7 +41,10 @@ JS
             <div class="nav-tabs-custom" id="translations">
                 <ul class="nav nav-tabs">
                     <li class="pull-right tools">
-                        <button id="delete-translation" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i> <?= Yii::t('maddoger/website', 'Delete this translation') ?></button></li>
+                        <button id="delete-translation" class="btn btn-danger btn-xs"><i
+                                class="glyphicon glyphicon-trash"></i> <?= Yii::t('maddoger/website',
+                                'Delete this translation') ?></button>
+                    </li>
                     <li class="header"><?= Yii::t('maddoger/website', 'Content') ?></li>
                     <?php
                     foreach ($availableLanguages as $language) {
@@ -70,7 +74,8 @@ JS
 
                             <?= $form->field($modelI18n, 'meta_keywords', ['enableClientValidation' => false])
                                 ->textarea(['rows' => 4])
-                                ->hint(Yii::t('maddoger/website', 'Keywords of the page separated by commas. Example: <code>bread, cookies</code>.')) ?>
+                                ->hint(Yii::t('maddoger/website',
+                                        'Keywords of the page separated by commas. Example: <code>bread, cookies</code>.')) ?>
 
                             <?= $form->field($modelI18n, 'meta_description', ['enableClientValidation' => false])
                                 ->textarea(['rows' => 4])
@@ -89,9 +94,10 @@ JS
                 </div>
                 <div class="panel-body">
                     <?= $form->field($model, 'slug')->textInput(['maxlength' => 150])
-                        ->hint(Yii::t('maddoger/website', 'URL where page will be published. Example: <code>index</code> will be <code>{domain}/{language}/index</code>.',
+                        ->hint(Yii::t('maddoger/website',
+                            'URL where page will be published. Example: <code>index</code> will be <code>{domain}/{language}/index</code>.',
                             [
-                                'domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl'),
+                                'domain' => Yii::$app->request->hostInfo . Yii::getAlias('@frontendUrl'),
                                 'language' => substr($activeLanguage, 0, 2),
                             ]))
                     ?>
@@ -101,7 +107,8 @@ JS
 
                     <?= $form->field($model, 'default_language')->dropDownList(
                         array_merge(['' => Yii::t('maddoger/website', 'Not use')], $availableLanguagesCombine)
-                    )->hint(Yii::t('maddoger/website', 'If needed language version not found, which version should use?')) ?>
+                    )->hint(Yii::t('maddoger/website',
+                            'If needed language version not found, which version should use?')) ?>
 
                     <?= $form->field($model, 'layout')->dropDownList($layouts)
                         ->hint(Yii::t('maddoger/website', 'As this page will look like.')) ?>
@@ -122,12 +129,15 @@ JS
 
     <div class="form-group">
         <div class="btn-group">
-            <?= Html::submitButton(Yii::t('maddoger/website', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= Html::submitButton(Yii::t('maddoger/website', 'Save and exit'), ['name' => 'redirect', 'value' => 'exit', 'class' => 'btn btn-default']) ?>
-            <?= Html::submitButton(Yii::t('maddoger/website', 'Save and create new'), ['name' => 'redirect', 'value' => 'new', 'class' => 'btn btn-default']) ?>
+            <?= Html::submitButton(Yii::t('maddoger/website', 'Save'),
+                ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton(Yii::t('maddoger/website', 'Save and exit'),
+                ['name' => 'redirect', 'value' => 'exit', 'class' => 'btn btn-default']) ?>
+            <?= Html::submitButton(Yii::t('maddoger/website', 'Save and create new'),
+                ['name' => 'redirect', 'value' => 'new', 'class' => 'btn btn-default']) ?>
         </div>
     </div>
-    
+
     <?php ActiveForm::end(); ?>
 
 </div>

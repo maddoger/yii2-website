@@ -5,6 +5,7 @@
  */
 
 namespace maddoger\website\frontend;
+
 use Yii;
 
 /**
@@ -52,6 +53,11 @@ class Module extends \yii\base\Module
     public $endBodyScripts;
 
     /**
+     * @var string view file path
+     */
+    public $pageView = '@maddoger/website/frontend/views/page/index.php';
+
+    /**
      * @var array available languages
      */
     static private $_availableLanguages;
@@ -80,7 +86,8 @@ class Module extends \yii\base\Module
     {
         if (!static::$_availableLanguages) {
             if (isset(Yii::$app->params['availableLanguages'])
-                && Yii::$app->params['availableLanguages']) {
+                && Yii::$app->params['availableLanguages']
+            ) {
                 static::$_availableLanguages = Yii::$app->params['availableLanguages'];
                 //sort(static::$_availableLanguages);
             } else {

@@ -60,9 +60,9 @@ $availableLanguages = Module::getAvailableLanguages();
                              */
                             foreach ($availableLanguages as $language) {
                                 $model->setLanguage($language);
-                                $res .= '<tr><td>'.$model->title.'</td><td class="text-right" width="50">'.$model->language.'</td></tr>';
+                                $res .= '<tr><td>' . $model->title . '</td><td class="text-right" width="50">' . $model->language . '</td></tr>';
                             }
-                            $res .='</tbody></table>';
+                            $res .= '</tbody></table>';
                             return $res;
                         },
                         'format' => 'raw',
@@ -70,9 +70,9 @@ $availableLanguages = Module::getAvailableLanguages();
                     //'default_language',
                     [
                         'attribute' => 'status',
-                        'value' => function($model, $key, $index, $column) {
+                        'value' => function ($model, $key, $index, $column) {
                             return Html::tag('span', $model->getStatusDescription(),
-                                ['class' => 'label label-'.($model->status == Page::STATUS_ACTIVE ? 'success' : 'warning')]);
+                                ['class' => 'label label-' . ($model->status == Page::STATUS_ACTIVE ? 'success' : 'warning')]);
                         },
                         'format' => 'html',
                         'options' => [

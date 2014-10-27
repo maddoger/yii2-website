@@ -53,7 +53,7 @@ class PageI18n extends \yii\db\ActiveRecord
     {
         $name = parent::formName();
         if ($this->language) {
-            $name .= '_'.$this->language;
+            $name .= '_' . $this->language;
         }
         return $name;
     }

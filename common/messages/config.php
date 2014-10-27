@@ -2,7 +2,7 @@
 
 return [
     // string, required, root directory of all source files
-    'sourcePath' => __DIR__ . DIRECTORY_SEPARATOR .'..' . DIRECTORY_SEPARATOR . '..',
+    'sourcePath' => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..',
     // array, required, list of language codes that the extracted messages
     // should be translated to. For example, ['zh-CN', 'de'].
     'languages' => ['ru-RU'],
@@ -41,15 +41,12 @@ return [
         '/messages',
         '/old',
     ],
-
     // 'php' output format is for saving messages to php files.
     'format' => 'php',
     // Root directory containing message translations.
     'messagePath' => __DIR__,
     // boolean, whether the message file should be overwritten with the merged messages
     'overwrite' => true,
-
-
     /*
     // 'db' output format is for saving messages to database.
     'format' => 'db',

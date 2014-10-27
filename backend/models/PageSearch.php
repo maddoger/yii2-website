@@ -3,11 +3,11 @@
 namespace maddoger\website\backend\models;
 
 use maddoger\website\backend\Module;
+use maddoger\website\common\models\Page;
 use maddoger\website\common\models\PageI18n;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use maddoger\website\common\models\Page;
 
 /**
  * PageSearch represents the model behind the search form about `maddoger\website\common\models\Page`.
@@ -58,8 +58,8 @@ class PageSearch extends Page
         ]);
         $dataProvider->sort->defaultOrder = ['slug' => SORT_ASC];
         $dataProvider->sort->attributes['title'] = [
-            'asc' => [PageI18n::tableName().'.[[title]]' => SORT_ASC],
-            'desc' => [PageI18n::tableName().'.[[title]]' => SORT_DESC],
+            'asc' => [PageI18n::tableName() . '.[[title]]' => SORT_ASC],
+            'desc' => [PageI18n::tableName() . '.[[title]]' => SORT_DESC],
             'default' => SORT_ASC,
         ];
 
@@ -70,11 +70,10 @@ class PageSearch extends Page
         if ($this->title) {
             $query->andWhere([
                 'or',
-                ['like', PageI18n::tableName().'.[[title]]', $this->title],
-                ['like', PageI18n::tableName().'.[[language]]', $this->title],
+                ['like', PageI18n::tableName() . '.[[title]]', $this->title],
+                ['like', PageI18n::tableName() . '.[[language]]', $this->title],
             ]);
         }
-
 
 
         $query->andFilterWhere([

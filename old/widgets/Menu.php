@@ -3,10 +3,10 @@
 namespace maddoger\website\widgets;
 
 use maddoger\website\models\Menu as MenuModel;
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Menu as BaseMenu;
-use Yii;
 
 /**
  * Class Menu
@@ -100,12 +100,14 @@ class Menu extends BaseMenu
                 $item['label'] = $item['title'];
             }
             if (isset($item['link'])) {
-                $item['url'] = Url::to( $item['link'] == '/' ? '/' : rtrim($item['link'], '/') );
+                $item['url'] = Url::to($item['link'] == '/' ? '/' : rtrim($item['link'], '/'));
             }
-            if (isset($item['children']) && (count($item['children'])>0)) {
+            if (isset($item['children']) && (count($item['children']) > 0)) {
                 $item['items'] = &$item['children'];
             }
-            if (!isset($item['options'])) $item['options'] = [];
+            if (!isset($item['options'])) {
+                $item['options'] = [];
+            }
             if (isset($item['css_class']) && !empty($item['css_class'])) {
                 $item['options']['class'] = $item['css_class'];
             }
@@ -170,12 +172,12 @@ class Menu extends BaseMenu
 
         if ($preg !== null && !empty($preg)) {
 
-            $preg = '/^'.str_replace('*', '(.*?)',  str_replace('/', '\/', $preg)).'$/is';
+            $preg = '/^' . str_replace('*', '(.*?)', str_replace('/', '\/', $preg)) . '$/is';
 
             /*var_dump($preg);
             var_dump($this->currentUrl);*/
 
-            return ( preg_match($preg, $this->currentUrl) || preg_match($preg, $this->currentUrl.'/') );
+            return (preg_match($preg, $this->currentUrl) || preg_match($preg, $this->currentUrl . '/'));
         } else {
             return parent::isItemActive($item);
         }

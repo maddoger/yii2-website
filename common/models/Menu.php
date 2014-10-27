@@ -57,7 +57,10 @@ class Menu extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['parent_id', 'enabled', 'sort', 'page_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [
+                ['parent_id', 'enabled', 'sort', 'page_id', 'created_at', 'created_by', 'updated_at', 'updated_by'],
+                'integer'
+            ],
             [['title'], 'required'],
             [['title', 'link', 'preg'], 'string', 'max' => 150],
             [['target', 'css_class', 'element_id'], 'string', 'max' => 50]

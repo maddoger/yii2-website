@@ -2,14 +2,14 @@
 
 namespace maddoger\website\backend\controllers;
 
-use maddoger\website\backend\Module;
-use Yii;
-use maddoger\website\common\models\Page;
 use maddoger\website\backend\models\PageSearch;
+use maddoger\website\backend\Module;
+use maddoger\website\common\models\Page;
 use maddoger\website\frontend\Module as FrontendModule;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * PageController implements the CRUD actions for Page model.
@@ -32,7 +32,7 @@ class PageController extends Controller
      * Lists all Page models.
      * @return mixed
      */
-    public function actionFaker($count=1)
+    public function actionFaker($count = 1)
     {
         $languages = FrontendModule::getAvailableLanguages();
         /**
@@ -45,7 +45,7 @@ class PageController extends Controller
             $fakers[$language] = $faker;
         }
 
-        for($i=0; $i<$count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $page = new Page();
 
             $page->status = 10;
@@ -54,7 +54,7 @@ class PageController extends Controller
             foreach ($languages as $language) {
 
                 $page->setLanguage($language);
-                $page->title = $fakers[$language]->colorName.' - '.$fakers[$language]->sentence();
+                $page->title = $fakers[$language]->colorName . ' - ' . $fakers[$language]->sentence();
                 $page->window_title = $fakers[$language]->sentence();
                 $page->text = $fakers[$language]->realText(2000);
                 $page->meta_keywords = implode(', ', $faker->words(10));

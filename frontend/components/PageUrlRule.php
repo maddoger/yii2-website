@@ -1,6 +1,6 @@
 <?php
 
-namespace maddoger\website\components;
+namespace maddoger\website\frontend\components;
 
 use yii\web\UrlRule;
 
