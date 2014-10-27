@@ -3,6 +3,7 @@
 namespace maddoger\website\backend\models;
 
 use maddoger\website\backend\Module;
+use maddoger\website\common\models\PageI18n;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -13,6 +14,9 @@ use maddoger\website\common\models\Page;
  */
 class PageSearch extends Page
 {
+    public $title;
+    public $language;
+
     /**
      * @inheritdoc
      */
@@ -20,7 +24,7 @@ class PageSearch extends Page
     {
         return [
             [['id', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['slug', 'layout', 'default_language'], 'safe'],
+            [['slug', 'layout', 'default_language', 'title', 'language'], 'safe'],
         ];
     }
 
@@ -47,14 +51,26 @@ class PageSearch extends Page
          * @var \yii\db\ActiveQuery $query
          */
         $query = $pageClass::find();
+        $query->joinWith('translations');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+        $dataProvider->sort->defaultOrder = ['slug' => SORT_ASC];
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
+
+        if ($this->title) {
+            $query->andWhere([
+                'or',
+                ['like', PageI18n::tableName().'.[[title]]', $this->title],
+                ['like', PageI18n::tableName().'.[[language]]', $this->title],
+            ]);
+        }
+
+
 
         $query->andFilterWhere([
             'id' => $this->id,

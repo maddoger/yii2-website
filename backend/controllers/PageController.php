@@ -127,7 +127,7 @@ class PageController extends Controller
 
             if ($validate && $model->save()) {
 
-                Yii::$app->session->addFlash('success', 'Сохранено!');
+                Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
                 switch (Yii::$app->request->post('redirect')) {
                     case 'exit':
                         return $this->redirect(['index']);
@@ -136,8 +136,6 @@ class PageController extends Controller
                     default:
                         return $this->redirect(['view', 'id' => $model->id]);
                 }
-            } else {
-                Yii::$app->session->addFlash('error', 'Ошибка!');
             }
         }
 
@@ -174,7 +172,7 @@ class PageController extends Controller
 
             if ($validate && $model->save()) {
 
-                Yii::$app->session->addFlash('success', 'Сохранено!');
+                Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
                 switch (Yii::$app->request->post('redirect')) {
                     case 'exit':
                         return $this->redirect(['index']);
@@ -183,14 +181,29 @@ class PageController extends Controller
                     default:
                         return $this->redirect(['view', 'id' => $model->id]);
                 }
-            } else {
-                Yii::$app->session->addFlash('error', 'Ошибка!');
             }
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Deletes an existing Page model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @param string $status
+     * @return mixed
+     */
+    public function actionStatus($id, $status)
+    {
+        $this->findModel($id)->updateAttributes(['status' => $status]);
+        if (Yii::$app->request->isAjax) {
+            return 'ok';
+        } else {
+            return $this->redirect(['view', 'id' => $id]);
+        }
     }
 
     /**

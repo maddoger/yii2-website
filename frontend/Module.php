@@ -82,7 +82,7 @@ class Module extends \yii\base\Module
             if (isset(Yii::$app->params['availableLanguages'])
                 && Yii::$app->params['availableLanguages']) {
                 static::$_availableLanguages = Yii::$app->params['availableLanguages'];
-                sort(static::$_availableLanguages);
+                //sort(static::$_availableLanguages);
             } else {
                 static::$_availableLanguages = [Yii::$app->language];
             }

@@ -6,6 +6,7 @@ use maddoger\core\i18n\TranslatableBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\Markdown;
 
 /**
  * This is the model class for table "{{%website_page}}".
@@ -31,6 +32,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $title
  * @property string $window_title
  * @property string $text
+ * @property string $text_format
  * @property string $meta_keywords
  * @property string $meta_description
  *
@@ -63,7 +65,7 @@ class Page extends \yii\db\ActiveRecord
                 'class' => TranslatableBehavior::className(),
                 'defaultLanguageAttribute' => 'default_language',
                 'translationAttributes' => [
-                    'title', 'window_title', 'text', 'meta_keywords', 'meta_description',
+                    'title', 'window_title', 'text_format', 'text', 'meta_keywords', 'meta_description',
                 ],
             ],
             TimestampBehavior::className(),
@@ -108,12 +110,12 @@ class Page extends \yii\db\ActiveRecord
             'updated_by' => Yii::t('maddoger/website', 'Updated By'),
 
             //I18N
-            'language' => Yii::t('maddoger/website', 'Language'),
             'title' => Yii::t('maddoger/website', 'Title'),
-            'window_title' => Yii::t('maddoger/website', 'Window title'),
+            'window_title' => Yii::t('maddoger/website', 'SEO: Title'),
             'text' => Yii::t('maddoger/website', 'Text'),
-            'meta_keywords' => Yii::t('maddoger/website', 'Meta Keywords'),
-            'meta_description' => Yii::t('maddoger/website', 'Meta Description'),
+            'text_format' => Yii::t('maddoger/website', 'Text format'),
+            'meta_keywords' => Yii::t('maddoger/website', 'SEO: Keywords'),
+            'meta_description' => Yii::t('maddoger/website', 'SEO: Description'),
         ];
     }
 
@@ -141,6 +143,23 @@ class Page extends \yii\db\ActiveRecord
         return $this->getTranslations()->select(['language'])->distinct()->orderBy(['language' => SORT_ASC])->column();
     }
 
+    public function getFormattedText($format=null)
+    {
+        if (!$format) {
+            $format = $this->text_format;
+        }
+        switch ($format) {
+            case 'html':
+                return Yii::$app->formatter->asHtml($this->text);
+            case 'text':
+                return Yii::$app->formatter->asNtext($this->text);
+            case 'md':
+                return Markdown::process($this->text, 'extra');
+
+            default:
+                return $this->text;
+        }
+    }
 
     /**
      * Status sting representation

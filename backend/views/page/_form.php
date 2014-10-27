@@ -89,7 +89,7 @@ JS
                 </div>
                 <div class="panel-body">
                     <?= $form->field($model, 'slug')->textInput(['maxlength' => 150])
-                        ->hint(Yii::t('maddoger/website', 'URL where page will be published. Example: <code>/index</code> will be <code>{domain}/{language}/index</code>.',
+                        ->hint(Yii::t('maddoger/website', 'URL where page will be published. Example: <code>index</code> will be <code>{domain}/{language}/index</code>.',
                             [
                                 'domain' => Yii::$app->request->hostInfo.Yii::getAlias('@frontendUrl'),
                                 'language' => substr($activeLanguage, 0, 2),
