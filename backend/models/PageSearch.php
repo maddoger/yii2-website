@@ -57,6 +57,11 @@ class PageSearch extends Page
             'query' => $query,
         ]);
         $dataProvider->sort->defaultOrder = ['slug' => SORT_ASC];
+        $dataProvider->sort->attributes['title'] = [
+            'asc' => [PageI18n::tableName().'.[[title]]' => SORT_ASC],
+            'desc' => [PageI18n::tableName().'.[[title]]' => SORT_DESC],
+            'default' => SORT_ASC,
+        ];
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
