@@ -2,10 +2,10 @@
 
 namespace maddoger\website\backend\controllers;
 
+use maddoger\core\i18n\I18N;
 use maddoger\website\backend\models\PageSearch;
 use maddoger\website\backend\Module;
 use maddoger\website\common\models\Page;
-use maddoger\website\frontend\Module as FrontendModule;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -26,47 +26,6 @@ class PageController extends Controller
                 ],
             ],
         ];
-    }
-
-    /**
-     * Lists all Page models.
-     * @return mixed
-     */
-    public function actionFaker($count = 1)
-    {
-        $languages = FrontendModule::getAvailableLanguages();
-        /**
-         * @var \Faker\Generator[] $fakers
-         */
-        $fakers = [];
-        $faker = null;
-        foreach ($languages as $language) {
-            $faker = \Faker\Factory::create(str_replace('-', '_', $language));
-            $fakers[$language] = $faker;
-        }
-
-        for ($i = 0; $i < $count; $i++) {
-            $page = new Page();
-
-            $page->status = 10;
-            $page->slug = implode('-', $faker->words(rand(1, 3)));
-
-            foreach ($languages as $language) {
-
-                $page->setLanguage($language);
-                $page->title = $fakers[$language]->colorName . ' - ' . $fakers[$language]->sentence();
-                $page->window_title = $fakers[$language]->sentence();
-                $page->text = $fakers[$language]->realText(2000);
-                $page->meta_keywords = implode(', ', $faker->words(10));
-                $page->meta_description = implode(', ', $faker->sentences(3));
-
-                $page->save();
-            }
-
-            //var_dump($page);
-        }
-
-        return $this->redirect(['index']);
     }
 
     /**
@@ -112,8 +71,8 @@ class PageController extends Controller
         if ($model->load(Yii::$app->request->post())) {
 
             $validate = true;
-            foreach (FrontendModule::getAvailableLanguages() as $language) {
-                $modelI18n = $model->getTranslation($language);
+            foreach (I18N::getAvailableLanguages() as $language) {
+                $modelI18n = $model->getTranslation($language['locale']);
                 if ($modelI18n->load(Yii::$app->request->post())) {
                     if (empty($modelI18n->title) && empty($modelI18n->text)) {
                         if (!$modelI18n->isNewRecord) {
@@ -157,8 +116,8 @@ class PageController extends Controller
         if ($model->load(Yii::$app->request->post())) {
 
             $validate = true;
-            foreach (FrontendModule::getAvailableLanguages() as $language) {
-                $modelI18n = $model->getTranslation($language);
+            foreach (I18N::getAvailableLanguages() as $language) {
+                $modelI18n = $model->getTranslation($language['locale']);
                 if ($modelI18n->load(Yii::$app->request->post())) {
                     if (empty($modelI18n->title) && empty($modelI18n->text)) {
                         if (!$modelI18n->isNewRecord) {

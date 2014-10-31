@@ -58,11 +58,6 @@ class Module extends \yii\base\Module
     public $pageView = '@maddoger/website/frontend/views/page/index.php';
 
     /**
-     * @var array available languages
-     */
-    static private $_availableLanguages;
-
-    /**
      * Init module
      */
     public function init()
@@ -77,31 +72,5 @@ class Module extends \yii\base\Module
                 'sourceLanguage' => 'en-US',
             ];
         }
-    }
-
-    /**
-     * @return array
-     */
-    public static function getAvailableLanguages()
-    {
-        if (!static::$_availableLanguages) {
-            if (isset(Yii::$app->params['availableLanguages'])
-                && Yii::$app->params['availableLanguages']
-            ) {
-                static::$_availableLanguages = Yii::$app->params['availableLanguages'];
-                //sort(static::$_availableLanguages);
-            } else {
-                static::$_availableLanguages = [Yii::$app->language];
-            }
-        }
-        return static::$_availableLanguages;
-    }
-
-    /**
-     * @param $value
-     */
-    public static function setAvailableLanguages($value)
-    {
-        static::$_availableLanguages = $value;
     }
 }

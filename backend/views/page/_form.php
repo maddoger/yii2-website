@@ -1,7 +1,8 @@
 <?php
 
+use maddoger\core\i18n\I18N;
 use maddoger\website\backend\Module as BackendModule;
-use maddoger\website\frontend\Module as FrontendModule;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -10,10 +11,19 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 
 
-$availableLanguages = FrontendModule::getAvailableLanguages();
-$availableLanguagesCombine = array_combine($availableLanguages, $availableLanguages);
+$availableLanguages = I18N::getAvailableLanguages();
 
-$activeLanguage = $model->default_language ?: $availableLanguages[0];
+$activeLanguage = $model->default_language;
+if (!$activeLanguage) {
+    $ls = $model->getTranslatedLanguages();
+    if ($ls) {
+        $activeLanguage = $ls[0];
+    }
+}
+if (!$activeLanguage) {
+    $activeLanguage = $availableLanguages[0]['locale'];
+}
+
 $layouts = BackendModule::getInstance()->layouts;
 $layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')],
     $layouts) : ['' => Yii::t('maddoger/website', 'Default')];
@@ -49,18 +59,18 @@ JS
                     <?php
                     foreach ($availableLanguages as $language) {
                         echo Html::tag('li',
-                            Html::a($language, '#i18n_' . $language, ['data-toggle' => 'tab']),
-                            ['class' => $language == $activeLanguage ? 'active' : '']
+                            Html::a($language['name'], '#i18n_' . $language['locale'], ['data-toggle' => 'tab']),
+                            ['class' => $language['locale'] == $activeLanguage ? 'active' : '']
                         );
                     }
                     ?>
                 </ul>
                 <div class="tab-content">
                     <?php foreach ($availableLanguages as $language) :
-                        $modelI18n = $model->getTranslation($language);
+                        $modelI18n = $model->getTranslation($language['locale']);
                         ?>
-                        <div class="tab-pane <?= $language == $activeLanguage ? 'active' : '' ?>"
-                             id="i18n_<?= $language ?>">
+                        <div class="tab-pane <?= $language['locale'] == $activeLanguage ? 'active' : '' ?>"
+                             id="i18n_<?= $language['locale'] ?>">
                             <?= $form->field($modelI18n, 'title', ['enableClientValidation' => false])
                                 ->textInput(['maxlength' => 150]) ?>
                             <?= $form->field($modelI18n, 'text_format', ['enableClientValidation' => false])
@@ -75,7 +85,7 @@ JS
                             <?= $form->field($modelI18n, 'meta_keywords', ['enableClientValidation' => false])
                                 ->textarea(['rows' => 4])
                                 ->hint(Yii::t('maddoger/website',
-                                        'Keywords of the page separated by commas. Example: <code>bread, cookies</code>.')) ?>
+                                    'Keywords of the page separated by commas. Example: <code>bread, cookies</code>.')) ?>
 
                             <?= $form->field($modelI18n, 'meta_description', ['enableClientValidation' => false])
                                 ->textarea(['rows' => 4])
@@ -93,7 +103,7 @@ JS
                     <div class="panel-title"><?= Yii::t('maddoger/website', 'Common info') ?></div>
                 </div>
                 <div class="panel-body">
-                    <?= $form->field($model, 'slug')->textInput(['maxlength' => 150])
+                    <?= $form->field($model, 'slug')->textInput(['maxlength' => 150, 'placeholder' => Yii::t('maddoger/website', 'Generate using title')])
                         ->hint(Yii::t('maddoger/website',
                             'URL where page will be published. Example: <code>index</code> will be <code>{domain}/{language}/index</code>.',
                             [
@@ -106,9 +116,9 @@ JS
                         ->hint(Yii::t('maddoger/website', 'Who will see this page?')) ?>
 
                     <?= $form->field($model, 'default_language')->dropDownList(
-                        array_merge(['' => Yii::t('maddoger/website', 'Not use')], $availableLanguagesCombine)
+                        array_merge(['' => Yii::t('maddoger/website', 'Not use')], ArrayHelper::map($availableLanguages, 'locale', 'name'))
                     )->hint(Yii::t('maddoger/website',
-                            'If needed language version not found, which version should use?')) ?>
+                        'If needed language version not found, which version should use?')) ?>
 
                     <?= $form->field($model, 'layout')->dropDownList($layouts)
                         ->hint(Yii::t('maddoger/website', 'As this page will look like.')) ?>

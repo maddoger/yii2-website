@@ -2,6 +2,7 @@
 
 namespace maddoger\website\frontend\controllers;
 
+use maddoger\core\i18n\I18N;
 use maddoger\website\common\models\Page;
 use maddoger\website\frontend\Module;
 use Yii;
@@ -11,7 +12,7 @@ use yii\web\NotFoundHttpException;
 
 class PageController extends Controller
 {
-    public function actionIndex($slug, $language = null)
+    public function actionIndex($slug, $languageSlug = null)
     {
         /**
          * @var Page $page
@@ -19,22 +20,24 @@ class PageController extends Controller
         $pageClass = Module::getInstance()->pageModelClass;
         $page = $pageClass::findBySlug($slug);
 
-        if ($language) {
-            Yii::$app->language = $language;
-        } else {
-            $language = Yii::$app->language;
+        $language = null;
+        if ($languageSlug) {
+            $language = I18N::getLanguageBySlug($languageSlug);
+        }
+        if (!$language) {
+            $language = I18N::getCurrentLanguage();
         }
 
         if (!$page) {
-            throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
+            throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page not found.'));
         }
 
-        $page->setLanguage($language);
+        $page->setLanguage($language['locale']);
         if (!$page->hasTranslation() && $page->default_language) {
             $page->setLanguage($page->default_language);
         }
         if (!$page->hasTranslation()) {
-            throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.', ['url' => $slug]));
+            throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page not found.'));
         }
 
         switch ($page->status) {
@@ -42,15 +45,14 @@ class PageController extends Controller
                 break;
 
             case Page::STATUS_AUTH_ONLY:
-                if (Yii::$app->user->isGuest()) {
+                if (Yii::$app->user->getIsGuest()) {
                     throw new ForbiddenHttpException(Yii::t('maddoger/website',
                         'You must be authenticated to view this page.'));
                 }
                 break;
 
             default:
-                throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page "{url}" not found.',
-                    ['url' => $slug]));
+                throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page not found.'));
         }
 
         if ($page->layout !== null && !empty($page->layout)) {

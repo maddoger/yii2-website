@@ -1,7 +1,7 @@
 <?php
 
+use maddoger\core\i18n\I18N;
 use maddoger\website\common\models\Page;
-use maddoger\website\frontend\Module;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
@@ -12,7 +12,28 @@ use yii\helpers\Html;
 $this->title = Yii::t('maddoger/website', 'Pages');
 $this->params['breadcrumbs'][] = $this->title;
 
-$availableLanguages = Module::getAvailableLanguages();
+$availableLanguages = I18N::getAvailableLanguages();
+
+
+$this->registerJs(
+    <<<JS
+        $('.status-btn-group').each(function(){
+        var container = $(this);
+        var button = container.find('button');
+        container.find('a').click(function(){
+            var link = $(this);
+            $.get(link.attr('href'), function(){
+                container.removeClass('open');
+                button.attr('class', 'dropdown-toggle btn btn-xs btn-'+link.data('class'));
+                button.find('.status-desc').text(link.text());
+
+            });
+            return false;
+        });
+
+    });
+JS
+);
 
 ?>
 <div class="page-index">
@@ -59,8 +80,12 @@ $availableLanguages = Module::getAvailableLanguages();
                              * @var \maddoger\website\common\models\Page $model
                              */
                             foreach ($availableLanguages as $language) {
-                                $model->setLanguage($language);
-                                $res .= '<tr><td>' . $model->title . '</td><td class="text-right" width="50">' . $model->language . '</td></tr>';
+                                $model->setLanguage($language['locale']);
+                                if (!$model->hasTranslation($language['locale'])) {
+                                    continue;
+                                }
+
+                                $res .= '<tr><td>' . $model->title . '</td><td class="text-right" width="50">' . $language['name'] . '</td></tr>';
                             }
                             $res .= '</tbody></table>';
                             return $res;
@@ -71,10 +96,23 @@ $availableLanguages = Module::getAvailableLanguages();
                     [
                         'attribute' => 'status',
                         'value' => function ($model, $key, $index, $column) {
-                            return Html::tag('span', $model->getStatusDescription(),
-                                ['class' => 'label label-' . ($model->status == Page::STATUS_ACTIVE ? 'success' : 'warning')]);
+                            $res = '
+<div class="btn-group status-btn-group">
+            <button type="button"
+                    class="btn btn-xs btn-' . ($model->status == Page::STATUS_ACTIVE ? 'success' : 'warning') . ' dropdown-toggle"
+                    data-toggle="dropdown"><span class="status-desc">' . $model->getStatusDescription() . '</span> <span
+                    class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">';
+
+                            foreach ($model->getStatusList() as $key => $desc) {
+                                $res .= Html::tag('li', Html::a($desc, ['status', 'id' => $model->id, 'status' => $key],
+                                        ['data-class' => ($key == Page::STATUS_ACTIVE ? 'success' : 'warning')]));
+                            }
+                            $res .= '</ul></div>';
+                            return $res;
                         },
-                        'format' => 'html',
+                        'format' => 'raw',
                         'options' => [
                             'width' => '100',
                         ],

@@ -6,6 +6,7 @@ use maddoger\core\i18n\TranslatableBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\Inflector;
 use yii\helpers\Markdown;
 
 /**
@@ -16,6 +17,7 @@ use yii\helpers\Markdown;
  * @method setTranslationAttribute($attribute, $value)
  * @method mixed getTranslationAttribute($attribute)
  * @method PageI18n getTranslation($language = null)
+ * @method bool hasTranslation($language = null)
  *
  * @property integer $id
  * @property string $slug
@@ -84,7 +86,7 @@ class Page extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['slug'], 'required'],
+            //[['slug'], 'required'],
             [['status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['slug'], 'string', 'max' => 150],
             [['layout'], 'string', 'max' => 50],
@@ -125,6 +127,21 @@ class Page extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeValidate()
+    {
+        if (empty($this->slug)) {
+            $title = $this->hasTranslation('en-US') ?
+                $this->getTranslation('en-US')->title :
+                $this->title;
+            $this->slug = Inflector::slug($title);
+        }
+        if ($this->isAttributeChanged('slug')) {
+            $this->slug = trim($this->slug, '/');
+        }
+        return parent::beforeValidate();
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -144,7 +161,7 @@ class Page extends \yii\db\ActiveRecord
     /**
      * @return array
      */
-    public function getAvailableTranslations()
+    public function getTranslatedLanguages()
     {
         return $this->getTranslations()->select(['language'])->distinct()->orderBy(['language' => SORT_ASC])->column();
     }
