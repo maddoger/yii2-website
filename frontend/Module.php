@@ -6,7 +6,9 @@
 
 namespace maddoger\website\frontend;
 
+use maddoger\core\config\ConfigBehavior;
 use Yii;
+use yii\log\Logger;
 
 /**
  * WebsiteModule
@@ -62,7 +64,9 @@ class Module extends \yii\base\Module
      */
     public function init()
     {
+        Yii::getLogger()->log('BEFORE_INIT', Logger::LEVEL_INFO);
         parent::init();
+        Yii::getLogger()->log('AFTER_INIT', Logger::LEVEL_INFO);
 
         if (!isset(Yii::$app->i18n->translations['maddoger/website'])) {
 
@@ -72,5 +76,14 @@ class Module extends \yii\base\Module
                 'sourceLanguage' => 'en-US',
             ];
         }
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => ConfigBehavior::className(),
+            ],
+        ];
     }
 }

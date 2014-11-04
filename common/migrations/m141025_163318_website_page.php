@@ -15,6 +15,7 @@ class m141025_163318_website_page extends Migration
 
         $this->createTable('{{%website_page}}', [
             'id' => Schema::TYPE_PK,
+            'parent_id' => Schema::TYPE_INTEGER,
             'slug' => Schema::TYPE_STRING . '(150) NOT NULL',
             'status' => Schema::TYPE_SMALLINT . ' NOT NULL DEFAULT 10',
             'layout' => Schema::TYPE_STRING . '(50)',
@@ -25,7 +26,7 @@ class m141025_163318_website_page extends Migration
             'updated_by' => Schema::TYPE_INTEGER,
         ], $tableOptions);
 
-        $this->createIndex($this->db->tablePrefix . 'website_page_slug_ix', '{{%website_page}}', 'slug');
+        $this->createIndex($this->db->tablePrefix .'website_page_slug_ix', '{{%website_page}}', 'slug');
 
         $this->createTable('{{%website_page_i18n}}', [
             'id' => Schema::TYPE_PK,
@@ -42,10 +43,10 @@ class m141025_163318_website_page extends Migration
             'updated_by' => Schema::TYPE_INTEGER,
         ], $tableOptions);
 
-        $this->createIndex($this->db->tablePrefix . 'website_page_i18n_uq',
+        $this->createIndex($this->db->tablePrefix .'website_page_i18n_uq',
             '{{%website_page_i18n}}', ['page_id', 'language'], true);
 
-        $this->addForeignKey($this->db->tablePrefix . 'website_page_i18n_fk',
+        $this->addForeignKey($this->db->tablePrefix .'website_page_i18n_page_fk',
             '{{%website_page_i18n}}', 'page_id',
             '{{%website_page}}', 'id',
             'CASCADE', 'CASCADE'
@@ -55,11 +56,11 @@ class m141025_163318_website_page extends Migration
 
     public function safeDown()
     {
-        $this->dropForeignKey($this->db->tablePrefix . 'website_page_i18n_fk', '{{%website_page_i18n}}');
-        $this->dropIndex($this->db->tablePrefix . 'website_page_i18n_uq', '{{%website_page_i18n}}');
+        $this->dropForeignKey($this->db->tablePrefix.'website_page_fk', '{{%website_page_i18n}}');
+        $this->dropIndex($this->db->tablePrefix .'website_page_i18n_uq', '{{%website_page_i18n}}');
         $this->dropTable('{{%website_page_i18n}}');
 
-        $this->dropIndex($this->db->tablePrefix . 'website_page_slug_ix', '{{%website_page}}');
+        $this->dropIndex($this->db->tablePrefix .'website_page_slug_ix', '{{%website_page}}');
         $this->dropTable('{{%website_page}}');
     }
 }
