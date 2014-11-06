@@ -28,6 +28,8 @@ class PageController extends Controller
             $language = I18N::getCurrentLanguage();
         }
 
+        Yii::$app->language = $language['locale'];
+
         if (!$page) {
             throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page not found.'));
         }
