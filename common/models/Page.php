@@ -178,7 +178,7 @@ class Page extends \yii\db\ActiveRecord
             case 'text':
                 return Yii::$app->formatter->asNtext($text);
             case 'md':
-                return Markdown::process($text, 'extra');
+                return Markdown::process($text, 'gfm');
 
             default:
                 return $text;

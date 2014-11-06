@@ -6,9 +6,8 @@
 
 namespace maddoger\website\frontend;
 
-use maddoger\core\config\ConfigBehavior;
+use maddoger\website\common\models\Config;
 use Yii;
-use yii\log\Logger;
 
 /**
  * WebsiteModule
@@ -25,19 +24,14 @@ class Module extends \yii\base\Module
     public $pageModelClass = 'maddoger\website\common\models\Page';
 
     /**
-     * @var string Title of all website
+     * @var string view file path
      */
-    public $title;
+    public $pageView = '@maddoger/website/frontend/views/page/index.php';
 
     /**
-     * @var string Keywords of all website
+     * @var \maddoger\website\common\models\Config Module configuration
      */
-    public $keywords;
-
-    /**
-     * @var string Description of all website
-     */
-    public $description;
+    public $config;
 
     /**
      * @var array available layouts for pages
@@ -45,28 +39,14 @@ class Module extends \yii\base\Module
     public $layouts;
 
     /**
-     * @var string default layout
-     */
-    public $defaultLayout;
-
-    /**
-     * @var string scripts will be added to the end of body tag
-     */
-    public $endBodyScripts;
-
-    /**
-     * @var string view file path
-     */
-    public $pageView = '@maddoger/website/frontend/views/page/index.php';
-
-    /**
      * Init module
      */
     public function init()
     {
-        Yii::getLogger()->log('BEFORE_INIT', Logger::LEVEL_INFO);
         parent::init();
-        Yii::getLogger()->log('AFTER_INIT', Logger::LEVEL_INFO);
+        $this->config = Config::getConfig($this->className(),
+            is_array($this->config) ? $this->config : []
+        );
 
         if (!isset(Yii::$app->i18n->translations['maddoger/website'])) {
 
@@ -76,14 +56,5 @@ class Module extends \yii\base\Module
                 'sourceLanguage' => 'en-US',
             ];
         }
-    }
-
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => ConfigBehavior::className(),
-            ],
-        ];
     }
 }

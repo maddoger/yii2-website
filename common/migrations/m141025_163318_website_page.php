@@ -34,6 +34,7 @@ class m141025_163318_website_page extends Migration
             'language' => Schema::TYPE_STRING . '(10) NOT NULL',
             'title' => Schema::TYPE_STRING . '(150) NOT NULL',
             'window_title' => Schema::TYPE_STRING . '(150)',
+            'text_format' => Schema::TYPE_STRING.'(20)',
             'text' => ($this->db->driverName === 'mysql' ? 'longtext' : Schema::TYPE_TEXT),
             'meta_keywords' => Schema::TYPE_STRING . '(255)',
             'meta_description' => Schema::TYPE_STRING . '(255)',

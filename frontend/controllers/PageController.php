@@ -61,7 +61,7 @@ class PageController extends Controller
             /**
              * @var $this ->module WebsiteModule
              */
-            $this->layout = Module::getInstance()->defaultLayout ?: null;
+            $this->layout = Module::getInstance()->config->defaultLayout ?: null;
         }
 
         return $this->render(Module::getInstance()->pageView, ['model' => $page]);

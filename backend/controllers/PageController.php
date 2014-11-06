@@ -8,6 +8,7 @@ use maddoger\website\backend\Module;
 use maddoger\website\common\models\Page;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
