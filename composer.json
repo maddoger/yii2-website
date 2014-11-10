@@ -11,8 +11,8 @@
     "minimum-stability": "dev",
     "require": {
         "yiisoft/yii2": "2.*",
-        "maddoger/yii2-core": "*",
-        "bower-asset/jquery-ui": "1.11.*@stable"
+        "yiisoft/yii2-jui": "*",
+        "maddoger/yii2-core": "*"
     },
     "autoload": {
         "psr-4": {
