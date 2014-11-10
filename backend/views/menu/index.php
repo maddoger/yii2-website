@@ -15,7 +15,6 @@ use yii\helpers\Url;
 
 BackendAsset::register($this);
 
-
 $this->title = Yii::t('maddoger/website', 'Menus');
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -58,6 +57,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end() ?>
             </div>
         </div>
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="panel-title"><?= Yii::t('maddoger/website', 'Page') ?></div>
+            </div>
+            <div class="panel-body">
+                <?php $customLinkForm = ActiveForm::begin([
+                    'action' => '#',
+                    'id' => 'page-form',
+                ]); ?>
+                <?= Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_PAGE]); ?>
+                <?= $customLinkForm->field($newItem, 'page_id')->textInput() ?>
+                <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'), ['class' => 'btn btn-default']) ?>
+                <?php ActiveForm::end() ?>
+            </div>
+        </div>
+
     </div>
     <div class="col-md-8">
         <?php $form = ActiveForm::begin([

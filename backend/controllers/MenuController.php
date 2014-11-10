@@ -12,6 +12,7 @@ use maddoger\website\backend\models\MenuNewItemForm;
 use maddoger\website\common\models\Menu;
 use Yii;
 use yii\base\Exception;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -38,6 +39,12 @@ class MenuController extends Controller
                         'allow' => true,
                         'roles' => ['website.menu.manageMenu'],
                     ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
                 ],
             ],
         ];
@@ -73,22 +80,52 @@ class MenuController extends Controller
         }
 
         //New item
-        $newItem = new MenuNewItemForm();
+        $newItem = new Menu();
+        $newItem->scenario = 'newItem';
         $newItem->status = Menu::STATUS_DRAFT;
-
-        $items = MenuItemForm::getTreeByParentId($menu->id);
 
         if (Yii::$app->request->isPost) {
 
             if (!$menu->isNewRecord) {
+
+                //New item
                 if ($newItem->load(Yii::$app->request->post())) {
                     $newItem->parent_id = $menu->id;
+
+                    if ($newItem->type == Menu::TYPE_PAGE) {
+                        $page = $newItem->page;
+                        if ($page) {
+                            if ($menu->language) {
+                                $page->setLanguage($menu->language);
+                            }
+                            $newItem->title = $page->title;
+                            $newItem->link = $page->getUrl();
+                        }
+                    }
+
                     if ($newItem->save()) {
                         if (Yii::$app->request->isAjax) {
-                            return $this->redirect(['', 'id' => $menu->id]);
+                            return $this->renderPartial('_item', ['item' => $newItem]);
                         } else {
                             return $this->refresh();
                         }
+                    }
+                }
+
+                //Items
+                $itemsSort = @array_flip(Yii::$app->request->post('items_sort'));
+                $items = Yii::$app->request->post('menu-items');
+                if ($items) {
+                    foreach ($items as $id=>$itemArray) {
+                        $item = Menu::findOne($id);
+                        $item->scenario = 'updateMenuItems';
+                        if (!$item) {
+                            continue;
+                        }
+                        $item->setAttributes($itemArray);
+                        $item->sort = @$itemsSort[$item->id]+1;
+                        $item->status = Menu::STATUS_ACTIVE;
+                        $item->save();
                     }
                 }
             }
@@ -99,59 +136,7 @@ class MenuController extends Controller
             }
         }
 
-        /*if (Yii::$app->request->isPost && isset($_POST['level'])) {
-
-            $c = count($_POST['level']);
-            //Массив, куда будут записаны элементы
-            $id_by_level = array(1 => 0);
-            for ($i = 0; $i < $c; $i++) {
-                //Получаем данные
-                $level = $_POST['level'][$i];
-
-                $array = array(
-                    'id' => $_POST['id'][$i],
-                    'link' => $_POST['link'][$i],
-                    'preg' => $_POST['preg'][$i],
-                    'title' => $_POST['title'][$i],
-                    'css_class' => $_POST['css_class'][$i],
-                    'element_id' => $_POST['element_id'][$i],
-                    'enabled' => $_POST['enabled'][$i],
-                    'parent_id' => $id_by_level[$level],
-                    'sort' => $i
-                );
-                if ($array['parent_id'] == 0) {
-                    $array['parent_id'] = null;
-                }
-
-                //Если элемент отмечен на удаление
-                if ($_POST['delete'][$i]) {
-                    //И id задан, то удаляем
-                    if ($array['id']) {
-                        Menu::deleteAll(['id' => $array['id']]);
-                    }
-                } else {
-                    if (!$array['id']) {
-                        unset($array['id']);
-                        $model = new Menu();
-                        $model->setAttributes($array, false);
-                        if (!$model->save()) {
-                            throw new Exception('Saving error');
-                        }
-                        $array['id'] = $model->id;
-                    } else {
-                        //Заменяем
-                        $model = Menu::findOne($array['id']);
-                        $model->setAttributes($array, false);
-                        if (!$model->save()) {
-                            throw new Exception('Saving error');
-                        }
-                    }
-                }
-                //Записываем указатель на следующий уровень
-                $id_by_level[$level + 1] = $array['id'];
-            }
-            return $this->redirect(['index']);
-        }*/
+        $items = MenuItemForm::getTreeByParentId($menu->id, false);
 
         return $this->render('index', [
             'items' => $items,
@@ -159,5 +144,14 @@ class MenuController extends Controller
             'menu' => $menu,
             'newItem' => $newItem,
         ]);
+    }
+
+    public function actionDelete($id)
+    {
+        if (($model = Menu::findOne($id)) !== null) {
+            $model->delete();
+        } else {
+            throw new NotFoundHttpException(Yii::t('maddoger/website', 'The requested menu does not exist.'));
+        }
     }
 }

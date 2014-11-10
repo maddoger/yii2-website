@@ -17,5 +17,8 @@ use Yii;
  */
 class MenuItemForm extends Menu
 {
-
+    public function formName()
+    {
+        return 'menu-items['.$this->id.']';
+    }
 }

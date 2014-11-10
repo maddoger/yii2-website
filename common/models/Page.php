@@ -2,12 +2,14 @@
 
 namespace maddoger\website\common\models;
 
+use maddoger\core\i18n\I18N;
 use maddoger\core\i18n\TranslatableBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\Inflector;
 use yii\helpers\Markdown;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%website_page}}".
@@ -166,6 +168,23 @@ class Page extends \yii\db\ActiveRecord
         return $this->getTranslations()->select(['language'])->distinct()->orderBy(['language' => SORT_ASC])->column();
     }
 
+    /**
+     * @param null $language
+     * @return string
+     */
+    public function getUrl($language=null)
+    {
+        if (!$language) {
+            $language = $this->language;
+        }
+        $lang = I18N::getLanguageByLocale($language);
+        return Url::to('@frontendUrl/'.$lang['slug'].'/'.$this->slug);
+    }
+
+    /**
+     * @param null $format
+     * @return string
+     */
     public function getFormattedText($format = null)
     {
         if (!$format) {

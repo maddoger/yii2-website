@@ -21,6 +21,14 @@ class BackendAsset extends AssetBundle
         'menu-editor.css'
     ];
 
+    public $js = [
+        'jquery.mjs.nestedSortable.js',
+    ];
+
+    public $depends = [
+        'yii\jui\JuiAsset',
+    ];
+
     public function init()
     {
         $this->sourcePath = __DIR__.'/assets/dist';
