@@ -34,11 +34,6 @@ class Module extends \yii\base\Module
     public $config;
 
     /**
-     * @var array available layouts for pages
-     */
-    public $layouts;
-
-    /**
      * Init module
      */
     public function init()

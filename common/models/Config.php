@@ -42,6 +42,16 @@ class Config extends ConfigModel
     public $endBodyScripts;
 
     /**
+     * @var array available layouts for pages
+     */
+    public $layouts;
+
+    /**
+     * @var string default text format
+     */
+    public $defaultTextFormat;
+
+    /**
      * @var ConfigI18n[]
      */
     public $translations;

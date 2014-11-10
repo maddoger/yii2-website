@@ -10,9 +10,9 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.4.0",
         "yiisoft/yii2": "2.*",
-        "maddoger/yii2-core": "*"
+        "maddoger/yii2-core": "*",
+        "bower-asset/jquery-ui": "1.11.*@stable"
     },
     "autoload": {
         "psr-4": {

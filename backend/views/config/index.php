@@ -16,7 +16,7 @@ $this->title = Yii::t('maddoger/website', 'Configuration');
 $availableLanguages = I18N::getAvailableLanguages();
 $activeLanguage = $availableLanguages[0]['locale'];
 
-$layouts = BackendModule::getInstance()->layouts;
+$layouts = BackendModule::getInstance()->config->layouts;
 $layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')],
     $layouts) : ['' => Yii::t('maddoger/website', 'Default')];
 

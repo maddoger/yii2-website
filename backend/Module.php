@@ -7,6 +7,7 @@
 namespace maddoger\website\backend;
 
 use maddoger\core\BackendModule;
+use maddoger\website\common\models\Config;
 use Yii;
 use yii\rbac\Item;
 
@@ -25,14 +26,9 @@ class Module extends BackendModule
     public $pageModelClass = 'maddoger\website\common\models\Page';
 
     /**
-     * @var array available layouts for pages
+     * @var \maddoger\website\common\models\Config Module configuration
      */
-    public $layouts;
-
-    /**
-     * @var string default text format
-     */
-    public $defaultTextFormat;
+    public $config;
 
     /**
      * Init module
@@ -40,6 +36,9 @@ class Module extends BackendModule
     public function init()
     {
         parent::init();
+        $this->config = Config::getConfig('\maddoger\website\frontend\Module',
+            is_array($this->config) ? $this->config : []
+        );
 
         if (!isset(Yii::$app->i18n->translations['maddoger/website'])) {
 

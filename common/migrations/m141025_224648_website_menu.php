@@ -16,13 +16,17 @@ class m141025_224648_website_menu extends Migration
         $this->createTable('{{%website_menu}}', [
             'id' => Schema::TYPE_PK,
             'parent_id' => Schema::TYPE_INTEGER,
+            'type' => Schema::TYPE_SMALLINT,
             'title' => Schema::TYPE_STRING . '(150) NOT NULL',
+            'language' => Schema::TYPE_STRING . '(10)',
+            'slug' => Schema::TYPE_STRING . '(20)',
             'link' => Schema::TYPE_STRING . '(150)',
             'preg' => Schema::TYPE_STRING . '(150)',
             'target' => Schema::TYPE_STRING . '(50)',
             'css_class' => Schema::TYPE_STRING . '(50)',
+            'icon_class' => Schema::TYPE_STRING . '(50)',
             'element_id' => Schema::TYPE_STRING . '(50)',
-            'enabled' => Schema::TYPE_BOOLEAN . ' NOT NULL DEFAULT TRUE',
+            'status' => Schema::TYPE_SMALLINT . ' NOT NULL DEFAULT 10',
             'sort' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
             'page_id' => Schema::TYPE_INTEGER,
             'created_at' => Schema::TYPE_INTEGER,
@@ -30,6 +34,9 @@ class m141025_224648_website_menu extends Migration
             'updated_at' => Schema::TYPE_INTEGER,
             'updated_by' => Schema::TYPE_INTEGER,
         ], $tableOptions);
+
+        $this->createIndex($this->db->tablePrefix . 'website_menu_slug_ix',
+            '{{%website_menu}}', 'slug');
 
         $this->addForeignKey($this->db->tablePrefix . 'website_menu_parent_fk',
             '{{%website_menu}}', 'parent_id',
@@ -46,6 +53,7 @@ class m141025_224648_website_menu extends Migration
     {
         $this->dropForeignKey($this->db->tablePrefix . 'website_menu_parent_fk', '{{%website_menu}}');
         $this->dropForeignKey($this->db->tablePrefix . 'website_menu_page_fk', '{{%website_menu}}');
+        $this->dropIndex($this->db->tablePrefix . 'website_menu_slug_ix', '{{%website_menu}}');
         $this->dropTable('{{%website_menu}}');
     }
 }

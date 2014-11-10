@@ -1,17 +1,32 @@
 <?php
+/**
+ * @copyright Copyright (c) 2014 Vitaliy Syrchikov
+ * @link http://syrchikov.name
+ */
 
-namespace maddoger\website\modules\backend\controllers;
+namespace maddoger\website\backend\controllers;
 
-use maddoger\core\BackendController;
-use maddoger\website\models\Menu;
+use maddoger\website\backend\models\MenuForm;
+use maddoger\website\backend\models\MenuItemForm;
+use maddoger\website\backend\models\MenuNewItemForm;
+use maddoger\website\common\models\Menu;
 use Yii;
-use yii\db\Exception;
-use yii\filters\VerbFilter;
+use yii\base\Exception;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+
+/**
+ * MenuController
+ *
+ * @author Vitaliy Syrchikov <maddoger@gmail.com>
+ * @link http://syrchikov.name
+ * @package maddoger/yii2-website
+ */
 
 /**
  * MenuController implements the CRUD actions for Menu model.
  */
-class MenuController extends BackendController
+class MenuController extends Controller
 {
     public function behaviors()
     {
@@ -21,17 +36,8 @@ class MenuController extends BackendController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['menu.manage'],
+                        'roles' => ['website.menu.manageMenu'],
                     ],
-                    [
-                        'allow' => false,
-                    ]
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
                 ],
             ],
         ];
@@ -39,15 +45,61 @@ class MenuController extends BackendController
 
     /**
      * Menu tree
-     *
-     * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id=null)
     {
-        $this->title = Yii::t('maddoger/website', 'Menu');
-        $items = Menu::getTreeByParentId();
+        $menus = MenuForm::findMenus();
+        $menu = null;
 
-        if (Yii::$app->request->isPost && isset($_POST['level'])) {
+        if ($id === null) {
+            if (count($menus)>0) {
+                reset($menus);
+                $id = key($menus);
+                $menu = $menus[$id];
+            }
+        } elseif ($id) {
+            if (isset($menus[$id])) {
+                $menu = $menus[$id];
+            } else {
+                throw new NotFoundHttpException(Yii::t('maddoger/website', 'Menu not found.'));
+            }
+        }
+
+        //New menu
+        if (!$menu) {
+            $menu = new Menu();
+            $menu->type = Menu::TYPE_MENU;
+            $menu->status = Menu::STATUS_DRAFT;
+        }
+
+        //New item
+        $newItem = new MenuNewItemForm();
+        $newItem->status = Menu::STATUS_DRAFT;
+
+        $items = MenuItemForm::getTreeByParentId($menu->id);
+
+        if (Yii::$app->request->isPost) {
+
+            if (!$menu->isNewRecord) {
+                if ($newItem->load(Yii::$app->request->post())) {
+                    $newItem->parent_id = $menu->id;
+                    if ($newItem->save()) {
+                        if (Yii::$app->request->isAjax) {
+                            return $this->redirect(['', 'id' => $menu->id]);
+                        } else {
+                            return $this->refresh();
+                        }
+                    }
+                }
+            }
+
+            if ($menu->load(Yii::$app->request->post()) && $menu->save()) {
+                Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Menu successfully saved.'));
+                return $this->redirect(['', 'id' => $menu->id]);
+            }
+        }
+
+        /*if (Yii::$app->request->isPost && isset($_POST['level'])) {
 
             $c = count($_POST['level']);
             //Массив, куда будут записаны элементы
@@ -99,10 +151,13 @@ class MenuController extends BackendController
                 $id_by_level[$level + 1] = $array['id'];
             }
             return $this->redirect(['index']);
-        }
+        }*/
 
         return $this->render('index', [
             'items' => $items,
+            'menus' => $menus,
+            'menu' => $menu,
+            'newItem' => $newItem,
         ]);
     }
 }

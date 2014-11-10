@@ -24,7 +24,7 @@ if (!$activeLanguage) {
     $activeLanguage = $availableLanguages[0]['locale'];
 }
 
-$layouts = BackendModule::getInstance()->layouts;
+$layouts = BackendModule::getInstance()->config->layouts;
 $layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')],
     $layouts) : ['' => Yii::t('maddoger/website', 'Default')];
 
