@@ -72,7 +72,7 @@ JS
 
                     [
                         'attribute' => 'title',
-                        'label' => Yii::t('maddoger/website', 'Translations'),
+                        'label' => Yii::t('maddoger/website', 'Versions'),
                         'value' => function ($model, $key, $index, $column) use (&$availableLanguages) {
 
                             $res = '<table class="table table-condensed"><tbody>';

@@ -27,6 +27,7 @@ $this->registerJs(
         panel.find('.overlay, .loading-img').show();
         $.post(form.prop('action'), data, function(html){
             $('#menu-items-editor > ol').append(html);
+            $("[data-widget='collapse']").collapse();
             form[0].reset();
             panel.find('.overlay, .loading-img').hide();
         });

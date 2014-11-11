@@ -9,6 +9,7 @@ namespace maddoger\website\backend\controllers;
 use maddoger\website\backend\models\MenuForm;
 use maddoger\website\backend\models\MenuItemForm;
 use maddoger\website\backend\models\MenuNewItemForm;
+use maddoger\website\backend\models\PageSearch;
 use maddoger\website\common\models\Menu;
 use Yii;
 use yii\base\Exception;
@@ -144,6 +145,12 @@ class MenuController extends Controller
             'menu' => $menu,
             'newItem' => $newItem,
         ]);
+    }
+
+    public function actionPages($q)
+    {
+        $searchModel = new PageSearch();
+        $dataProvider = $searchModel->search(['title' => $q]);
     }
 
     public function actionDelete($id)
