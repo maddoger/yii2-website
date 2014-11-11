@@ -8,6 +8,8 @@
 use maddoger\core\i18n\I18N;
 use maddoger\website\backend\BackendAsset;
 use maddoger\website\common\models\Menu;
+use maddoger\widgets\Select2;
+use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -29,6 +31,7 @@ $this->registerJs(
             $('#menu-items-editor > ol').append(html);
             $("[data-widget='collapse']").collapse();
             form[0].reset();
+            form.find('.select2-container').select2("val", "");
             panel.find('.overlay, .loading-img').hide();
         });
         return false;
@@ -43,14 +46,17 @@ JS
     <div class="panel-body">
         <?php
         if (count($menus) > 1) {
-            Html::beginForm([''], 'get');
-            echo Yii::t('maddoger/website', 'Choose menu for editing'), ': ',
-            Html::dropDownList('id', $menu->id, ArrayHelper::map($menus, 'id', 'title'),
-                ['id' => 'menu-id-select']);
-            echo Html::submitButton(Yii::t('maddoger/website', 'Choose'), ['class' => 'btn btn-default']);
+            echo Html::beginForm([''], 'get', ['class' => 'form-inline']);
+            echo Yii::t('maddoger/website', 'Choose menu for editing'), ': ';
+            echo Html::dropDownList('id', $menu->id, ArrayHelper::map($menus, 'id', 'label'),
+                ['id' => 'menu-id-select', 'class' => 'form-control input-sm']), '&nbsp;';
+            echo Html::submitButton(Yii::t('maddoger/website', 'Choose'), ['class' => 'btn btn-sm btn-default']), '&nbsp;';
+            echo Yii::t('maddoger/website', ' or <a href="{url}">create a new menu</a>.',
+                ['url' => Url::to(['', 'id' => 0])]);
             echo Html::endForm();
         } else {
-            echo Yii::t('maddoger/website', 'Update menu bellow or <a href="{url}">create a new menu</a>.',
+            echo Yii::t('maddoger/website', 'Update menu bellow');
+            echo Yii::t('maddoger/website', ' or <a href="{url}">create a new menu</a>.',
                 ['url' => Url::to(['', 'id' => 0])]);
         }
         ?>
@@ -70,7 +76,7 @@ JS
                 ]); ?>
                 <?= Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_LINK]); ?>
                 <?= $customLinkForm->field($newItem, 'link')->textInput(['value' => empty($newItem->link) ? 'http://' : $newItem->link]) ?>
-                <?= $customLinkForm->field($newItem, 'title')->textInput() ?>
+                <?= $customLinkForm->field($newItem, 'label')->textInput() ?>
                 <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'), ['class' => 'btn btn-default ajax-add']) ?>
                 <?php ActiveForm::end() ?>
             </div>
@@ -80,7 +86,7 @@ JS
 
         <div class="panel panel-success">
             <div class="panel-heading">
-                <div class="panel-title"><?= Yii::t('maddoger/website', 'Page') ?></div>
+                <div class="panel-title"><?= Yii::t('maddoger/website', 'Pages') ?></div>
             </div>
             <div class="panel-body">
                 <?php $pageForm = ActiveForm::begin([
@@ -88,7 +94,39 @@ JS
                     'id' => 'page-form',
                 ]); ?>
                 <?= Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_PAGE]); ?>
-                <?= $pageForm->field($newItem, 'page_id')->textInput() ?>
+                <?= Html::activeHiddenInput($newItem, 'label') ?>
+                <?= Html::activeHiddenInput($newItem, 'link') ?>
+
+                <div class="clearfix">
+                    <div class="pull-right">
+                        <?= Html::dropDownList('sort', 'updated_at', [
+                            'updated_at' => Yii::t('maddoger/website', 'Last updated'),
+                            'title' => Yii::t('maddoger/website', 'By title'),
+                        ], ['id' => 'new-item-page-sort']); ?>
+                    </div>
+                    <?= $pageForm->field($newItem, 'page_id')->widget(Select2::className(), [
+                        'clientOptions' => [
+                            'placeholder' => Yii::t('maddoger/website', 'Search pages...'),
+                            'ajax' => [
+                                'url' => Url::to(['pages']),
+                                'dataType' => 'json',
+                                'data' => new JsExpression('function (term, page) { return { q: term, sort: $("#new-item-page-sort").val() }; }'),
+                                'results' => new JsExpression('function (data, page) { return { results: data }; }'),
+                            ],
+                            'formatResult' => ($formatResult = new JsExpression('function (state) {
+                                if (!state.id) return state.text; // optgroup
+                                return state.text + " <small class=\"text-muted\">"+state.url+"</small>";
+                            }')),
+                            'formatSelection' => $formatResult,
+                        ],
+                        'clientEvents' => [
+                            'change' => new JsExpression('function (event) {
+                                $("#page-form input[name=\"MenuNewItem[label]\"]").val(event.added.title);
+                                $("#page-form input[name=\"MenuNewItem[link]\"]").val(event.added.url);
+                            }')
+                        ],
+                    ]) ?>
+                </div>
                 <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'), ['class' => 'btn btn-default ajax-add']) ?>
                 <?php ActiveForm::end() ?>
             </div>
@@ -108,7 +146,7 @@ JS
                             'Create menu') : Yii::t('maddoger/website', 'Save menu'),
                         ['class' => 'btn btn-primary btn-sm']) ?>
                 </div>
-                <?= Yii::t('maddoger/website', 'Menu name: ') ?> <?= Html::activeTextInput($menu, 'title',
+                <?= Yii::t('maddoger/website', 'Menu name: ') ?> <?= Html::activeTextInput($menu, 'label',
                     ['required' => 'required']) ?>
             </div>
             <div class="panel-body">

@@ -202,9 +202,9 @@ class Page extends \yii\db\ActiveRecord
         $languageArray = I18N::getLanguageByLocale($language);
 
         $url = strtr($url, [
-            'slug' => $this->slug,
-            'languageLocale' => $languageArray['locale'],
-            'languageSlug' => $languageArray['slug'],
+            '{slug}' => $this->slug,
+            '{languageLocale}' => $languageArray['locale'],
+            '{languageSlug}' => $languageArray['slug'],
         ]);
         return Url::to($url);
     }

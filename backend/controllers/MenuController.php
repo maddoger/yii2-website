@@ -11,11 +11,15 @@ use maddoger\website\backend\models\MenuItemForm;
 use maddoger\website\backend\models\MenuNewItemForm;
 use maddoger\website\backend\models\PageSearch;
 use maddoger\website\common\models\Menu;
+use maddoger\website\common\models\PageI18n;
 use Yii;
 use yii\base\Exception;
+use yii\base\InvalidParamException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * MenuController
@@ -92,17 +96,7 @@ class MenuController extends Controller
                 //New item
                 if ($newItem->load(Yii::$app->request->post())) {
                     $newItem->parent_id = $menu->id;
-
-                    if ($newItem->type == Menu::TYPE_PAGE) {
-                        $page = $newItem->page;
-                        if ($page) {
-                            if ($menu->language) {
-                                $page->setLanguage($menu->language);
-                            }
-                            $newItem->title = $page->title;
-                            $newItem->link = $page->getUrl();
-                        }
-                    }
+                    $newItem->language = $menu->language;
 
                     if ($newItem->save()) {
                         if (Yii::$app->request->isAjax) {
@@ -115,6 +109,7 @@ class MenuController extends Controller
 
                 //Items
                 $itemsSort = @array_flip(Yii::$app->request->post('items_sort'));
+                $itemsDelete = Yii::$app->request->post('items_delete');
                 $items = Yii::$app->request->post('menu-items');
                 if ($items) {
                     foreach ($items as $id=>$itemArray) {
@@ -123,7 +118,12 @@ class MenuController extends Controller
                         if (!$item) {
                             continue;
                         }
+                        if (isset($itemsDelete[$id]) && $itemsDelete[$id]) {
+                            $item->delete();
+                            continue;
+                        }
                         $item->setAttributes($itemArray);
+                        $item->language = $menu->language;
                         $item->sort = @$itemsSort[$item->id]+1;
                         $item->status = Menu::STATUS_ACTIVE;
                         $item->save();
@@ -137,7 +137,7 @@ class MenuController extends Controller
             }
         }
 
-        $items = MenuItemForm::getTreeByParentId($menu->id, false);
+        $items = MenuItemForm::getTreeByParentId($menu->id);
 
         return $this->render('index', [
             'items' => $items,
@@ -147,10 +147,30 @@ class MenuController extends Controller
         ]);
     }
 
-    public function actionPages($q)
+    public function actionPages($q, $sort='label')
     {
-        $searchModel = new PageSearch();
-        $dataProvider = $searchModel->search(['title' => $q]);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $sortAttributes = ['title' => SORT_ASC, 'updated_at' => SORT_DESC];
+        if (!$sort || !isset($sortAttributes[$sort])) {
+            throw new InvalidParamException('Unknown sort field.');
+        }
+
+        $query = PageI18n::find()->where(['like', 'title', $q])->orderBy([$sort => $sortAttributes[$sort]])->with('page');
+        $query->limit(100);
+        $res = [];
+        foreach ($query->all() as $model) {
+            /**
+             * @var PageI18n $model
+             */
+            $res[] = [
+                'id' => $model->page_id,
+                'text' => $model->title,
+                'title' => $model->title,
+                'url' => $model->page->getUrl($model->language),
+            ];
+        }
+        return $res;
     }
 
     public function actionDelete($id)

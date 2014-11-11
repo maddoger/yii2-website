@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $id
  * @property integer $parent_id
  * @property integer $type
+ * @property string $label
  * @property string $title
  * @property string $slug
  * @property string $language
@@ -92,8 +93,8 @@ class Menu extends \yii\db\ActiveRecord
                 ],
                 'integer'
             ],
-            [['title'], 'required'],
-            [['title', 'link', 'preg'], 'string', 'max' => 150],
+            [['label'], 'required'],
+            [['title', 'title', 'link', 'preg'], 'string', 'max' => 150],
             [['target', 'css_class', 'element_id', 'slug'], 'string', 'max' => 50],
             [['language'], 'string', 'max' => 10],
         ];
@@ -108,7 +109,9 @@ class Menu extends \yii\db\ActiveRecord
             'id' => Yii::t('maddoger/website', 'ID'),
             'parent_id' => Yii::t('maddoger/website', 'Parent ID'),
             'type' => Yii::t('maddoger/website', 'Type'),
-            'title' => Yii::t('maddoger/website', 'Title'),
+            'slug' => Yii::t('maddoger/website', 'Identifier for templates'),
+            'label' => Yii::t('maddoger/website', 'Label'),
+            'title' => Yii::t('maddoger/website', 'Title attribute'),
             'link' => Yii::t('maddoger/website', 'Link'),
             'preg' => Yii::t('maddoger/website', 'Preg'),
             'target' => Yii::t('maddoger/website', 'Target'),
@@ -117,7 +120,7 @@ class Menu extends \yii\db\ActiveRecord
             'element_id' => Yii::t('maddoger/website', 'Element ID'),
             'status' => Yii::t('maddoger/website', 'status'),
             'sort' => Yii::t('maddoger/website', 'Sort'),
-            'page_id' => Yii::t('maddoger/website', 'Page ID'),
+            'page_id' => Yii::t('maddoger/website', 'Page'),
             'created_at' => Yii::t('maddoger/website', 'Created At'),
             'created_by' => Yii::t('maddoger/website', 'Created By'),
             'updated_at' => Yii::t('maddoger/website', 'Updated At'),
@@ -261,7 +264,6 @@ class Menu extends \yii\db\ActiveRecord
      */
     public static function getTreeByParentId($parentId = 0, $cacheDuration = null)
     {
-        $cacheDuration = false;
         $cacheDuration = $cacheDuration !== null ? $cacheDuration : static::$cacheDuration;
 
         $items = Yii::$app->cache->get(static::$cacheKey);

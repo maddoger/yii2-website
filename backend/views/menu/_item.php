@@ -29,22 +29,34 @@ $item->scenario = 'updateMenuItems';
                 <button type="button" class="btn btn-default btn-xs" data-widget="collapse"><i class="fa fa-plus"></i>
                 </button>
             </div>
-            <div class="panel-title"><?= $item['title'] ?></div>
+            <div class="panel-title"><?= $item['label'] ?></div>
         </div>
         <div class="panel-body" style="display: none;">
             <?php
             //$fieldPrefix = 'menu-items['.$item['id'].']';
             //$idPrefix = 'menu-items-'.$item['id'];
             echo Html::hiddenInput('items_sort[]', $item['id']);
+            echo Html::hiddenInput('items_delete['.$item['id'].']', 0, ['class' => 'delete-field']);
             echo Html::activeHiddenInput($item, 'parent_id');
             ?>
             <div class="form-group form-group-sm">
                 <?= Html::activeLabel($item, 'link', ['class' => 'control-label']) ?>
                 <?= Html::activeTextInput($item, 'link', ['class' => 'form-control']) ?>
             </div>
-            <div class="form-group form-group-sm">
-                <?= Html::activeLabel($item, 'title', ['class' => 'control-label']) ?>
-                <?= Html::activeTextInput($item, 'title', ['class' => 'form-control']) ?>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group form-group-sm">
+                        <?= Html::activeLabel($item, 'label', ['class' => 'control-label']) ?>
+                        <?= Html::activeTextInput($item, 'label', ['class' => 'form-control']) ?>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-group-sm">
+                        <?= Html::activeLabel($item, 'title', ['class' => 'control-label']) ?>
+                        <?= Html::activeTextInput($item, 'title', ['class' => 'form-control']) ?>
+                    </div>
+                </div>
             </div>
             <hr />
             <?php if ($item->type == Menu::TYPE_PAGE && $item->page) { ?>
@@ -57,11 +69,6 @@ $item->scenario = 'updateMenuItems';
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group form-group-sm">
-                        <?= Html::activeLabel($item, 'icon_class', ['class' => 'control-label']) ?>
-                        <?= Html::activeTextInput($item, 'icon_class', ['class' => 'form-control']) ?>
-                        <div class="hint-block"><?= Yii::t('maddoger/website', 'For example: <code>fa fa-home</code> is <i class="fa fa-home"></i>') ?></div>
-                    </div>
-                    <div class="form-group form-group-sm">
                         <?= Html::activeLabel($item, 'target', ['class' => 'control-label']) ?>
                         <?= Html::activeDropDownList($item, 'target',
                             [
@@ -71,25 +78,38 @@ $item->scenario = 'updateMenuItems';
                             ],
                             ['class' => 'form-control']) ?>
                     </div>
+                    <div class="form-group form-group-sm">
+                        <?= Html::activeLabel($item, 'icon_class', ['class' => 'control-label']) ?>
+                        <?= Html::activeTextInput($item, 'icon_class', ['class' => 'form-control']) ?>
+                        <div class="hint-block"><?= Yii::t('maddoger/website', 'For example: <code>fa fa-home</code> is <i class="fa fa-home"></i>') ?></div>
+                    </div>
                 </div>
                 <div class="col-md-6">
+
+                    <div class="form-group form-group-sm">
+                        <?= Html::activeLabel($item, 'element_id', ['class' => 'control-label']) ?>
+                        <?= Html::activeTextInput($item, 'element_id', ['class' => 'form-control']) ?>
+                    </div>
                     <div class="form-group form-group-sm">
                         <?= Html::activeLabel($item, 'css_class', ['class' => 'control-label']) ?>
                         <?= Html::activeTextInput($item, 'css_class', ['class' => 'form-control']) ?>
                         <div class="hint-block"><?= Yii::t('maddoger/website', 'Class name for li element.') ?></div>
                     </div>
-                    <div class="form-group form-group-sm">
-                        <?= Html::activeLabel($item, 'element_id', ['class' => 'control-label']) ?>
-                        <?= Html::activeTextInput($item, 'element_id', ['class' => 'form-control']) ?>
-                    </div>
                 </div>
             </div>
-            <hr />
             <div class="form-group form-group-sm">
                 <?= Html::activeLabel($item, 'preg', ['class' => 'control-label']) ?>
                 <?= Html::activeTextInput($item, 'preg', ['class' => 'form-control']) ?>
                 <div class="hint-block"><?= Yii::t('maddoger/website', 'Custom activity regular expression.') ?></div>
             </div>
+            <hr />
+            <button type="button" class="btn btn-danger btn-sm pull-right" data-tree-action="delete"><?= Yii::t('maddoger/website', 'Delete') ?></button>
+            <span class="btn-group clearfix">
+                <button class="btn btn-primary btn-sm" type="button" data-tree-action="up"><i class="fa fa-arrow-up"></i></button>
+                <button class="btn btn-primary btn-sm" type="button" data-tree-action="down"><i class="fa fa-arrow-down"></i></button>
+                <button class="btn btn-primary btn-sm" type="button" data-tree-action="right"><i class="fa fa-arrow-right"></i></button>
+                <button class="btn btn-primary btn-sm" type="button" data-tree-action="left"><i class="fa fa-arrow-left"></i></button>
+            </span>
         </div>
     </div>
     <ol>
