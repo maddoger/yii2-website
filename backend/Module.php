@@ -94,6 +94,7 @@ class Module extends BackendModule
                     [
                         'label' => Yii::t('maddoger/website', 'Configuration'),
                         'url' => ['/' . $this->id . '/config'],
+                        'activeUrl' => '/' . $this->id . '/config/*',
                         'icon' => 'fa fa-gears',
                     ],
                 ]

@@ -53,6 +53,14 @@ class PageController extends Controller
                 }
                 break;
 
+            case Page::STATUS_HIDDEN:
+                if (!Yii::$app->user->getIsGuest() &&
+                    Yii::$app->user->can('website.page.viewHiddenPages')
+                ) {
+                    break;
+                }
+                throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page not found.'));
+
             default:
                 throw new NotFoundHttpException(Yii::t('maddoger/website', 'Page not found.'));
         }

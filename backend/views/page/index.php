@@ -85,7 +85,7 @@ JS
                                     continue;
                                 }
 
-                                $res .= '<tr><td>' . $model->title . '</td><td class="text-right" width="50">' . $language['name'] . '</td></tr>';
+                                $res .= '<tr><td>' . Html::a($model->title, $model->getUrl(), ['title' => Yii::t('maddoger/website', 'View on main website')]) . '</td><td class="text-right" width="50">' . $language['name'] . '</td></tr>';
                             }
                             $res .= '</tbody></table>';
                             return $res;
@@ -120,7 +120,14 @@ JS
                     ],
                     // 'created_at',
                     // 'created_by',
-                    // 'updated_at',
+                    [
+                        'attribute' => 'updated_at',
+                        'format' => 'datetime',
+                        'options' => [
+                            'width' => '150',
+                        ],
+                    ],
+                    //'updated_at:datetime',
                     // 'updated_by',
 
                     [

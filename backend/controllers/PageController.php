@@ -7,6 +7,7 @@ use maddoger\website\backend\models\PageSearch;
 use maddoger\website\backend\Module;
 use maddoger\website\common\models\Page;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -19,10 +20,30 @@ class PageController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view', 'list'],
+                        'roles' => ['website.page.view'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'roles' => ['website.page.create'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'roles' => ['website.page.update'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['website.page.delete'],
+                        'verbs' => ['POST'],
+                    ],
                 ],
             ],
         ];
@@ -41,6 +62,11 @@ class PageController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionList($q)
+    {
+
     }
 
     /**

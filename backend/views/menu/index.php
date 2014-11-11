@@ -18,6 +18,23 @@ BackendAsset::register($this);
 $this->title = Yii::t('maddoger/website', 'Menus');
 $this->params['breadcrumbs'][] = $this->title;
 
+$this->registerJs(
+<<<JS
+    $('.ajax-add').click(function(){
+        var form = $(this).closest('form');
+        var data = form.serialize();
+        var panel = form.closest('.panel');
+        panel.find('.overlay, .loading-img').show();
+        $.post(form.prop('action'), data, function(html){
+            $('#menu-items-editor > ol').append(html);
+            form[0].reset();
+            panel.find('.overlay, .loading-img').hide();
+        });
+        return false;
+    });
+JS
+);
+
 ?>
 <div class="menu-editor">
 
@@ -48,14 +65,16 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-body">
                 <?php $customLinkForm = ActiveForm::begin([
                     'action' => '#',
-                    'id' => 'custom-link-form',
+                    'id' => 'link-form',
                 ]); ?>
                 <?= Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_LINK]); ?>
                 <?= $customLinkForm->field($newItem, 'link')->textInput(['value' => empty($newItem->link) ? 'http://' : $newItem->link]) ?>
                 <?= $customLinkForm->field($newItem, 'title')->textInput() ?>
-                <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'), ['class' => 'btn btn-default']) ?>
+                <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'), ['class' => 'btn btn-default ajax-add']) ?>
                 <?php ActiveForm::end() ?>
             </div>
+            <div class="overlay" style="display: none;"></div>
+            <div class="loading-img" style="display: none;"></div>
         </div>
 
         <div class="panel panel-success">
@@ -63,15 +82,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="panel-title"><?= Yii::t('maddoger/website', 'Page') ?></div>
             </div>
             <div class="panel-body">
-                <?php $customLinkForm = ActiveForm::begin([
+                <?php $pageForm = ActiveForm::begin([
                     'action' => '#',
                     'id' => 'page-form',
                 ]); ?>
                 <?= Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_PAGE]); ?>
-                <?= $customLinkForm->field($newItem, 'page_id')->textInput() ?>
-                <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'), ['class' => 'btn btn-default']) ?>
+                <?= $pageForm->field($newItem, 'page_id')->textInput() ?>
+                <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'), ['class' => 'btn btn-default ajax-add']) ?>
                 <?php ActiveForm::end() ?>
             </div>
+            <div class="overlay" style="display: none;"></div>
+            <div class="loading-img" style="display: none;"></div>
         </div>
 
     </div>

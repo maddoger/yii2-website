@@ -52,6 +52,26 @@ class Page extends \yii\db\ActiveRecord
     const STATUS_ACTIVE = 10;
 
     /**
+     * @var string Frontend URL template
+     *
+     * Available placeholders:
+     * {languageSlug} - slug of language `en_US`
+     * {languageLocale} - locale of language `ru_RU`
+     * {slug} - page url
+     */
+    public $urlTemplate = '@frontendUrl/{slug}';
+
+    /**
+     * @var string Frontend URL with language template
+     *
+     * Available placeholders:
+     * {languageSlug} - slug of language `en_US`
+     * {languageLocale} - locale of language `ru_RU`
+     * {slug} - page url
+     */
+    public $urlWithLanguageTemplate = '@frontendUrl/{languageSlug}/{slug}';
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -177,8 +197,16 @@ class Page extends \yii\db\ActiveRecord
         if (!$language) {
             $language = $this->language;
         }
-        $lang = I18N::getLanguageByLocale($language);
-        return Url::to('@frontendUrl/'.$lang['slug'].'/'.$this->slug);
+        $languages = I18N::getAvailableLanguages();
+        $url = (count($languages)>1) ? $this->urlWithLanguageTemplate : $this->urlTemplate;
+        $languageArray = I18N::getLanguageByLocale($language);
+
+        $url = strtr($url, [
+            'slug' => $this->slug,
+            'languageLocale' => $languageArray['locale'],
+            'languageSlug' => $languageArray['slug'],
+        ]);
+        return Url::to($url);
     }
 
     /**
