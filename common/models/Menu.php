@@ -267,13 +267,22 @@ class Menu extends \yii\db\ActiveRecord
         $cacheDuration = $cacheDuration !== null ? $cacheDuration : static::$cacheDuration;
 
         $items = Yii::$app->cache->get(static::$cacheKey);
-        if ($items === false || $cacheDuration === false) {
+        //$items = null;
+        if (!$items || $cacheDuration === false) {
 
             $items = static::find()->
             orderBy(['sort' => SORT_ASC, 'id' => SORT_DESC])->
             indexBy('id')->
             with('children')->
             all();
+
+            $menus = [];
+            foreach ($items as $item) {
+                if ($item->type == self::TYPE_MENU) {
+                    $menus[$item->id] = $item;
+                }
+            }
+            $items[0] = ['children' => $menus];
 
             /*$models = static::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_DESC])->indexBy('id')->asArray()->all();
             $items = array_merge([
@@ -336,5 +345,28 @@ class Menu extends \yii\db\ActiveRecord
         } else {
             return null;
         }
+    }
+
+    /**
+     * @param null $parentId
+     * @return array
+     */
+    public static function getList($parentId = 0, $levelDelimiter = '- ')
+    {
+        $tree = static::getTreeByParentId($parentId);
+        if (!$tree) {
+            return [];
+        }
+        $res = [];
+        $func = function($items, $level = 0) use (&$res, &$func, &$levelDelimiter) {
+            foreach ($items as $item) {
+                $res[$item->id] = str_repeat($levelDelimiter, $level) . $item->label;
+                if ($item->children) {
+                    $func($item->children, $level+1);
+                }
+            }
+        };
+        $func($tree);
+        return $res;
     }
 }

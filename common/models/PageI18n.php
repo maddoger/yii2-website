@@ -2,9 +2,11 @@
 
 namespace maddoger\website\common\models;
 
+use maddoger\website\backend\Module;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\Markdown;
 
 /**
  * This is the model class for table "{{%website_page_i18n}}".
@@ -14,10 +16,12 @@ use yii\behaviors\TimestampBehavior;
  * @property string $language
  * @property string $title
  * @property string $window_title
- * @property string $text
  * @property string $text_format
+ * @property string $text_source
+ * @property string $text
  * @property string $meta_keywords
  * @property string $meta_description
+ * @property string $meta_data
  * @property integer $created_at
  * @property integer $created_by
  * @property integer $updated_at
@@ -67,11 +71,12 @@ class PageI18n extends \yii\db\ActiveRecord
         return [
             [['language', 'title', 'text'], 'required'],
             [['page_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['text'], 'string'],
+            [['text', 'text_source'], 'string'],
             [['text_format'], 'string', 'max' => 10],
             [['language'], 'string', 'max' => 10],
             [['title', 'window_title'], 'string', 'max' => 150],
             [['meta_keywords', 'meta_description'], 'string', 'max' => 255],
+            ['meta_data', 'safe'],
             [
                 ['page_id', 'language'],
                 'unique',
@@ -92,15 +97,71 @@ class PageI18n extends \yii\db\ActiveRecord
             'language' => Yii::t('maddoger/website', 'Language'),
             'title' => Yii::t('maddoger/website', 'Title'),
             'window_title' => Yii::t('maddoger/website', 'SEO: Title'),
+            'text_source' => Yii::t('maddoger/website', 'Text'),
             'text' => Yii::t('maddoger/website', 'Text'),
             'text_format' => Yii::t('maddoger/website', 'Text format'),
             'meta_keywords' => Yii::t('maddoger/website', 'SEO: Keywords'),
             'meta_description' => Yii::t('maddoger/website', 'SEO: Description'),
+            'meta_data' => Yii::t('maddoger/website', 'Custom fields'),
             'created_at' => Yii::t('maddoger/website', 'Created At'),
             'created_by' => Yii::t('maddoger/website', 'Created By'),
             'updated_at' => Yii::t('maddoger/website', 'Updated At'),
             'updated_by' => Yii::t('maddoger/website', 'Updated By'),
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterFind()
+    {
+        if ($this->meta_data) {
+            $this->meta_data = @unserialize($this->meta_data);
+        }
+        parent::afterFind();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if ($this->isAttributeChanged('text_source') || $this->isAttributeChanged('text_format')) {
+            $this->text = $this->getFormattedText();
+        }
+        if ($this->meta_data) {
+            $this->meta_data = @serialize($this->meta_data);
+        } else {
+            $this->meta_data = null;
+        }
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($this->meta_data) {
+            $this->meta_data = @unserialize($this->meta_data);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormattedText()
+    {
+        $text = trim($this->text_source);
+        $textFormats = Module::getInstance()->textFormats;
+        if (isset($textFormats[$this->text_format])) {
+            $format = $textFormats[$this->text_format];
+            if (isset($format['formatter']) && $format['formatter'] instanceof \Closure) {
+                return $format['formatter']($text);
+            }
+        }
+        return $text;
     }
 
     /**

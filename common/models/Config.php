@@ -49,7 +49,7 @@ class Config extends ConfigModel
     /**
      * @var string default text format
      */
-    public $defaultTextFormat;
+    public $defaultTextFormat = 'html';
 
     /**
      * @var ConfigI18n[]
@@ -91,7 +91,7 @@ class Config extends ConfigModel
     {
         return [
             [['defaultLayout'], 'string', 'max' => 150],
-            [['endBodyScripts'], 'string'],
+            [['endBodyScripts', 'defaultTextFormat'], 'string'],
         ];
     }
 
@@ -103,6 +103,7 @@ class Config extends ConfigModel
         return [
             'defaultLayout' => Yii::t('maddoger/website', 'Default layout'),
             'endBodyScripts' => Yii::t('maddoger/website', 'Counters JavaScript'),
+            'defaultTextFormat' => Yii::t('maddoger/website', 'Default text format'),
         ];
     }
 }

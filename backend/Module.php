@@ -9,6 +9,7 @@ namespace maddoger\website\backend;
 use maddoger\core\BackendModule;
 use maddoger\website\common\models\Config;
 use Yii;
+use yii\helpers\Markdown;
 use yii\rbac\Item;
 
 /**
@@ -24,6 +25,11 @@ class Module extends BackendModule
      * @var string page model class
      */
     public $pageModelClass = 'maddoger\website\common\models\Page';
+
+    /**
+     * @var array information about text formats
+     */
+    public $textFormats;
 
     /**
      * @var \maddoger\website\common\models\Config Module configuration
@@ -46,6 +52,34 @@ class Module extends BackendModule
                 'class' => 'yii\i18n\PhpMessageSource',
                 'basePath' => '@maddoger/website/common/messages',
                 'sourceLanguage' => 'en-US',
+            ];
+        }
+
+        if (!$this->textFormats && isset(Yii::$app->params['textFormats'])) {
+
+        }
+        if (!$this->textFormats) {
+            $this->textFormats = [
+                'text' => [
+                    'label' => Yii::t('maddoger/website', 'Text'),
+                    //no widget, simple textarea
+                    'formatter' => function($text) { return Yii::$app->formatter->asNtext($text); }
+                ],
+                'md' => [
+                    'label' => Yii::t('maddoger/website', 'Markdown'),
+                    //no widget, simple textarea
+                    'formatter' => function($text) { return Markdown::process($text, 'gfm'); }
+                ],
+                'html' => [
+                    'label' => Yii::t('maddoger/website', 'HTML'),
+                    //no widget, simple textarea
+                    'formatter' => function($text) { return $text; }
+                ],
+                'raw' => [
+                    'label' => Yii::t('maddoger/website', 'Raw'),
+                    //no widget, simple textarea
+                    'formatter' => function($text) { return $text; }
+                ],
             ];
         }
     }

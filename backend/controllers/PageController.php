@@ -5,6 +5,7 @@ namespace maddoger\website\backend\controllers;
 use maddoger\core\i18n\I18N;
 use maddoger\website\backend\models\PageSearch;
 use maddoger\website\backend\Module;
+use maddoger\website\common\models\Menu;
 use maddoger\website\common\models\Page;
 use Yii;
 use yii\filters\AccessControl;
@@ -24,7 +25,7 @@ class PageController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'list'],
+                        'actions' => ['index', 'view'],
                         'roles' => ['website.page.view'],
                         'allow' => true,
                     ],
@@ -64,11 +65,6 @@ class PageController extends Controller
         ]);
     }
 
-    public function actionList($q)
-    {
-
-    }
-
     /**
      * Displays a single Page model.
      * @param integer $id
@@ -93,6 +89,7 @@ class PageController extends Controller
          * @var \maddoger\website\common\models\Page $model
          */
         $model = new $pageClass();
+        $menus = [new Menu()];
 
         if ($model->load(Yii::$app->request->post())) {
 
@@ -111,6 +108,32 @@ class PageController extends Controller
             }
 
             if ($validate && $model->save()) {
+
+                //Update menu items
+                $updateMenuItems = Yii::$app->request->post('menu-items-update');
+                foreach ($menus as $menu) {
+                    if ($menu->isNewRecord) {
+                        if (Yii::$app->request->post('menu-items-create')) {
+                            $menu->page_id = $model->id;
+                            $menu->parent_id = Yii::$app->request->post('menu-items-create-parent_id');
+                            if (!$menu->parent_id) {
+                                continue;
+                            }
+                            $menu->type = Menu::TYPE_PAGE;
+                            $menu->language = $menu->parent->language;
+                            $menu->link = $model->getUrl($menu->language);
+                            $menu->label =  $model->getTranslation($menu->language)->title;
+                            $menu->save();
+                        }
+                        continue;
+                    }
+                    $menu->link = $model->getUrl($menu->language);
+                    if ($updateMenuItems && isset($updateMenuItems[$menu->id]) && $updateMenuItems[$menu->id]) {
+                        $menu->label =  $model->getTranslation($menu->language)->title;
+                    }
+                    $menu->save();
+                }
+
 
                 Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
                 switch (Yii::$app->request->post('redirect')) {
@@ -126,6 +149,7 @@ class PageController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'menus' => $menus,
         ]);
     }
 
@@ -138,6 +162,10 @@ class PageController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $menus = $model->menus;
+        if (!$menus) {
+            $menus = [new Menu()];
+        }
 
         if ($model->load(Yii::$app->request->post())) {
 
@@ -157,6 +185,31 @@ class PageController extends Controller
 
             if ($validate && $model->save()) {
 
+                //Update menu items
+                $updateMenuItems = Yii::$app->request->post('menu-items-update');
+                foreach ($menus as $menu) {
+                    if ($menu->isNewRecord) {
+                        if (Yii::$app->request->post('menu-items-create')) {
+                            $menu->page_id = $model->id;
+                            $menu->parent_id = Yii::$app->request->post('menu-items-create-parent_id');
+                            if (!$menu->parent_id) {
+                                continue;
+                            }
+                            $menu->type = Menu::TYPE_PAGE;
+                            $menu->language = $menu->parent->language;
+                            $menu->link = $model->getUrl($menu->language);
+                            $menu->label =  $model->getTranslation($menu->language)->title;
+                            $menu->save();
+                        }
+                        continue;
+                    }
+                    $menu->link = $model->getUrl($menu->language);
+                    if ($updateMenuItems && isset($updateMenuItems[$menu->id]) && $updateMenuItems[$menu->id]) {
+                        $menu->label =  $model->getTranslation($menu->language)->title;
+                    }
+                    $menu->save();
+                }
+
                 Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
                 switch (Yii::$app->request->post('redirect')) {
                     case 'exit':
@@ -171,6 +224,7 @@ class PageController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'menus' => $menus,
         ]);
     }
 

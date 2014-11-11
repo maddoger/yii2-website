@@ -122,7 +122,7 @@ JS
                     <?= $model->getAttributeLabel('slug'), ': ', Html::a($url, $url) ?><br />
                     <div class="text-content">
                         <h1><?= $model->title ?></h1>
-                        <?= $model->getFormattedText() ?>
+                        <?= $model->text ?>
                     </div>
                 </div>
             <?php endforeach; ?>

@@ -10,6 +10,7 @@ use maddoger\website\common\models\Config;
 use maddoger\website\frontend\Module;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 
 /**
@@ -44,7 +45,6 @@ class ConfigController extends Controller
             foreach (I18N::getAvailableLanguages() as $language) {
                 $modelI18n = $model->getTranslation($language['locale']);
                 $modelI18n->load(Yii::$app->request->post());
-                //$validate = $validate && $modelI18n->validate();
             }
 
             if ($model->save()) {

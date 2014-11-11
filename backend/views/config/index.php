@@ -10,8 +10,6 @@ use yii\widgets\ActiveForm;
 /* @var $model maddoger\website\common\models\Page */
 
 $this->title = Yii::t('maddoger/website', 'Configuration');
-//$this->params['breadcrumbs'][] = ['label' => Yii::t('maddoger/website', 'Pages'), 'url' => ['index']];
-//$this->params['breadcrumbs'][] = ['label' => $model->title];
 
 $availableLanguages = I18N::getAvailableLanguages();
 $activeLanguage = $availableLanguages[0]['locale'];
@@ -19,6 +17,11 @@ $activeLanguage = $availableLanguages[0]['locale'];
 $layouts = BackendModule::getInstance()->config->layouts;
 $layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')],
     $layouts) : ['' => Yii::t('maddoger/website', 'Default')];
+
+$textFormats = BackendModule::getInstance()->textFormats;
+$textFormats = array_merge(['' => Yii::t('maddoger/website', 'Default')],
+    $textFormats ? ArrayHelper::getColumn($textFormats, 'label', true) : []);
+
 
 ?>
 <div class="page-update">
@@ -71,6 +74,9 @@ $layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')],
                         <div class="panel-title"><?= Yii::t('maddoger/website', 'Common') ?></div>
                     </div>
                     <div class="panel-body">
+                        <?= $form->field($model, 'defaultTextFormat')->dropDownList($textFormats)
+                            ->hint(Yii::t('maddoger/website', 'Default text format for pages.')) ?>
+
                         <?= $form->field($model, 'defaultLayout')->dropDownList($layouts)
                             ->hint(Yii::t('maddoger/website', 'As this page will look like.')) ?>
 

@@ -8,7 +8,6 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\Inflector;
-use yii\helpers\Markdown;
 use yii\helpers\Url;
 
 /**
@@ -36,6 +35,7 @@ use yii\helpers\Url;
  * @property string $title
  * @property string $window_title
  * @property string $text
+ * @property string $text_source
  * @property string $text_format
  * @property string $meta_keywords
  * @property string $meta_description
@@ -92,6 +92,7 @@ class Page extends \yii\db\ActiveRecord
                     'title',
                     'window_title',
                     'text_format',
+                    'text_source',
                     'text',
                     'meta_keywords',
                     'meta_description',
@@ -207,29 +208,6 @@ class Page extends \yii\db\ActiveRecord
             '{languageSlug}' => $languageArray['slug'],
         ]);
         return Url::to($url);
-    }
-
-    /**
-     * @param null $format
-     * @return string
-     */
-    public function getFormattedText($format = null)
-    {
-        if (!$format) {
-            $format = $this->text_format;
-        }
-        $text = trim($this->text);
-        switch ($format) {
-            case 'html':
-                return Yii::$app->formatter->asHtml($text);
-            case 'text':
-                return Yii::$app->formatter->asNtext($text);
-            case 'md':
-                return Markdown::process($text, 'gfm');
-
-            default:
-                return $text;
-        }
     }
 
     /**

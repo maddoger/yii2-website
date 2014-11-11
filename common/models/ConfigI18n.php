@@ -6,8 +6,8 @@
 
 namespace maddoger\website\common\models;
 
+use maddoger\core\config\ConfigModel;
 use Yii;
-use yii\base\Model;
 
 /**
  * Config
@@ -16,7 +16,7 @@ use yii\base\Model;
  * @link http://syrchikov.name
  * @package maddoger/yii2-website
  */
-class ConfigI18n extends Model
+class ConfigI18n extends ConfigModel
 {
     /**
      * @var string
