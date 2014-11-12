@@ -91,59 +91,15 @@ class PageController extends Controller
         $model = new $pageClass();
         $menus = [new Menu()];
 
-        if ($model->load(Yii::$app->request->post())) {
-
-            $validate = true;
-            foreach (I18N::getAvailableLanguages() as $language) {
-                $modelI18n = $model->getTranslation($language['locale']);
-                if ($modelI18n->load(Yii::$app->request->post())) {
-                    if (empty($modelI18n->title) && empty($modelI18n->text)) {
-                        if (!$modelI18n->isNewRecord) {
-                            $modelI18n->delete();
-                        }
-                    } elseif (!$modelI18n->validate()) {
-                        $validate = false;
-                    }
-                }
-            }
-
-            if ($validate && $model->save()) {
-
-                //Update menu items
-                $updateMenuItems = Yii::$app->request->post('menu-items-update');
-                foreach ($menus as $menu) {
-                    if ($menu->isNewRecord) {
-                        if (Yii::$app->request->post('menu-items-create')) {
-                            $menu->page_id = $model->id;
-                            $menu->parent_id = Yii::$app->request->post('menu-items-create-parent_id');
-                            if (!$menu->parent_id) {
-                                continue;
-                            }
-                            $menu->type = Menu::TYPE_PAGE;
-                            $menu->language = $menu->parent->language;
-                            $menu->link = $model->getUrl($menu->language);
-                            $menu->label =  $model->getTranslation($menu->language)->title;
-                            $menu->save();
-                        }
-                        continue;
-                    }
-                    $menu->link = $model->getUrl($menu->language);
-                    if ($updateMenuItems && isset($updateMenuItems[$menu->id]) && $updateMenuItems[$menu->id]) {
-                        $menu->label =  $model->getTranslation($menu->language)->title;
-                    }
-                    $menu->save();
-                }
-
-
-                Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
-                switch (Yii::$app->request->post('redirect')) {
-                    case 'exit':
-                        return $this->redirect(['index']);
-                    case 'new':
-                        return $this->redirect(['create']);
-                    default:
-                        return $this->redirect(['view', 'id' => $model->id]);
-                }
+        if ($this->saveModel($model, $menus)) {
+            Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
+            switch (Yii::$app->request->post('redirect')) {
+                case 'exit':
+                    return $this->redirect(['index']);
+                case 'new':
+                    return $this->redirect(['create']);
+                default:
+                    return $this->redirect(['view', 'id' => $model->id]);
             }
         }
 
@@ -167,6 +123,31 @@ class PageController extends Controller
             $menus = [new Menu()];
         }
 
+        if ($this->saveModel($model, $menus)) {
+            Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
+            switch (Yii::$app->request->post('redirect')) {
+                case 'exit':
+                    return $this->redirect(['index']);
+                case 'new':
+                    return $this->redirect(['create']);
+                default:
+                    return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'menus' => $menus,
+        ]);
+    }
+
+    /**
+     * @param Page $model
+     * @param Menu[] $menus
+     * @return bool
+     */
+    protected function saveModel($model, $menus)
+    {
         if ($model->load(Yii::$app->request->post())) {
 
             $validate = true;
@@ -177,8 +158,27 @@ class PageController extends Controller
                         if (!$modelI18n->isNewRecord) {
                             $modelI18n->delete();
                         }
-                    } elseif (!$modelI18n->validate()) {
-                        $validate = false;
+                    } else {
+
+                        //Meta data
+                        if ($modelI18n->meta_data && isset($modelI18n->meta_data['name']) && isset($modelI18n->meta_data['value'])) {
+                            $data = array_filter(array_combine(
+                                $modelI18n->meta_data['name'],
+                                $modelI18n->meta_data['value']
+                            ));
+                            if ($data) {
+                                ksort($data);
+                                $modelI18n->meta_data = $data;
+                            } else {
+                                $modelI18n->meta_data = null;
+                            }
+                        } else {
+                            $modelI18n->meta_data = null;
+                        }
+
+                        if (!$modelI18n->validate()) {
+                            $validate = false;
+                        }
                     }
                 }
             }
@@ -210,22 +210,10 @@ class PageController extends Controller
                     $menu->save();
                 }
 
-                Yii::$app->session->addFlash('success', Yii::t('maddoger/website', 'Saved.'));
-                switch (Yii::$app->request->post('redirect')) {
-                    case 'exit':
-                        return $this->redirect(['index']);
-                    case 'new':
-                        return $this->redirect(['create']);
-                    default:
-                        return $this->redirect(['view', 'id' => $model->id]);
-                }
+                return true;
             }
         }
-
-        return $this->render('update', [
-            'model' => $model,
-            'menus' => $menus,
-        ]);
+        return false;
     }
 
     /**
