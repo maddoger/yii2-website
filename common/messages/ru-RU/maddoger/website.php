@@ -33,7 +33,7 @@ return [
     'Auth users only' => 'Только для пользователей',
     'By title' => 'По заголовку',
     'CSS Class' => 'CSS класс',
-    'Choose' => 'Выберите',
+    'Choose' => 'Выбрать',
     'Choose menu for editing' => 'Выберите меню для редактирования',
     'Class name for li element.' => 'Класс для тега LI элемента.',
     'Common' => 'Общее',

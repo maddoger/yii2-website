@@ -162,7 +162,7 @@ JS
                         } ?></h4>
                     <?= Yii::t('maddoger/website', 'Add menu items from the column on the left.') ?>
                     <br />
-                    <?= $this->render('_items', ['menu' => $menu, 'items' => $items]); ?>
+                    <?= $this->render('_items', ['menu' => $menu, 'items' => $menu->getChildren()->with(['children', 'page'])->all()]); ?>
                     <br />
                     <hr/>
                     <h4><?= Yii::t('maddoger/website', 'Menu settings') ?></h4>

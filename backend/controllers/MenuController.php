@@ -6,17 +6,11 @@
 
 namespace maddoger\website\backend\controllers;
 
-use maddoger\website\backend\models\MenuForm;
-use maddoger\website\backend\models\MenuItemForm;
-use maddoger\website\backend\models\MenuNewItemForm;
-use maddoger\website\backend\models\PageSearch;
 use maddoger\website\common\models\Menu;
 use maddoger\website\common\models\PageI18n;
 use Yii;
-use yii\base\Exception;
 use yii\base\InvalidParamException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -58,13 +52,16 @@ class MenuController extends Controller
     /**
      * Menu tree
      */
-    public function actionIndex($id=null)
+    public function actionIndex($id = null)
     {
-        $menus = MenuForm::findMenus();
+        $menus = Menu::findMenus();
+        /**
+         * @var Menu $menu
+         */
         $menu = null;
 
         if ($id === null) {
-            if (count($menus)>0) {
+            if (count($menus) > 0) {
                 reset($menus);
                 $id = key($menus);
                 $menu = $menus[$id];
@@ -112,7 +109,7 @@ class MenuController extends Controller
                 $itemsDelete = Yii::$app->request->post('items_delete');
                 $items = Yii::$app->request->post('menu-items');
                 if ($items) {
-                    foreach ($items as $id=>$itemArray) {
+                    foreach ($items as $id => $itemArray) {
                         $item = Menu::findOne($id);
                         $item->scenario = 'updateMenuItems';
                         if (!$item) {
@@ -124,7 +121,7 @@ class MenuController extends Controller
                         }
                         $item->setAttributes($itemArray);
                         $item->language = $menu->language;
-                        $item->sort = @$itemsSort[$item->id]+1;
+                        $item->sort = @$itemsSort[$item->id] + 1;
                         $item->status = Menu::STATUS_ACTIVE;
                         $item->save();
                     }
@@ -137,17 +134,14 @@ class MenuController extends Controller
             }
         }
 
-        $items = MenuItemForm::getTreeByParentId($menu->id);
-
         return $this->render('index', [
-            'items' => $items,
             'menus' => $menus,
             'menu' => $menu,
             'newItem' => $newItem,
         ]);
     }
 
-    public function actionPages($q, $sort='label')
+    public function actionPages($q, $sort = 'label')
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -156,8 +150,12 @@ class MenuController extends Controller
             throw new InvalidParamException('Unknown sort field.');
         }
 
-        $query = PageI18n::find()->where(['like', 'title', $q])->orderBy([$sort => $sortAttributes[$sort]])->with('page');
-        $query->limit(100);
+        $query = PageI18n::find()->where([
+                'like',
+                'title',
+                $q
+            ])->orderBy([$sort => $sortAttributes[$sort]])->with('page');
+        $query->limit(20);
         $res = [];
         foreach ($query->all() as $model) {
             /**

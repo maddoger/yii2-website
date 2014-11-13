@@ -115,8 +115,11 @@ class PageI18n extends \yii\db\ActiveRecord
      */
     public function afterFind()
     {
-        if ($this->meta_data) {
-            $this->meta_data = @unserialize($this->meta_data);
+        try {
+            $this->meta_data = unserialize($this->meta_data);
+        }
+        catch (\Exception $e) {
+            $this->meta_data = null;
         }
         parent::afterFind();
     }
@@ -130,7 +133,12 @@ class PageI18n extends \yii\db\ActiveRecord
             $this->text = $this->getFormattedText();
         }
         if ($this->meta_data) {
-            $this->meta_data = @serialize($this->meta_data);
+            try {
+                $this->meta_data = serialize($this->meta_data);
+            }
+            catch (\Exception $e) {
+                $this->meta_data = null;
+            }
         } else {
             $this->meta_data = null;
         }
@@ -144,7 +152,12 @@ class PageI18n extends \yii\db\ActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
         if ($this->meta_data) {
-            $this->meta_data = @unserialize($this->meta_data);
+            try {
+                $this->meta_data = unserialize($this->meta_data);
+            }
+            catch (\Exception $e) {
+                $this->meta_data = null;
+            }
         }
     }
 

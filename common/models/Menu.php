@@ -5,6 +5,7 @@ namespace maddoger\website\common\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "{{%website_menu}}".
@@ -72,7 +73,6 @@ class Menu extends \yii\db\ActiveRecord
         ];
     }
 
-
     /**
      * @inheritdoc
      */
@@ -112,6 +112,7 @@ class Menu extends \yii\db\ActiveRecord
             'slug' => Yii::t('maddoger/website', 'Identifier for templates'),
             'label' => Yii::t('maddoger/website', 'Label'),
             'title' => Yii::t('maddoger/website', 'Title attribute'),
+            'language' => Yii::t('maddoger/website', 'Language'),
             'link' => Yii::t('maddoger/website', 'Link'),
             'preg' => Yii::t('maddoger/website', 'Preg'),
             'target' => Yii::t('maddoger/website', 'Target'),
@@ -142,8 +143,9 @@ class Menu extends \yii\db\ActiveRecord
             return 'MenuNewItem';
         } elseif ($this->scenario == 'updateMenuItems') {
             return 'menu-items['.$this->id.']';
+        } else {
+            return parent::formName();
         }
-        return parent::formName();
     }
 
     /**
@@ -219,7 +221,7 @@ class Menu extends \yii\db\ActiveRecord
      */
     public function getChildrenItems()
     {
-        return static::getTreeByParentId($this->id);
+        return static::getChildrenArrayByParentId($this->id);
     }
 
     /**
@@ -262,7 +264,7 @@ class Menu extends \yii\db\ActiveRecord
      * @param int|bool $cacheDuration
      * @return null|array
      */
-    public static function getTreeByParentId($parentId = 0, $cacheDuration = null)
+    public static function getChildrenArrayByParentId($parentId = 0, $cacheDuration = null)
     {
         $cacheDuration = $cacheDuration !== null ? $cacheDuration : static::$cacheDuration;
 
@@ -273,33 +275,23 @@ class Menu extends \yii\db\ActiveRecord
             $items = static::find()->
             orderBy(['sort' => SORT_ASC, 'id' => SORT_DESC])->
             indexBy('id')->
-            with('children')->
+            asArray()->
             all();
+            $items[0] = ['children' => []];
 
-            $menus = [];
-            foreach ($items as $item) {
-                if ($item->type == self::TYPE_MENU) {
-                    $menus[$item->id] = $item;
+            foreach ($items as $id=>$item) {
+                if (!$id) { continue; }
+                if ($item['parent_id'] === null) {
+                    $item['parent_id'] = 0;
+                }
+                if (isset($items[$item['parent_id']])) {
+                    $parent = &$items[$item['parent_id']];
+                    if (!isset($parent['children'])) {
+                        $parent['children'] = [];
+                    }
+                    $parent['children'][$id] = &$items[$id];
                 }
             }
-            $items[0] = ['children' => $menus];
-
-            /*$models = static::find()->orderBy(['sort' => SORT_ASC, 'id' => SORT_DESC])->indexBy('id')->asArray()->all();
-            $items = array_merge([
-                0 => ['children' =>[]]
-            ], $models);
-
-            foreach ($models as $id=>$item) {
-
-                $models[$id]['children'] = [];
-
-                if ($item['parent_id']) {
-                    $parent = &$items[$item['parent_id']];
-                } else {
-                    $parent = &$items[0];
-                }
-                $parent['children'][$item['id']] = &$items[$item['id']];
-            }*/
 
             if ($items && $cacheDuration !== false) {
                 Yii::$app->cache->set(static::$cacheKey, $items, $cacheDuration);
@@ -317,52 +309,42 @@ class Menu extends \yii\db\ActiveRecord
      * Returns array tree from parentTitle (without itself).
      * Children are in children field.
      *
-     * @param string $parentTitle
-     * @return null|array
+     * @param string $slug
+     * @param string $language
+     * @return null|static
      */
-    public static function getTreeByParentTitle($parentTitle)
+    public static function getMenuBySlug($slug, $language = null)
     {
-        static $itemsNameToId = null;
-        if ($itemsNameToId === null) {
-            $itemsNameToId = array();
+        $menuQuery = static::find()->where(['slug' => $slug]);
+        if ($language === null) {
+            $language = Yii::$app->language;
         }
+        $menuQuery->andWhere(['or', ['language' => $language], ['language' => null]]);
+        $menu = $menuQuery->limit(1)->one();
 
-        $parentId = null;
-
-        if (isset($itemsNameToId[$parentTitle])) {
-            $parentId = $itemsNameToId[$parentTitle];
-        } else {
-
-            $model = static::find()->where(['title' => $parentTitle])->select(['id'])->limit(1)->one();
-            if ($model) {
-                $parentId = $model->id;
-                $itemsNameToId[$parentTitle] = $parentId;
-            }
-        }
-
-        if ($parentId !== null) {
-            return static::getTreeByParentId($parentId);
-        } else {
-            return null;
-        }
+        return $menu;
     }
 
     /**
-     * @param null $parentId
+     * @param int $parentId
+     * @param int $maxLevel
+     * @param string $levelDelimiter
      * @return array
      */
-    public static function getList($parentId = 0, $levelDelimiter = '- ')
+    public static function getList($parentId = 0, $maxLevel = null, $levelDelimiter = '- ')
     {
-        $tree = static::getTreeByParentId($parentId);
+        $tree = static::getChildrenArrayByParentId($parentId);
         if (!$tree) {
             return [];
         }
         $res = [];
-        $func = function($items, $level = 0) use (&$res, &$func, &$levelDelimiter) {
+        $func = function($items, $level = 0) use (&$res, &$func, &$levelDelimiter, &$maxLevel) {
             foreach ($items as $item) {
-                $res[$item->id] = str_repeat($levelDelimiter, $level) . $item->label;
-                if ($item->children) {
-                    $func($item->children, $level+1);
+                $res[$item['id']] = str_repeat($levelDelimiter, $level) . $item['label'];
+                if (isset($item['children']) && !empty($item['children'])) {
+                    if ($maxLevel===null || $level<$maxLevel) {
+                        $func($item['children'], $level+1);
+                    }
                 }
             }
         };

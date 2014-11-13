@@ -6,7 +6,7 @@ use yii\helpers\Html;
 
 /* @var array|maddoger\website\common\models\Menu $item */
 
-switch ($item['type']) {
+switch ($item->type) {
     case Menu::TYPE_LINK:
         $itemTypeLabel = Yii::t('maddoger/website', 'Link');
         break;
@@ -21,7 +21,7 @@ switch ($item['type']) {
 $item->scenario = 'updateMenuItems';
 
 ?>
-<li id="menu-items-<?= $item['id'] ?>" data-id="<?= $item['id'] ?>">
+<li id="menu-items-<?= $item->id ?>" data-id="<?= $item->id ?>">
     <div class="panel panel-solid panel-default collapsed-panel">
         <div class="panel-heading">
             <div class="panel-tools pull-right">
@@ -29,14 +29,14 @@ $item->scenario = 'updateMenuItems';
                 <button type="button" class="btn btn-default btn-xs" data-widget="collapse"><i class="fa fa-plus"></i>
                 </button>
             </div>
-            <div class="panel-title"><?= $item['label'] ?></div>
+            <div class="panel-title"><?= $item->label ?></div>
         </div>
         <div class="panel-body" style="display: none;">
             <?php
-            //$fieldPrefix = 'menu-items['.$item['id'].']';
-            //$idPrefix = 'menu-items-'.$item['id'];
-            echo Html::hiddenInput('items_sort[]', $item['id']);
-            echo Html::hiddenInput('items_delete['.$item['id'].']', 0, ['class' => 'delete-field']);
+            //$fieldPrefix = 'menu-items['.$itemModel->id.']';
+            //$idPrefix = 'menu-items-'.$itemModel->id;
+            echo Html::hiddenInput('items_sort[]', $item->id);
+            echo Html::hiddenInput('items_delete['.$item->id.']', 0, ['class' => 'delete-field']);
             echo Html::activeHiddenInput($item, 'parent_id');
             ?>
             <div class="form-group form-group-sm">
@@ -59,7 +59,9 @@ $item->scenario = 'updateMenuItems';
                 </div>
             </div>
             <hr />
-            <?php if ($item->type == Menu::TYPE_PAGE && $item->page) { ?>
+            <?php if ($item->type == Menu::TYPE_PAGE && $item->page_id && $item->page) {
+                $item->page->setLanguage($item->language);
+                ?>
             <div class="form-group form-group-sm">
                 <label class="control-label"><?=  Yii::t('maddoger/website', 'Original page') ?>:</label>
                 <?= Html::a(Html::encode($item->page->title), ['page/view', 'id' => $item->page_id]) ?>
@@ -114,8 +116,8 @@ $item->scenario = 'updateMenuItems';
     </div>
     <ol>
         <?php
-        if (isset($item['children']) && !empty($item['children'])) {
-            foreach ($item['children'] as $child) {
+        if (isset($item->children) && !empty($item->children)) {
+            foreach ($item->children as $child) {
                 echo $this->render('_item', ['item' => $child]);
             }
         }
