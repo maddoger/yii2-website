@@ -246,7 +246,8 @@ class Page extends \yii\db\ActiveRecord
         $slug = trim($slug, '/\\');
         $query = static::find();
         $query->with(['translations']);
-        $query->andWhere(['or', ['slug' => $slug], ['slug' => '/' . $slug]]);
+        //$query->andWhere(['or', ['slug' => $slug], ['slug' => '/' . $slug]]);
+        $query->andWhere(['slug' => $slug]);
         $query->limit(1);
         return $query->one();
     }

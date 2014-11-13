@@ -6,9 +6,9 @@
 
 namespace maddoger\website\frontend\widgets;
 
-
-use maddoger\website\common\models\Menu as MenuModel;
 use Yii;
+use yii\base\InvalidParamException;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Menu as BaseMenu;
@@ -23,26 +23,39 @@ use yii\widgets\Menu as BaseMenu;
 class Menu extends BaseMenu
 {
     /**
-     * @var Menu|int|string Parent id or name for items
+     * @var \maddoger\website\common\models\Menu for items. You can use Menu object, slug or id.
      */
-    public $menu = null;
+    public $menu;
 
     /**
-     * @var null|array Array of items
+     * @var string
      */
-    public $items = null;
+    public $menuModelClass = 'maddoger\website\common\models\Menu';
 
     /**
      * @inheritdoc
      */
-    public $linkTemplate = '<a href="{url}"><span>{icon}{label}</span></a>';
+    public $linkTemplate = '<a href="{url}"{target}{title}><span>{icon}{label}</span></a>';
 
     /**
-     * @var string the template used to render the body of a menu which is NOT a link.
-     * In this template, the token `{label}` will be replaced with the label of the menu item.
-     * This property will be overridden by the `template` option set in individual menu items via [[items]].
+     * @inheritdoc
      */
-    public $labelTemplate = '<span>{icon}{label}</span>';
+    public $labelTemplate = '<span{title}>{icon}{label}</span>';
+
+    /**
+     * @var string
+     */
+    public $iconTemplate = '<i class="{icon}"></i>&nbsp;';
+
+    /**
+     * @inheritdoc
+     */
+    public $submenuTemplate = "\n<ul>\n{items}\n</ul>\n";
+
+    /**
+     * @var string
+     */
+    public $submenuItemClass;
 
     /**
      * @inheritdoc
@@ -52,40 +65,39 @@ class Menu extends BaseMenu
     /**
      * @inheritdoc
      */
-    public $hideEmptyItems = true;
-
-    /**
-     * @var string
-     */
-    public $currentUrl = null;
-
-    /**
-     * Renders the menu.
-     */
-    public function run()
+    public function init()
     {
-        if ($this->items === null) {
-            if ($this->parent !== null) {
-                //Getting items by parent
-                if (is_numeric($this->parent)) {
-                    $children = MenuModel::getChildrenArrayByParentId(intval($this->parent));
-                } else {
-                    $children = MenuModel::getTreeByParentTitle($this->parent);
-                }
-            } else {
-                return null;
+        parent::init();
+        if (!$this->items) {
+
+            if (!$this->menu) {
+                throw new InvalidParamException('Menu property must be set.');
             }
 
-            if ($children) {
-                $this->items = $children;
+            $class = $this->menuModelClass;
+            if (is_int($this->menu)) {
+                $this->menu = $class::findOne($this->menu);
+            } elseif (is_string($this->menu)) {
+                $this->menu = $class::findBySlug($this->menu);
+            }
+
+            if ($this->menu instanceof $class) {
+                //Get items
+                $this->items = $this->menu->getItems();
+
+                if (!empty($this->menu->element_id) && !isset($this->options['id'])) {
+                    $this->options['id'] = $this->menu->element_id;
+                }
+                if (!empty($this->menu->css_class)) {
+                    Html::addCssClass($this->options, $this->menu->css_class);
+                }
             }
         }
-        if ($this->currentUrl === null) {
-            $this->currentUrl = rtrim(str_replace('?', '/?', Yii::$app->request->url), '/');
-        }
-        parent::run();
     }
 
+    /**
+     * @inheritdoc
+     */
     /**
      * Normalizes the [[items]] property to remove invisible items and activate certain items.
      * @param array $items the items to be normalized.
@@ -94,45 +106,29 @@ class Menu extends BaseMenu
      */
     protected function normalizeItems($items, &$active)
     {
-        if (!$items) {
-            return [];
-        }
         foreach ($items as $i => $item) {
 
-            if (isset($item['enabled'])) {
-                $item['visible'] = $item['enabled'];
+            if (isset($item['roles'])) {
+                $item['visible'] = false;
+                foreach ($item['roles'] as $role) {
+                    if (Yii::$app->user->can($role)) {
+                        $item['visible'] = true;
+                        break;
+                    }
+                }
             }
-            if (isset($item['title'])) {
-                $item['label'] = $item['title'];
-            }
-            if (isset($item['link'])) {
-                $item['url'] = Url::to($item['link'] == '/' ? '/' : rtrim($item['link'], '/'));
-            }
-            if (isset($item['children']) && (count($item['children']) > 0)) {
-                $item['items'] = &$item['children'];
-            }
-            if (!isset($item['options'])) {
-                $item['options'] = [];
-            }
-            if (isset($item['css_class']) && !empty($item['css_class'])) {
-                $item['options']['class'] = $item['css_class'];
-            }
-            if (isset($item['element_id']) && !empty($item['element_id'])) {
-                $item['options']['id'] = $item['element_id'];
-            }
-            $items[$i] = $item;
-
             if (isset($item['visible']) && !$item['visible']) {
                 unset($items[$i]);
                 continue;
             }
-
             if (!isset($item['label'])) {
                 $item['label'] = '';
             }
-            if ($this->encodeLabels) {
-                $items[$i]['label'] = Html::encode($item['label']);
+            if (!isset($items[$i]['options'])) {
+                $items[$i]['options'] = [];
             }
+            $encodeLabel = isset($item['encode']) ? $item['encode'] : $this->encodeLabels;
+            $items[$i]['label'] = $encodeLabel ? Html::encode($item['label']) : $item['label'];
             $hasActiveChild = false;
             if (isset($item['items'])) {
                 $items[$i]['items'] = $this->normalizeItems($item['items'], $hasActiveChild);
@@ -142,6 +138,9 @@ class Menu extends BaseMenu
                         unset($items[$i]);
                         continue;
                     }
+                }
+                if ($this->submenuItemClass) {
+                    Html::addCssClass($items[$i]['options'], $this->submenuItemClass);
                 }
             }
             if (!isset($item['active'])) {
@@ -154,8 +153,41 @@ class Menu extends BaseMenu
                 $active = true;
             }
         }
+
         return array_values($items);
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    protected function renderItem($item)
+    {
+        $icon = ArrayHelper::getValue($item, 'icon_class');
+        if ($icon) {
+            $icon = '<i class="'.$icon.'"></i>&nbsp;';
+        }
+
+        $template = isset($item['url']) ?
+            ArrayHelper::getValue($item, 'template', $this->linkTemplate) :
+            ArrayHelper::getValue($item, 'template', $this->labelTemplate);
+
+        return strtr($template, [
+            '{url}' => Url::to($item['url']),
+            '{icon}' => $icon,
+            '{label}' => $item['label'],
+            '{target}' =>
+                (isset($item['target']) && !empty($item['target'])) ?
+                    ' target="'.Html::encode($item['target']).'"' :
+                    '',
+            '{title}' =>
+                (isset($item['title']) && !empty($item['title'])) ?
+                    ' title="'.Html::encode($item['title']).'"' :
+                    '',
+
+        ]);
+    }
+
 
     /**
      * Checks whether a menu item is active.
@@ -169,23 +201,20 @@ class Menu extends BaseMenu
      */
     protected function isItemActive($item)
     {
-        $preg = null;
-        if (isset($item['preg']) && !empty($item['preg'])) {
-            $preg = $item['preg'];
-        } elseif (isset($item['url'])) {
-            $preg = $item['url'] . ($item['url'] != '/' ? '/*' : '');
+        $res = parent::isItemActive($item);
+        if (!$res) {
+
+            $preg = null;
+            if (isset($item['preg']) && !empty($item['preg'])) {
+                $preg = $item['preg'];
+            } elseif (isset($item['url'])) {
+                $preg = $item['url'] . ($item['url'] != '/' ? '/*' : '');
+            }
+            if (!empty($preg)) {
+                $preg = '/^' . str_replace('*', '(.*?)', str_replace('/', '\/', $preg)) . '$/is';
+                $res = (preg_match($preg, Yii::$app->request->url) || preg_match($preg, Yii::$app->request->url . '/'));
+            }
         }
-
-        if ($preg !== null && !empty($preg)) {
-
-            $preg = '/^' . str_replace('*', '(.*?)', str_replace('/', '\/', $preg)) . '$/is';
-
-            /*var_dump($preg);
-            var_dump($this->currentUrl);*/
-
-            return (preg_match($preg, $this->currentUrl) || preg_match($preg, $this->currentUrl . '/'));
-        } else {
-            return parent::isItemActive($item);
-        }
+        return $res;
     }
 }

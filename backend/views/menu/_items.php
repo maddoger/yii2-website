@@ -32,7 +32,14 @@ $this->registerJs('$("#menu-items-editor > ol").nestedSortable({
             var t = $(this);
             var item = t.closest("li");
             item.find(".delete-field").val(1);
-            item.hide();
+            //item.hide();
+
+            var newContainer = $("<div />");
+            newContainer.hide();
+            newContainer.append(item.children());
+            $("#menu-items-editor").after(newContainer);
+
+            item.remove();
         }
         return false;
     }).on("click", "[data-tree-action=\"up\"]", function(){

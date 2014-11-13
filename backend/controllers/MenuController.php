@@ -111,7 +111,6 @@ class MenuController extends Controller
                 if ($items) {
                     foreach ($items as $id => $itemArray) {
                         $item = Menu::findOne($id);
-                        $item->scenario = 'updateMenuItems';
                         if (!$item) {
                             continue;
                         }
@@ -119,6 +118,7 @@ class MenuController extends Controller
                             $item->delete();
                             continue;
                         }
+                        $item->scenario = 'updateMenuItems';
                         $item->setAttributes($itemArray);
                         $item->language = $menu->language;
                         $item->sort = @$itemsSort[$item->id] + 1;
