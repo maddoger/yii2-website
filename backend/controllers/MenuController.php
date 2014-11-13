@@ -36,7 +36,7 @@ class MenuController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['website.menu.manageMenu'],
+                        'roles' => ['website.menu.manage'],
                     ],
                 ],
             ],

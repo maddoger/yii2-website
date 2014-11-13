@@ -115,21 +115,21 @@ class Module extends BackendModule
                         'url' => ['/' . $this->id . '/page/index'],
                         'activeUrl' => '/' . $this->id . '/page/*',
                         'icon' => 'fa fa-book',
-                        //'roles' => ['website.page.view'],
+                        'roles' => ['website.page.view'],
                     ],
                     [
                         'label' => Yii::t('maddoger/website', 'Menus'),
                         'url' => ['/' . $this->id . '/menu/index'],
                         'activeUrl' => '/' . $this->id . '/menu/*',
                         'icon' => 'fa fa-bars',
-                        //TODO: Поставить права
-                        //'roles' => ['website.menu.manageRoles'],
+                        'roles' => ['website.menu.manage'],
                     ],
                     [
                         'label' => Yii::t('maddoger/website', 'Configuration'),
                         'url' => ['/' . $this->id . '/config'],
                         'activeUrl' => '/' . $this->id . '/config/*',
                         'icon' => 'fa fa-gears',
+                        'roles' => ['website.config.manage'],
                     ],
                 ]
             ]
@@ -181,8 +181,7 @@ class Module extends BackendModule
                     ],
                 ],
             //Menu
-            //TODO: Сделать права
-            'website.menu.manageMenu' =>
+            'website.menu.manage' =>
                 [
                     'type' => Item::TYPE_PERMISSION,
                     'description' => Yii::t('maddoger/website', 'Website. Create, update and delete menus'),
@@ -192,14 +191,22 @@ class Module extends BackendModule
                     'type' => Item::TYPE_ROLE,
                     'description' => Yii::t('maddoger/website', 'Website. Manage menus'),
                     'children' => [
-                        'website.menu.manageMenu',
+                        'website.menu.manage',
                     ]
                 ],
             //Website
-            'website.config' =>
+            'website.config.manage' =>
                 [
                     'type' => Item::TYPE_PERMISSION,
                     'description' => Yii::t('maddoger/website', 'Website. Change SEO settings'),
+                ],
+            'website.config.manager' =>
+                [
+                    'type' => Item::TYPE_ROLE,
+                    'description' => Yii::t('maddoger/website', 'Website. Change SEO settings'),
+                    'children' => [
+                        'website.config.manage',
+                    ]
                 ],
         ];
     }
