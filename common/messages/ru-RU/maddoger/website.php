@@ -17,7 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Custom fields can be used to add extra metadata to a page that you can use in your theme.' => 'Произвольные поля используются для добавления дополнительных мета-данных страницы, которые вы можете использовать в своей теме оформления.',
+    'Create new page' => 'Создать новую страницу',
+    'Menu - ' => 'Меню - ',
+    'Page - ' => 'Страница - ',
+    'SEO Configuration' => 'Настройка SEO',
     ' or <a href="{url}">create a new menu</a>.' => 'или <a href="{url}">создайте новое меню</a>',
     'Active' => 'Активна',
     'Add custom field' => 'Добавить поле',
@@ -51,6 +54,7 @@ return [
     'Custom' => 'Специальное',
     'Custom activity regular expression.' => 'Специальное регулярное выражение для определения активности.',
     'Custom fields' => 'Произвольные поля',
+    'Custom fields can be used to add extra metadata to a page that you can use in your theme.' => 'Произвольные поля используются для добавления дополнительных мета-данных страницы, которые вы можете использовать в своей теме оформления.',
     'Default' => 'По-умолчанию',
     'Default Language' => 'Язык по-умолчанию',
     'Default layout' => 'Шаблон по-умолчанию',

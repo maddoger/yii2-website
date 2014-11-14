@@ -173,7 +173,7 @@ class Menu extends BaseMenu
             ArrayHelper::getValue($item, 'template', $this->labelTemplate);
 
         return strtr($template, [
-            '{url}' => Url::to($item['url']),
+            '{url}' => isset($item['url']) ? Url::to($item['url']) : null,
             '{icon}' => $icon,
             '{label}' => $item['label'],
             '{target}' =>
