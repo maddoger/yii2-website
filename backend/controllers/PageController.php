@@ -10,6 +10,7 @@ use maddoger\website\common\models\Page;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -43,6 +44,12 @@ class PageController extends Controller
                         'actions' => ['delete'],
                         'allow' => true,
                         'roles' => ['website.page.delete'],
+                        'verbs' => ['POST'],
+                    ],
+                    [
+                        'actions' => ['backup'],
+                        'allow' => true,
+                        'roles' => ['website.page.create', 'website.page.update'],
                         'verbs' => ['POST'],
                     ],
                 ],
@@ -80,15 +87,23 @@ class PageController extends Controller
     /**
      * Creates a new Page model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param integer $original
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($original = 0)
     {
         $pageClass = Module::getInstance()->pageModelClass;
         /**
          * @var \maddoger\website\common\models\Page $model
          */
         $model = new $pageClass();
+        if (!$original && ($time = $this->loadBackup($model))!==false) {
+            Yii::$app->session->addFlash('warning', Yii::t('maddoger/website', 'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.', [
+                'url' => Url::to(['', 'original' => 1]),
+                'time' => $time,
+            ]));
+        }
+
         $menus = [new Menu()];
 
         if ($this->saveModel($model, $menus)) {
@@ -113,11 +128,19 @@ class PageController extends Controller
      * Updates an existing Page model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
+     * @param integer $original
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $original = 0)
     {
         $model = $this->findModel($id);
+        if (!$original && ($time = $this->loadBackup($model))!==false) {
+            Yii::$app->session->addFlash('warning', Yii::t('maddoger/website', 'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.', [
+                'url' => Url::to(['', 'id' => $id, 'original' => 1]),
+                'time' => $time,
+            ]));
+        }
+
         $menus = $model->menus;
         if (!$menus) {
             $menus = [new Menu()];
@@ -185,6 +208,9 @@ class PageController extends Controller
 
             if ($validate && $model->save()) {
 
+                Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_');
+                Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_'.$model->id);
+
                 //Update menu items
                 $updateMenuItems = Yii::$app->request->post('menu-items-update');
                 foreach ($menus as $menu) {
@@ -215,6 +241,68 @@ class PageController extends Controller
         }
         return false;
     }
+
+    /**
+     * Backup data. AJAX only
+     *
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionBackup($id = null)
+    {
+        if (!Yii::$app->request->isAjax) {
+            return $this->redirect(['index']);
+        }
+
+        $data = Yii::$app->request->post();
+        $data['time'] = time();
+        Yii::$app->session->set('WEBSITE_PAGE_BACKUP_'.$id, $data);
+        return 'ok';
+    }
+
+    /**
+     * Load model from backup
+     * @param Page $model
+     * @return bool if success
+     */
+    protected function loadBackup($model)
+    {
+        $data = Yii::$app->session->get('WEBSITE_PAGE_BACKUP_'.$model->id);
+        if ($data && $model->load($data)) {
+            $isDirty = count($model->getDirtyAttributes(['slug']))>0;
+            foreach (I18N::getAvailableLanguages() as $language) {
+                $modelI18n = $model->getTranslation($language['locale']);
+                if ($modelI18n->load($data)) {
+                    //Meta data
+                    if ($modelI18n->meta_data && isset($modelI18n->meta_data['name']) && isset($modelI18n->meta_data['value'])) {
+                        $metaData = array_filter(array_combine(
+                            $modelI18n->meta_data['name'],
+                            $modelI18n->meta_data['value']
+                        ));
+                        if ($metaData) {
+                            ksort($metaData);
+                            $modelI18n->meta_data = $metaData;
+                        } else {
+                            $modelI18n->meta_data = null;
+                        }
+                    } else {
+                        $modelI18n->meta_data = null;
+                    }
+                    $isDirty = $isDirty ||
+                        (count($modelI18n->getDirtyAttributes())>0);
+                }
+            }
+            if ($isDirty) {
+                if (isset($data['time'])) {
+                    return $data['time'];
+                } else {
+                    return 0;
+                }
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Deletes an existing Page model.

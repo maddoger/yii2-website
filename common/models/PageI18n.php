@@ -6,7 +6,6 @@ use maddoger\website\backend\Module;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
-use yii\helpers\Markdown;
 
 /**
  * This is the model class for table "{{%website_page_i18n}}".
@@ -117,8 +116,7 @@ class PageI18n extends \yii\db\ActiveRecord
     {
         try {
             $this->meta_data = unserialize($this->meta_data);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->meta_data = null;
         }
         parent::afterFind();
@@ -135,8 +133,7 @@ class PageI18n extends \yii\db\ActiveRecord
         if ($this->meta_data) {
             try {
                 $this->meta_data = serialize($this->meta_data);
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $this->meta_data = null;
             }
         } else {
@@ -154,8 +151,7 @@ class PageI18n extends \yii\db\ActiveRecord
         if ($this->meta_data) {
             try {
                 $this->meta_data = unserialize($this->meta_data);
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $this->meta_data = null;
             }
         }

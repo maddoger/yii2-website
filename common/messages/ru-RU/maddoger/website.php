@@ -17,10 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create new page' => 'Создать новую страницу',
-    'Menu - ' => 'Меню - ',
-    'Page - ' => 'Страница - ',
-    'SEO Configuration' => 'Настройка SEO',
+    'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.' => 'Загружена резервная копия за {time, date, long} {time, time}. Нажмите <a href="{url}">сюда</a>, чтобы использовать оригинальную версию.',
     ' or <a href="{url}">create a new menu</a>.' => 'или <a href="{url}">создайте новое меню</a>',
     'Active' => 'Активна',
     'Add custom field' => 'Добавить поле',
@@ -47,6 +44,7 @@ return [
     'Create menu' => 'Создать меню',
     'Create menu item for page' => 'Создать пункт меню для страницы',
     'Create new' => 'Создать новую',
+    'Create new page' => 'Создать новую страницу',
     'Create page' => 'Создать страницу',
     'Created At' => 'Создана в',
     'Created By' => 'Создал',
@@ -85,6 +83,7 @@ return [
     'Links' => 'Ссылки',
     'Markdown' => 'Markdown',
     'Menu' => 'Меню',
+    'Menu - ' => 'Меню - ',
     'Menu item parent' => 'Родитель пункта меню',
     'Menu name: ' => 'Название меню',
     'Menu not found.' => 'Меню не найдено.',
@@ -97,6 +96,7 @@ return [
     'Not use' => 'Не использовать',
     'Original page' => 'Исходная страница',
     'Page' => 'Страница',
+    'Page - ' => 'Страница - ',
     'Page ID' => 'ID страницы',
     'Page not found.' => 'Страница не найдена.',
     'Page title for Search Engines.' => 'Заголовок страниц для поисковых систем.',
@@ -108,6 +108,7 @@ return [
     'Reset' => 'Сбросить',
     'Reset field' => 'Сбросить поле',
     'SEO' => 'SEO',
+    'SEO Configuration' => 'Настройка SEO',
     'SEO: Description' => 'SEO: Описание',
     'SEO: Keywords' => 'SEO: Ключевые слова',
     'SEO: Title' => 'SEO: Заголовок',

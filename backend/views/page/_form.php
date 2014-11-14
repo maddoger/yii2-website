@@ -5,6 +5,7 @@ use maddoger\website\backend\Module as BackendModule;
 use maddoger\website\common\models\Menu;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var yii\web\View $this */
@@ -36,6 +37,7 @@ $deleteTranslationMessage = Yii::t('maddoger/website', 'Are you sure want to del
 $resetFieldMessage = Yii::t('maddoger/website', 'Are you sure want to reset the field?');
 $deleteFieldMessage = Yii::t('maddoger/website', 'Are you sure want to delete the field?');
 $deleteFieldLabel = Yii::t('maddoger/website', 'Delete field');
+$backupUrl = Url::to(['backup', 'id' => $model->id]);
 $this->registerJs(
     <<<JS
     $('#delete-translation').click(function(){
@@ -91,6 +93,28 @@ $this->registerJs(
         }
         return false;
     });
+
+    //Backup
+    var backupInterval;
+    $('#page-form').on('change', '*', function(){
+        performBackup();
+        if (backupInterval === undefined) {
+            backupInterval = setInterval(performBackup, 3000);
+        }
+
+    });
+    function performBackup()
+    {
+        var data = $('#page-form').serialize();
+        $.post("{$backupUrl}", data, function(responce){
+        });
+    }
+    $(window).keydown(function(event) {
+	    if (!(event.which == 83 && (event.ctrlKey || event.metaKey))) return true;
+        performBackup();
+        event.preventDefault();
+        return false;
+    });
 JS
 );
 
@@ -98,10 +122,9 @@ JS
 
 <div class="page-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => 'page-form']); ?>
     <div class="row">
         <div class="col-md-8">
-
             <div class="nav-tabs-custom" id="translations">
                 <ul class="nav nav-tabs">
                     <li class="pull-right tools">
