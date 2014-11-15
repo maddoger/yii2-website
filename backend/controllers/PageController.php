@@ -8,8 +8,8 @@ use maddoger\website\backend\Module;
 use maddoger\website\common\models\Menu;
 use maddoger\website\common\models\Page;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -47,7 +47,7 @@ class PageController extends Controller
                         'verbs' => ['POST'],
                     ],
                     [
-                        'actions' => ['backup'],
+                        'actions' => ['backup', 'change-format'],
                         'allow' => true,
                         'roles' => ['website.page.create', 'website.page.update'],
                         'verbs' => ['POST'],
@@ -97,8 +97,10 @@ class PageController extends Controller
          * @var \maddoger\website\common\models\Page $model
          */
         $model = new $pageClass();
-        if (!$original && ($time = $this->loadBackup($model))!==false) {
-            Yii::$app->session->addFlash('warning', Yii::t('maddoger/website', 'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.', [
+        if (!$original && ($time = $this->loadBackup($model)) !== false) {
+            Yii::$app->session->addFlash('warning', Yii::t('maddoger/website',
+            'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.',
+            [
                 'url' => Url::to(['', 'original' => 1]),
                 'time' => $time,
             ]));
@@ -134,8 +136,10 @@ class PageController extends Controller
     public function actionUpdate($id, $original = 0)
     {
         $model = $this->findModel($id);
-        if (!$original && ($time = $this->loadBackup($model))!==false) {
-            Yii::$app->session->addFlash('warning', Yii::t('maddoger/website', 'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.', [
+        if (!$original && ($time = $this->loadBackup($model)) !== false) {
+            Yii::$app->session->addFlash('warning', Yii::t('maddoger/website',
+            'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.',
+            [
                 'url' => Url::to(['', 'id' => $id, 'original' => 1]),
                 'time' => $time,
             ]));
@@ -209,7 +213,7 @@ class PageController extends Controller
             if ($validate && $model->save()) {
 
                 Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_');
-                Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_'.$model->id);
+                Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_' . $model->id);
 
                 //Update menu items
                 $updateMenuItems = Yii::$app->request->post('menu-items-update');
@@ -224,14 +228,14 @@ class PageController extends Controller
                             $menu->type = Menu::TYPE_PAGE;
                             $menu->language = $menu->parent->language;
                             $menu->link = $model->getUrl($menu->language);
-                            $menu->label =  $model->getTranslation($menu->language)->title;
+                            $menu->label = $model->getTranslation($menu->language)->title;
                             $menu->save();
                         }
                         continue;
                     }
                     $menu->link = $model->getUrl($menu->language);
                     if ($updateMenuItems && isset($updateMenuItems[$menu->id]) && $updateMenuItems[$menu->id]) {
-                        $menu->label =  $model->getTranslation($menu->language)->title;
+                        $menu->label = $model->getTranslation($menu->language)->title;
                     }
                     $menu->save();
                 }
@@ -256,7 +260,7 @@ class PageController extends Controller
 
         $data = Yii::$app->request->post();
         $data['time'] = time();
-        Yii::$app->session->set('WEBSITE_PAGE_BACKUP_'.$id, $data);
+        Yii::$app->session->set('WEBSITE_PAGE_BACKUP_' . $id, $data);
         return 'ok';
     }
 
@@ -267,9 +271,9 @@ class PageController extends Controller
      */
     protected function loadBackup($model)
     {
-        $data = Yii::$app->session->get('WEBSITE_PAGE_BACKUP_'.$model->id);
+        $data = Yii::$app->session->get('WEBSITE_PAGE_BACKUP_' . $model->id);
         if ($data && $model->load($data)) {
-            $isDirty = count($model->getDirtyAttributes(['slug']))>0;
+            $isDirty = count($model->getDirtyAttributes(['slug'])) > 0;
             foreach (I18N::getAvailableLanguages() as $language) {
                 $modelI18n = $model->getTranslation($language['locale']);
                 if ($modelI18n->load($data)) {
@@ -289,7 +293,7 @@ class PageController extends Controller
                         $modelI18n->meta_data = null;
                     }
                     $isDirty = $isDirty ||
-                        (count($modelI18n->getDirtyAttributes())>0);
+                        (count($modelI18n->getDirtyAttributes()) > 0);
                 }
             }
             if ($isDirty) {
@@ -303,6 +307,36 @@ class PageController extends Controller
         return false;
     }
 
+    /**
+     * Backup data. AJAX only
+     *
+     * @return mixed
+     */
+    public function actionChangeFormat()
+    {
+        if (!Yii::$app->request->isAjax) {
+            return $this->redirect(['index']);
+        }
+
+        $post = Yii::$app->request->post();
+        $keys = array_keys($post);
+        $formName = $keys[0];
+        if (!isset($post[$formName]['text_source'])) {
+            throw new InvalidParamException('Invalid POST data.');
+        }
+        $format = $post[$formName]['text_format'];
+        $text = $post[$formName]['text_source'];
+        if (!isset($this->module->textFormats[$format])) {
+            throw new InvalidParamException('Format not found.');
+        }
+        $formatInfo = $this->module->textFormats[$format];
+
+        return $this->renderAjax('changeFormat', [
+            'fieldName' => $formName.'[text_source]',
+            'text' => $text,
+            'formatInfo' => $formatInfo,
+        ]);
+    }
 
     /**
      * Deletes an existing Page model.

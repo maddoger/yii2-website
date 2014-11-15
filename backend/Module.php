@@ -30,6 +30,12 @@ class Module extends BackendModule
 
     /**
      * @var array information about text formats
+     * Each item is format. Key is format id, value is format description.
+     * Description fields:
+     * `label` - format label;
+     * `formatter` - source to html Closure `string function($model)`. If is null, copy will be used;
+     * `widgetClass` - widget class for editor
+     * `widgetOptions` - widget options
      */
     public $textFormats;
 
@@ -58,7 +64,7 @@ class Module extends BackendModule
         }
 
         if (!$this->textFormats && isset(Yii::$app->params['textFormats'])) {
-            $this->textFormats = isset(Yii::$app->params['textFormats']);
+            $this->textFormats = Yii::$app->params['textFormats'];
         }
         if (!$this->textFormats) {
             $this->textFormats = [
@@ -78,17 +84,9 @@ class Module extends BackendModule
                 ],
                 'html' => [
                     'label' => Yii::t('maddoger/website', 'HTML'),
-                    //no widget, simple textarea
-                    'formatter' => function ($text) {
-                        return $text;
-                    }
                 ],
                 'raw' => [
                     'label' => Yii::t('maddoger/website', 'Raw'),
-                    //no widget, simple textarea
-                    'formatter' => function ($text) {
-                        return $text;
-                    }
                 ],
             ];
         }

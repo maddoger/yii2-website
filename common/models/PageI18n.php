@@ -158,17 +158,26 @@ class PageI18n extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    public function getTextFormatInfo()
+    {
+        $textFormats = Module::getInstance()->textFormats;
+        if (isset($textFormats[$this->text_format])) {
+            return $textFormats[$this->text_format];
+        }
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getFormattedText()
     {
         $text = trim($this->text_source);
-        $textFormats = Module::getInstance()->textFormats;
-        if (isset($textFormats[$this->text_format])) {
-            $format = $textFormats[$this->text_format];
-            if (isset($format['formatter']) && $format['formatter'] instanceof \Closure) {
-                return $format['formatter']($text);
-            }
+        $format = $this->getTextFormatInfo();
+        if ($format && isset($format['formatter']) && $format['formatter'] instanceof \Closure) {
+            return $format['formatter']($text);
         }
         return $text;
     }

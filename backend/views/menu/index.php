@@ -20,6 +20,8 @@ BackendAsset::register($this);
 $this->title = Yii::t('maddoger/website', 'Menus');
 $this->params['breadcrumbs'][] = $this->title;
 
+$leavePageMessage = Yii::t('maddoger/website', 'Changes are not saved. Are you sure want to leave this page?');
+
 $this->registerJs(
 <<<JS
     $('.ajax-add').click(function(){
@@ -35,6 +37,16 @@ $this->registerJs(
             panel.find('.overlay, .loading-img').hide();
         });
         return false;
+    });
+
+    var onBeforeUploadBind = false;
+    $('.menu-editor').on('change', '*', function(){
+        if (!onBeforeUploadBind) {
+            onBeforeUploadBind = true;
+            window.onbeforeunload = function(e) {
+              return '{$leavePageMessage}';
+            };
+        }
     });
 JS
 );

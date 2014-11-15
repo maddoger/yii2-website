@@ -17,7 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.' => 'Загружена резервная копия за {time, date, long} {time, time}. Нажмите <a href="{url}">сюда</a>, чтобы использовать оригинальную версию.',
+    'Are you sure want to change text format and load another editor?' => 'Вы уверены, что хотите изменить формат текста и загрузить другой редактор?',
+    'Changes are not saved. Are you sure want to leave this page?' => 'Изменения не сохранены. Вы уверены, что хотите покинуть страницу?',
     ' or <a href="{url}">create a new menu</a>.' => 'или <a href="{url}">создайте новое меню</a>',
     'Active' => 'Активна',
     'Add custom field' => 'Добавить поле',
@@ -31,6 +32,7 @@ return [
     'Are you sure you want to delete this item?' => 'Вы уверены, что хотите удалить эту страницу?',
     'As this page will look like.' => 'Как страница будет выглядеть.',
     'Auth users only' => 'Только для пользователей',
+    'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.' => 'Загружена резервная копия за {time, date, long} {time, time}. Нажмите <a href="{url}">сюда</a>, чтобы использовать оригинальную версию.',
     'By title' => 'По заголовку',
     'CSS Class' => 'CSS класс',
     'Choose' => 'Выбрать',
