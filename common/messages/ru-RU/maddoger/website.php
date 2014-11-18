@@ -17,13 +17,13 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Are you sure want to change text format and load another editor?' => 'Вы уверены, что хотите изменить формат текста и загрузить другой редактор?',
-    'Changes are not saved. Are you sure want to leave this page?' => 'Изменения не сохранены. Вы уверены, что хотите покинуть страницу?',
+    'Create menu first.' => 'Создайте меню.',
     ' or <a href="{url}">create a new menu</a>.' => 'или <a href="{url}">создайте новое меню</a>',
     'Active' => 'Активна',
     'Add custom field' => 'Добавить поле',
     'Add menu items from the column on the left.' => 'Добавьте элементы меню из колонки слева.',
     'Add to menu' => 'Добавить в меню',
+    'Are you sure want to change text format and load another editor?' => 'Вы уверены, что хотите изменить формат текста и загрузить другой редактор?',
     'Are you sure want to delete the field?' => 'Вы уверены, что хотите удалить данное поле?',
     'Are you sure want to delete this item?' => 'Вы уверены, что хотите удалить этот элемент?',
     'Are you sure want to delete this menu?' => 'Вы уверены, что хотите удалить это меню?',
@@ -35,6 +35,7 @@ return [
     'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.' => 'Загружена резервная копия за {time, date, long} {time, time}. Нажмите <a href="{url}">сюда</a>, чтобы использовать оригинальную версию.',
     'By title' => 'По заголовку',
     'CSS Class' => 'CSS класс',
+    'Changes are not saved. Are you sure want to leave this page?' => 'Изменения не сохранены. Вы уверены, что хотите покинуть страницу?',
     'Choose' => 'Выбрать',
     'Choose menu for editing' => 'Выберите меню для редактирования',
     'Class name for li element.' => 'Класс для тега LI элемента.',
