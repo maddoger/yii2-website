@@ -68,7 +68,7 @@ class PageI18n extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['language', 'title', 'text'], 'required'],
+            [['language', 'title', 'text_source'], 'required'],
             [['page_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['text', 'text_source'], 'string'],
             [['text_format'], 'string', 'max' => 10],

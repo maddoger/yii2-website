@@ -181,7 +181,7 @@ class PageController extends Controller
             foreach (I18N::getAvailableLanguages() as $language) {
                 $modelI18n = $model->getTranslation($language['locale']);
                 if ($modelI18n->load(Yii::$app->request->post())) {
-                    if (empty($modelI18n->title) && empty($modelI18n->text)) {
+                    if (empty($modelI18n->title) && empty($modelI18n->text_source)) {
                         if (!$modelI18n->isNewRecord) {
                             $modelI18n->delete();
                         }
