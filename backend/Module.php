@@ -40,6 +40,11 @@ class Module extends BackendModule
     public $textFormats;
 
     /**
+     * @var array additional options for widget
+     */
+    public $textEditorWidgetOptions = [];
+
+    /**
      * @var \maddoger\website\common\models\Config Module configuration
      */
     public $config;

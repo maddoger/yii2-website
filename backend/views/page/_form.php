@@ -199,9 +199,16 @@ JS
                             $format = $modelI18n->getTextFormatInfo();
                             $field = $form->field($modelI18n, 'text_source', ['template' => "{label}\n<div class=\"text-source\">{input}</div>\n{hint}\n{error}", 'enableClientValidation' => false]);
                             if (isset($format['widgetClass'])) {
+
+                                $options = isset($format['widgetOptions']) ? $format['widgetOptions'] : [];
+                                $additionalOptions = BackendModule::getInstance()->textEditorWidgetOptions;
+                                if ($additionalOptions) {
+                                    $options = ArrayHelper::merge($options, $additionalOptions);
+                                }
+
                                 $field->widget(
                                     $format['widgetClass'],
-                                    isset($format['widgetOptions']) ? $format['widgetOptions'] : []
+                                    $options
                                     );
                             } else {
                                 $field->textarea(['rows' => 20]);
