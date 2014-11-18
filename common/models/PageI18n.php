@@ -82,7 +82,7 @@ class PageI18n extends \yii\db\ActiveRecord
                 'targetAttribute' => ['page_id', 'language'],
                 'message' => 'The combination of Page and Language has already been taken.'
             ],
-            [['window_title', 'meta_keywords', 'meta_description', 'meta_data'], 'default', 'value' => 'null'],
+            [['window_title', 'meta_keywords', 'meta_description', 'meta_data'], 'default', 'value' => null],
         ];
     }
 
