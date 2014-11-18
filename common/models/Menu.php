@@ -99,9 +99,10 @@ class Menu extends \yii\db\ActiveRecord
                 'integer'
             ],
             [['label'], 'required'],
-            [['title', 'title', 'link', 'preg'], 'string', 'max' => 150],
+            [['label', 'title', 'link', 'preg'], 'string', 'max' => 150],
             [['target', 'css_class', 'icon_class', 'element_id', 'slug'], 'string', 'max' => 50],
             [['language'], 'string', 'max' => 10],
+            [['title', 'link', 'language', 'css_class', 'icon_class', 'element_id', 'slug'], 'default', 'value' => null]
         ];
     }
 
