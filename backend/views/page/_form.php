@@ -114,7 +114,11 @@ $this->registerJs(
         if (backupInterval === undefined) {
             backupInterval = setInterval(performBackup, 3000);
         }
+    }).submit(function(){
+        window.onbeforeunload = null;
+        onBeforeUploadBind = false;
     });
+
     function performBackup()
     {
         var data = $('#page-form').serialize();
@@ -144,9 +148,6 @@ $this->registerJs(
             t.find('.text-source').load("{$changeFormatUrl}", data, function(response){
 
             });
-            /*$.post("{$changeFormatUrl}", data, function(responce){
-                console.log(responce);
-            });*/
         }).on('focus', 'select:first', function(){
             $(this).data('val', $(this).val());
         });

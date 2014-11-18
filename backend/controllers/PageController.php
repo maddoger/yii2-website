@@ -97,7 +97,7 @@ class PageController extends Controller
          * @var \maddoger\website\common\models\Page $model
          */
         $model = new $pageClass();
-        if (!$original && ($time = $this->loadBackup($model)) !== false) {
+        if (Yii::$app->request->isGet && !$original && ($time = $this->loadBackup($model)) !== false) {
             Yii::$app->session->addFlash('warning', Yii::t('maddoger/website',
             'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.',
             [
@@ -136,7 +136,7 @@ class PageController extends Controller
     public function actionUpdate($id, $original = 0)
     {
         $model = $this->findModel($id);
-        if (!$original && ($time = $this->loadBackup($model)) !== false) {
+        if (Yii::$app->request->isGet && !$original && ($time = $this->loadBackup($model)) !== false) {
             Yii::$app->session->addFlash('warning', Yii::t('maddoger/website',
             'Backup for {time, date} {time, time} is used! Click <a href="{url}">here</a> if you want to use original version.',
             [

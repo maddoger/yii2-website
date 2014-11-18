@@ -24,7 +24,7 @@ $leavePageMessage = Yii::t('maddoger/website', 'Changes are not saved. Are you s
 
 $this->registerJs(
     <<<JS
-        $('.ajax-add').click(function(){
+    $('.ajax-add').click(function(){
         var form = $(this).closest('form');
         var data = form.serialize();
         var panel = form.closest('.panel');
@@ -47,6 +47,9 @@ $this->registerJs(
               return '{$leavePageMessage}';
             };
         }
+    }).find('form').submit(function(){
+        window.onbeforeunload = null;
+        onBeforeUploadBind = false;
     });
 JS
 );
@@ -83,17 +86,22 @@ JS
                     <div class="panel-title"><?= Yii::t('maddoger/website', 'Links') ?></div>
                 </div>
                 <div class="panel-body">
-                    <?php $customLinkForm = ActiveForm::begin([
-                        'action' => '#',
-                        'id' => 'link-form',
-                    ]); ?>
-                    <?= Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_LINK]); ?>
-                    <?= $customLinkForm->field($newItem,
-                        'link')->textInput(['value' => empty($newItem->link) ? 'http://' : $newItem->link]) ?>
-                    <?= $customLinkForm->field($newItem, 'label')->textInput() ?>
-                    <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'),
-                        ['class' => 'btn btn-default ajax-add']) ?>
-                    <?php ActiveForm::end() ?>
+                    <?php if ($menu->isNewRecord) {
+                        echo Yii::t('maddoger/website', 'Create menu first.');
+                    } else {
+                        $customLinkForm = ActiveForm::begin([
+                            'action' => '#',
+                            'id' => 'link-form',
+                        ]);
+                        echo Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_LINK]);
+                        echo $customLinkForm->field($newItem,
+                            'link')->textInput(['value' => empty($newItem->link) ? 'http://' : $newItem->link]);
+                        echo $customLinkForm->field($newItem, 'label')->textInput();
+                        echo Html::submitButton(Yii::t('maddoger/website', 'Add to menu'),
+                            ['class' => 'btn btn-default ajax-add']);
+                        ActiveForm::end();
+                    }
+                    ?>
                 </div>
                 <div class="overlay" style="display: none;"></div>
                 <div class="loading-img" style="display: none;"></div>
@@ -104,47 +112,52 @@ JS
                     <div class="panel-title"><?= Yii::t('maddoger/website', 'Pages') ?></div>
                 </div>
                 <div class="panel-body">
-                    <?php $pageForm = ActiveForm::begin([
-                        'action' => '#',
-                        'id' => 'page-form',
-                    ]); ?>
-                    <?= Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_PAGE]); ?>
-                    <?= Html::activeHiddenInput($newItem, 'label') ?>
-                    <?= Html::activeHiddenInput($newItem, 'link') ?>
+                    <?php if ($menu->isNewRecord) {
+                        echo Yii::t('maddoger/website', 'Create menu first.');
+                    } else {
+                        $pageForm = ActiveForm::begin([
+                            'action' => '#',
+                            'id' => 'page-form',
+                        ]);
+                        echo Html::activeHiddenInput($newItem, 'type', ['value' => Menu::TYPE_PAGE]);
+                        echo Html::activeHiddenInput($newItem, 'label');
+                        echo Html::activeHiddenInput($newItem, 'link')
+                        ?>
 
-                    <div class="clearfix">
-                        <div class="pull-right">
-                            <?= Html::dropDownList('sort', 'updated_at', [
-                                'updated_at' => Yii::t('maddoger/website', 'Last updated'),
-                                'title' => Yii::t('maddoger/website', 'By title'),
-                            ], ['id' => 'new-item-page-sort']); ?>
-                        </div>
-                        <?= $pageForm->field($newItem, 'page_id')->widget(Select2::className(), [
-                            'clientOptions' => [
-                                'placeholder' => Yii::t('maddoger/website', 'Search pages...'),
-                                'ajax' => [
-                                    'url' => Url::to(['pages']),
-                                    'dataType' => 'json',
-                                    'data' => new JsExpression('function (term, page) { return { q: term, sort: $("#new-item-page-sort").val() }; }'),
-                                    'results' => new JsExpression('function (data, page) { return { results: data }; }'),
-                                ],
-                                'formatResult' => ($formatResult = new JsExpression('function (state) {
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <?= Html::dropDownList('sort', 'updated_at', [
+                                    'updated_at' => Yii::t('maddoger/website', 'Last updated'),
+                                    'title' => Yii::t('maddoger/website', 'By title'),
+                                ], ['id' => 'new-item-page-sort']); ?>
+                            </div>
+                            <?= $pageForm->field($newItem, 'page_id')->widget(Select2::className(), [
+                                'clientOptions' => [
+                                    'placeholder' => Yii::t('maddoger/website', 'Search pages...'),
+                                    'ajax' => [
+                                        'url' => Url::to(['pages']),
+                                        'dataType' => 'json',
+                                        'data' => new JsExpression('function (term, page) { return { q: term, sort: $("#new-item-page-sort").val() }; }'),
+                                        'results' => new JsExpression('function (data, page) { return { results: data }; }'),
+                                    ],
+                                    'formatResult' => ($formatResult = new JsExpression('function (state) {
                                 if (!state.id) return state.text; // optgroup
                                 return state.text + " <small class=\"text-muted\">"+state.url+"</small>";
                             }')),
-                                'formatSelection' => $formatResult,
-                            ],
-                            'clientEvents' => [
-                                'change' => new JsExpression('function (event) {
+                                    'formatSelection' => $formatResult,
+                                ],
+                                'clientEvents' => [
+                                    'change' => new JsExpression('function (event) {
                                 $("#page-form input[name=\"MenuNewItem[label]\"]").val(event.added.title);
                                 $("#page-form input[name=\"MenuNewItem[link]\"]").val(event.added.url);
                             }')
-                            ],
-                        ]) ?>
-                    </div>
-                    <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'),
-                        ['class' => 'btn btn-default ajax-add']) ?>
-                    <?php ActiveForm::end() ?>
+                                ],
+                            ]) ?>
+                        </div>
+                        <?= Html::submitButton(Yii::t('maddoger/website', 'Add to menu'),
+                            ['class' => 'btn btn-default ajax-add']) ?>
+                        <?php ActiveForm::end();
+                    } ?>
                 </div>
                 <div class="overlay" style="display: none;"></div>
                 <div class="loading-img" style="display: none;"></div>
@@ -186,17 +199,17 @@ JS
                         <h4><?= Yii::t('maddoger/website', 'Menu settings') ?></h4>
                         <?= $form->field($menu, 'slug',
                             ['options' => ['class' => 'form-group form-group-sm']])->textInput()->hint(Yii::t('maddoger/website',
-                                'You insert the menu to a template using it.')) ?>
+                            'You insert the menu to a template using it.')) ?>
                         <?= $form->field($menu, 'language',
                             ['options' => ['class' => 'form-group form-group-sm']])->dropDownList(array_merge(['' => '-'],
-                                I18N::getAvailableLanguagesList()))->hint(Yii::t('maddoger/website',
-                                'The menu is for one language.')) ?>
+                            I18N::getAvailableLanguagesList()))->hint(Yii::t('maddoger/website',
+                            'The menu is for one language.')) ?>
                         <?= $form->field($menu, 'css_class',
                             ['options' => ['class' => 'form-group form-group-sm']])->textInput()->hint(Yii::t('maddoger/website',
-                                'The menu UL element will receive this class.')) ?>
+                            'The menu UL element will receive this class.')) ?>
                         <?= $form->field($menu, 'element_id',
                             ['options' => ['class' => 'form-group form-group-sm']])->textInput()->hint(Yii::t('maddoger/website',
-                                'The menu UL element will receive this ID.')) ?>
+                            'The menu UL element will receive this ID.')) ?>
                     <?php } ?>
                 </div>
                 <div class="panel-footer clearfix">
