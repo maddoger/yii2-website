@@ -18,7 +18,7 @@
  */
 return [
     'Create menu first.' => 'Создайте меню.',
-    ' or <a href="{url}">create a new menu</a>.' => 'или <a href="{url}">создайте новое меню</a>',
+    ' or <a href="{url}">create a new menu</a>.' => ' или <a href="{url}">создайте новое меню</a>',
     'Active' => 'Активна',
     'Add custom field' => 'Добавить поле',
     'Add menu items from the column on the left.' => 'Добавьте элементы меню из колонки слева.',
