@@ -96,9 +96,6 @@ JS
     </div>
 
     <div class="nav-tabs-custom" id="translations">
-        <div class="pull-right tools">
-            <?= $model->getAttributeLabel('slug'), ': ', Html::a($model->slug, '@frontendUrl/'.$model->slug) ?>
-        </div>
          <ul class="nav nav-tabs">
                 <li class="header"><?= Yii::t('maddoger/website', 'Content') ?></li>
                 <?php
@@ -115,7 +112,7 @@ JS
             <?php foreach ($availableLanguages as $language) :
                 if (!$model->hasTranslation($language['locale'])) continue;
                 $model->setLanguage($language['locale']);
-                $url = Url::to('@frontendUrl/'.$language['slug'].'/'.$model->slug);
+                $url = $model->getUrl($language['locale']);
                 ?>
                 <div class="tab-pane <?= $language['locale'] == $activeLanguage ? 'active' : '' ?>"
                      id="i18n_<?= $language['locale'] ?>">
