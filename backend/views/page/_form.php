@@ -112,7 +112,7 @@ $this->registerJs(
         }
         performBackup();
         if (backupInterval === undefined) {
-            backupInterval = setInterval(performBackup, 3000);
+            backupInterval = setInterval(performBackup, 60000);
         }
     }).submit(function(){
         window.onbeforeunload = null;
