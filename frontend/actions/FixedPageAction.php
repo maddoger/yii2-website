@@ -71,7 +71,11 @@ class FixedPageAction extends Action
         }
 
         $language = $this->language;
-        if (!$language) {
+        if ($language) {
+            if (!is_array($language)) {
+                $language = I18N::getLanguageByLocale($language);
+            }
+        } else {
             $language = I18N::getCurrentLanguage();
         }
 

@@ -78,10 +78,13 @@ class Page extends Widget
 
 
         $language = $this->language;
-        if (!$language) {
+        if ($language) {
+            if (!is_array($language)) {
+                $language = I18N::getLanguageByLocale($language);
+            }
+        } else {
             $language = I18N::getCurrentLanguage();
         }
-
         Yii::$app->language = $language['locale'];
 
         if (!$page) {
@@ -94,28 +97,6 @@ class Page extends Widget
         }
         if (!$page->hasTranslation()) {
             return null;
-        }
-
-        switch ($page->status) {
-            case PageModel::STATUS_ACTIVE:
-                break;
-
-            case PageModel::STATUS_AUTH_ONLY:
-                if (Yii::$app->user->getIsGuest()) {
-                    return null;
-                }
-                break;
-
-            case PageModel::STATUS_HIDDEN:
-                if (!Yii::$app->user->getIsGuest() &&
-                    Yii::$app->user->can('website.page.viewHiddenPages')
-                ) {
-                    break;
-                }
-                return null;
-
-            default:
-                return null;
         }
 
         $content = $this->view ? $this->render($this->view, ['model' => $page]) : $page->text;
