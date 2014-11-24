@@ -63,6 +63,18 @@ class Menu extends BaseMenu
     public $activateParents = true;
 
     /**
+     * @var array items before menu items
+     * @see \yii\widgets\Menu::$items
+     */
+    public $beforeItems;
+
+    /**
+     * @var array items after menu items
+     * @see \yii\widgets\Menu::$items
+     */
+    public $afterItems;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -84,6 +96,12 @@ class Menu extends BaseMenu
             if ($this->menu instanceof $class) {
                 //Get items
                 $this->items = $this->menu->getItems();
+                if ($this->beforeItems) {
+                    $this->items = array_merge($this->beforeItems, $this->items);
+                }
+                if ($this->afterItems) {
+                    $this->items = array_merge($this->items, $this->afterItems);
+                }
 
                 if (!empty($this->menu->element_id) && !isset($this->options['id'])) {
                     $this->options['id'] = $this->menu->element_id;
