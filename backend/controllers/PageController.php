@@ -36,7 +36,7 @@ class PageController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['update'],
+                        'actions' => ['update', 'status'],
                         'roles' => ['website.page.update'],
                         'allow' => true,
                     ],
