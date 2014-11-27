@@ -10,7 +10,6 @@ use maddoger\core\BackendModule;
 use maddoger\website\common\models\Config;
 use maddoger\website\common\models\PageI18n;
 use Yii;
-use yii\helpers\Markdown;
 use yii\helpers\Url;
 use yii\rbac\Item;
 
@@ -20,6 +19,9 @@ use yii\rbac\Item;
  * @author Vitaliy Syrchikov <maddoger@gmail.com>
  * @link http://syrchikov.name
  * @package yii2-website
+ *
+ * @property array $textFormats
+ * @property array $textEditorWidgetOptions
  */
 class Module extends BackendModule
 {
@@ -29,25 +31,16 @@ class Module extends BackendModule
     public $pageModelClass = 'maddoger\website\common\models\Page';
 
     /**
-     * @var array information about text formats
-     * Each item is format. Key is format id, value is format description.
-     * Description fields:
-     * `label` - format label;
-     * `formatter` - source to html Closure `string function($model)`. If is null, copy will be used;
-     * `widgetClass` - widget class for editor
-     * `widgetOptions` - widget options
-     */
-    public $textFormats;
-
-    /**
-     * @var array additional options for widget
-     */
-    public $textEditorWidgetOptions = [];
-
-    /**
      * @var \maddoger\website\common\models\Config Module configuration
      */
     public $config;
+
+    public function behaviors()
+    {
+        return [
+            'maddoger\textformats\TextFormatsBehavior',
+        ];
+    }
 
     /**
      * Init module
@@ -65,34 +58,6 @@ class Module extends BackendModule
                 'class' => 'yii\i18n\PhpMessageSource',
                 'basePath' => '@maddoger/website/common/messages',
                 'sourceLanguage' => 'en-US',
-            ];
-        }
-
-        if (!$this->textFormats && isset(Yii::$app->params['textFormats'])) {
-            $this->textFormats = Yii::$app->params['textFormats'];
-        }
-        if (!$this->textFormats) {
-            $this->textFormats = [
-                'text' => [
-                    'label' => Yii::t('maddoger/website', 'Text'),
-                    //no widget, simple textarea
-                    'formatter' => function ($text) {
-                        return Yii::$app->formatter->asNtext($text);
-                    }
-                ],
-                'md' => [
-                    'label' => Yii::t('maddoger/website', 'Markdown'),
-                    //no widget, simple textarea
-                    'formatter' => function ($text) {
-                        return Markdown::process($text, 'gfm');
-                    }
-                ],
-                'html' => [
-                    'label' => Yii::t('maddoger/website', 'HTML'),
-                ],
-                'raw' => [
-                    'label' => Yii::t('maddoger/website', 'Raw'),
-                ],
             ];
         }
     }
@@ -264,7 +229,7 @@ class Module extends BackendModule
                 'class' => '\maddoger\core\search\ActiveSearchSource',
                 'query' => PageI18n::find(),
                 'searchAttributes' => ['title'],
-                'url' => function($model){
+                'url' => function ($model) {
                     return Url::to(['/' . $this->id . '/page/view', 'id' => $model['page_id']]);
                 },
                 'label' => 'title',

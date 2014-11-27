@@ -1,6 +1,8 @@
 <?php
 
 use maddoger\core\i18n\I18N;
+use maddoger\textformats\widgets\FormatDropdown;
+use maddoger\textformats\widgets\TextEditor;
 use maddoger\website\backend\Module as BackendModule;
 use maddoger\website\common\models\Menu;
 use yii\helpers\ArrayHelper;
@@ -131,28 +133,6 @@ $this->registerJs(
         event.preventDefault();
         return false;
     });
-
-    //Change editor
-    $('.text-editor-container').each(function(){
-        var t = $(this);
-        t.on('change', 'select:first', function(){
-            var textarea = t.find('textarea[name]');
-            if (textarea.val()!='') {
-                if (!confirm('{$changeFormatMessage}')) {
-                    $(this).val($(this).data('val'));
-                    return;
-                }
-            }
-
-            var data = t.find('input[name],select[name],textarea[name]').serializeArray();
-            t.find('.text-source').load("{$changeFormatUrl}", data, function(response){
-
-            });
-        }).on('focus', 'select:first', function(){
-            $(this).data('val', $(this).val());
-        });
-
-    });
 JS
 );
 
@@ -192,31 +172,16 @@ JS
                         <?= $form->field($modelI18n, 'title', ['enableClientValidation' => false])
                             ->textInput(['maxlength' => 150]) ?>
 
-                            <div class="text-editor-container">
-                            <?= $form->field($modelI18n, 'text_format', ['enableClientValidation' => false])
-                                ->dropDownList($textFormats) ?>
+                        <?= $form->field($modelI18n, 'text_format', ['enableClientValidation' => false])
+                                ->widget(FormatDropdown::className(), [
+                                    'changeFormatMessage' => $changeFormatMessage,
+                                    'changeFormatUrl' => $changeFormatUrl,
+                        ]) ?>
 
-                            <?php
-                            $format = $modelI18n->getTextFormatInfo();
-                            $field = $form->field($modelI18n, 'text_source', ['template' => "{label}\n<div class=\"text-source\">{input}</div>\n{hint}\n{error}", 'enableClientValidation' => false]);
-                            if (isset($format['widgetClass'])) {
-
-                                $options = isset($format['widgetOptions']) ? $format['widgetOptions'] : [];
-                                $additionalOptions = BackendModule::getInstance()->textEditorWidgetOptions;
-                                if ($additionalOptions) {
-                                    $options = ArrayHelper::merge($options, $additionalOptions);
-                                }
-
-                                $field->widget(
-                                    $format['widgetClass'],
-                                    $options
-                                    );
-                            } else {
-                                $field->textarea(['rows' => 20]);
-                            }
-                            echo $field;
-                            ?>
-                        </div>
+                        <?= $form->field($modelI18n, 'text_source', [
+                                'enableClientValidation' => false
+                            ])->widget(TextEditor::className());
+                        ?>
 
                         <?= $form->field($modelI18n, 'window_title', ['enableClientValidation' => false])
                             ->textInput(['maxlength' => 150])

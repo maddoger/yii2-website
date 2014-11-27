@@ -12,7 +12,8 @@
         "yiisoft/yii2": "*",
         "yiisoft/yii2-jui": "*",
         "maddoger/yii2-core": "*",
-        "maddoger/yii2-select2": "*"
+        "maddoger/yii2-select2": "*",
+        "maddoger/yii2-textformats": "*"
     },
     "autoload": {
         "psr-4": {

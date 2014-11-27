@@ -3,6 +3,7 @@
 namespace maddoger\website\backend\controllers;
 
 use maddoger\core\i18n\I18N;
+use maddoger\textformats\actions\ChangeFormatAction;
 use maddoger\website\backend\models\PageSearch;
 use maddoger\website\backend\Module;
 use maddoger\website\common\models\Menu;
@@ -54,6 +55,13 @@ class PageController extends Controller
                     ],
                 ],
             ],
+        ];
+    }
+
+    public function actions()
+    {
+        return [
+            'change-format' => ChangeFormatAction::className(),
         ];
     }
 
@@ -305,37 +313,6 @@ class PageController extends Controller
             }
         }
         return false;
-    }
-
-    /**
-     * Backup data. AJAX only
-     *
-     * @return mixed
-     */
-    public function actionChangeFormat()
-    {
-        if (!Yii::$app->request->isAjax) {
-            return $this->redirect(['index']);
-        }
-
-        $post = Yii::$app->request->post();
-        $keys = array_keys($post);
-        $formName = $keys[0];
-        if (!isset($post[$formName]['text_source'])) {
-            throw new InvalidParamException('Invalid POST data.');
-        }
-        $format = $post[$formName]['text_format'];
-        $text = $post[$formName]['text_source'];
-        if (!isset($this->module->textFormats[$format])) {
-            throw new InvalidParamException('Format not found.');
-        }
-        $formatInfo = $this->module->textFormats[$format];
-
-        return $this->renderAjax('changeFormat', [
-            'fieldName' => $formName.'[text_source]',
-            'text' => $text,
-            'formatInfo' => $formatInfo,
-        ]);
     }
 
     /**
