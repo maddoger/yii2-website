@@ -52,6 +52,7 @@ class PageSearch extends Page
          */
         $query = $pageClass::find();
         $query->joinWith('translations');
+        $query->distinct();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
