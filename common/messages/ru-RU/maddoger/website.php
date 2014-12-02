@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create menu first.' => 'Создайте меню.',
+    'You must create at least one translation.' => 'Необходимо создать по крайней мере один перевод.',
     ' or <a href="{url}">create a new menu</a>.' => ' или <a href="{url}">создайте новое меню</a>',
     'Active' => 'Активна',
     'Add custom field' => 'Добавить поле',
@@ -45,6 +45,7 @@ return [
     'Content' => 'Контент',
     'Counters JavaScript' => 'Код счетчиков (JS)',
     'Create menu' => 'Создать меню',
+    'Create menu first.' => 'Создайте меню.',
     'Create menu item for page' => 'Создать пункт меню для страницы',
     'Create new' => 'Создать новую',
     'Create new page' => 'Создать новую страницу',
@@ -71,7 +72,6 @@ return [
     'Generate using title' => 'Сгенерировать из заголовка',
     'Give your menu a name above, then click Create menu.' => 'Назовите новое меню и нажмите Создать меню.',
     'Google, LiveInternet, etc.' => 'Google, LiveInternet, etc.',
-    'HTML' => 'HTML',
     'Hidden' => 'Скрыта',
     'ID' => 'ID',
     'Icon Class' => 'Класс иконки',
@@ -84,7 +84,6 @@ return [
     'Layout' => 'Шаблон',
     'Link' => 'Ссылка',
     'Links' => 'Ссылки',
-    'Markdown' => 'Markdown',
     'Menu' => 'Меню',
     'Menu - ' => 'Меню - ',
     'Menu item parent' => 'Родитель пункта меню',
@@ -107,7 +106,6 @@ return [
     'Parent ID' => 'Родитель',
     'Preg' => 'Рег. выражение',
     'Preview page' => 'Предпросмотр страницы',
-    'Raw' => 'Исходный',
     'Reset' => 'Сбросить',
     'Reset field' => 'Сбросить поле',
     'SEO' => 'SEO',

@@ -184,70 +184,65 @@ class PageController extends Controller
     protected function saveModel($model, $menus)
     {
         if ($model->load(Yii::$app->request->post())) {
+            foreach (I18N::getAvailableLocalesList() as $language) {
+                $modelI18n = $model->getTranslation($language);
+                $modelI18n->load(Yii::$app->request->post());
 
-            $validate = true;
-            foreach (I18N::getAvailableLanguages() as $language) {
-                $modelI18n = $model->getTranslation($language['locale']);
-                if ($modelI18n->load(Yii::$app->request->post())) {
-                    if (empty($modelI18n->title) && empty($modelI18n->text_source)) {
-                        if (!$modelI18n->isNewRecord) {
-                            $modelI18n->delete();
-                        }
+                //Meta data
+                if ($modelI18n->meta_data && isset($modelI18n->meta_data['name']) && isset($modelI18n->meta_data['value'])) {
+                    $data = array_filter(array_combine(
+                        $modelI18n->meta_data['name'],
+                        $modelI18n->meta_data['value']
+                    ));
+                    if ($data) {
+                        ksort($data);
+                        $modelI18n->meta_data = $data;
                     } else {
-
-                        //Meta data
-                        if ($modelI18n->meta_data && isset($modelI18n->meta_data['name']) && isset($modelI18n->meta_data['value'])) {
-                            $data = array_filter(array_combine(
-                                $modelI18n->meta_data['name'],
-                                $modelI18n->meta_data['value']
-                            ));
-                            if ($data) {
-                                ksort($data);
-                                $modelI18n->meta_data = $data;
-                            } else {
-                                $modelI18n->meta_data = null;
-                            }
-                        } else {
-                            $modelI18n->meta_data = null;
-                        }
-
-                        if (!$modelI18n->validate()) {
-                            $validate = false;
-                        }
+                        $modelI18n->meta_data = null;
                     }
+                } else {
+                    $modelI18n->meta_data = null;
                 }
             }
 
-            if ($validate && $model->save()) {
+            if ($model->validate()) {
 
-                Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_');
-                Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_' . $model->id);
-
-                //Update menu items
-                $updateMenuItems = Yii::$app->request->post('menu-items-update');
-                foreach ($menus as $menu) {
-                    if ($menu->isNewRecord) {
-                        if (Yii::$app->request->post('menu-items-create')) {
-                            $menu->page_id = $model->id;
-                            $menu->parent_id = Yii::$app->request->post('menu-items-create-parent_id');
-                            if (!$menu->parent_id) {
-                                continue;
-                            }
-                            $menu->type = Menu::TYPE_PAGE;
-                            $menu->language = $menu->parent->language;
-                            $menu->link = $model->getUrl($menu->language);
-                            $menu->label = $model->getTranslation($menu->language)->title;
-                            $menu->save();
-                        }
-                        continue;
-                    }
-                    $menu->link = $model->getUrl($menu->language);
-                    if ($updateMenuItems && isset($updateMenuItems[$menu->id]) && $updateMenuItems[$menu->id]) {
-                        $menu->label = $model->getTranslation($menu->language)->title;
-                    }
-                    $menu->save();
+                if (!$model->validateTranslations()) {
+                    Yii::$app->session->addFlash('error', Yii::t('maddoger/website', 'You must create at least one translation.'));
+                    return false;
                 }
 
+                if ($model->save()) {
+
+                    Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_');
+                    Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_' . $model->id);
+
+                    //Update menu items
+                    $updateMenuItems = Yii::$app->request->post('menu-items-update');
+                    foreach ($menus as $menu) {
+                        if ($menu->isNewRecord) {
+                            if (Yii::$app->request->post('menu-items-create')) {
+                                $menu->page_id = $model->id;
+                                $menu->parent_id = Yii::$app->request->post('menu-items-create-parent_id');
+                                if (!$menu->parent_id) {
+                                    continue;
+                                }
+                                $menu->type = Menu::TYPE_PAGE;
+                                $menu->language = $menu->parent->language;
+                                $menu->link = $model->getUrl($menu->language);
+                                $menu->label = $model->getTranslation($menu->language)->title;
+                                $menu->save();
+                            }
+                            continue;
+                        }
+                        $menu->link = $model->getUrl($menu->language);
+                        if ($updateMenuItems && isset($updateMenuItems[$menu->id]) && $updateMenuItems[$menu->id]) {
+                            $menu->label = $model->getTranslation($menu->language)->title;
+                        }
+                        $menu->save();
+                    }
+
+                }
                 return true;
             }
         }
@@ -283,7 +278,7 @@ class PageController extends Controller
         if ($data && $model->load($data)) {
             $isDirty = count($model->getDirtyAttributes(['slug'])) > 0;
             foreach (I18N::getAvailableLanguages() as $language) {
-                $modelI18n = $model->getTranslation($language['locale']);
+                $modelI18n = $model->getTranslation($language['locale'], true);
                 if ($modelI18n->load($data)) {
                     //Meta data
                     if ($modelI18n->meta_data && isset($modelI18n->meta_data['name']) && isset($modelI18n->meta_data['value'])) {
@@ -355,7 +350,8 @@ class PageController extends Controller
     protected function findModel($id)
     {
         $pageClass = Module::getInstance()->pageModelClass;
-        if (($model = $pageClass::findOne($id)) !== null) {
+        if (($model = $pageClass::find()->where(['id' => $id])->with(['translations'])->limit(1)->one()) !== null) {
+            /** @var Page $model */
             return $model;
         } else {
             throw new NotFoundHttpException(Yii::t('maddoger/website', 'The requested page does not exist.'));

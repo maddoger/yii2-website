@@ -76,12 +76,6 @@ class PageI18n extends \yii\db\ActiveRecord
             [['title', 'window_title'], 'string', 'max' => 150],
             [['meta_keywords', 'meta_description'], 'string', 'max' => 255],
             ['meta_data', 'safe'],
-            [
-                ['page_id', 'language'],
-                'unique',
-                'targetAttribute' => ['page_id', 'language'],
-                'message' => 'The combination of Page and Language has already been taken.'
-            ],
             [['window_title', 'meta_keywords', 'meta_description', 'meta_data'], 'default', 'value' => null],
         ];
     }

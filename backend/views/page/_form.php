@@ -18,16 +18,7 @@ use yii\widgets\ActiveForm;
 
 $availableLanguages = I18N::getAvailableLanguages();
 
-$activeLanguage = $model->default_language;
-if (!$activeLanguage) {
-    $ls = $model->getTranslatedLanguages();
-    if ($ls) {
-        $activeLanguage = $ls[0];
-    }
-}
-if (!$activeLanguage) {
-    $activeLanguage = $availableLanguages[0]['locale'];
-}
+$activeLanguage = $model->getLanguage();
 
 $layouts = BackendModule::getInstance()->config->layouts;
 $layouts = $layouts ? array_merge(['' => Yii::t('maddoger/website', 'Default')],
@@ -49,7 +40,7 @@ $this->registerJs(
 
     $('#delete-translation').click(function(){
         if (confirm('{$deleteTranslationMessage}')) {
-            $('#translations .tab-pane.active').find('input, textarea').val('');
+            $('#translations .tab-pane.active').find('input, textarea').val('').change();
         }
         return false;
     });
@@ -162,7 +153,7 @@ JS
             </ul>
             <div class="tab-content">
                 <?php foreach ($availableLanguages as $language) :
-                    $modelI18n = $model->getTranslation($language['locale']);
+                    $modelI18n = $model->getTranslation($language['locale'], true);
                     if (!$modelI18n->text_format) {
                         $modelI18n->text_format = BackendModule::getInstance()->config->defaultTextFormat;
                     }

@@ -15,10 +15,11 @@ use yii\helpers\Url;
  *
  * @method setLanguage($value)
  * @method string getLanguage()
- * @method setTranslationAttribute($attribute, $value)
- * @method mixed getTranslationAttribute($attribute)
- * @method PageI18n getTranslation($language = null)
+ * @method array getAvailableLanguages()
+ * @method bool loadWithTranslations($data, $languages, $formName = null, $translationFormName = null)
+ * @method bool validateTranslations()
  * @method bool hasTranslation($language = null)
+ * @method PageI18n getTranslation($language = null)
  *
  * @property integer $id
  * @property string $slug
@@ -97,6 +98,10 @@ class Page extends \yii\db\ActiveRecord
                     'meta_keywords',
                     'meta_description',
                 ],
+                'requiredAttributes' => [
+                    'title',
+                    'text_source',
+                ]
             ],
             TimestampBehavior::className(),
             BlameableBehavior::className(),
@@ -182,14 +187,6 @@ class Page extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return array
-     */
-    public function getTranslatedLanguages()
-    {
-        return $this->getTranslations()->select(['language'])->distinct()->orderBy(['language' => SORT_ASC])->column();
-    }
-
-    /**
      * @param null $language
      * @return string
      */
@@ -235,6 +232,14 @@ class Page extends \yii\db\ActiveRecord
             self::STATUS_AUTH_ONLY => Yii::t('maddoger/website', 'Auth users only'),
             self::STATUS_ACTIVE => Yii::t('maddoger/website', 'Active'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public static function findWithTranslations()
+    {
+        return parent::find()->with('translation');
     }
 
     /**

@@ -16,7 +16,7 @@ $availableLanguages = I18N::getAvailableLanguages();
 
 $activeLanguage = $model->default_language;
 if (!$activeLanguage) {
-    $ls = $model->getTranslatedLanguages();
+    $ls = $model->getAvailableLanguages();
     if ($ls) {
         $activeLanguage = $ls[0];
     }
