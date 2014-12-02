@@ -183,6 +183,7 @@ class PageController extends Controller
      */
     protected function saveModel($model, $menus)
     {
+        $new = $model->isNewRecord;
         if ($model->load(Yii::$app->request->post())) {
             foreach (I18N::getAvailableLocalesList() as $language) {
                 $modelI18n = $model->getTranslation($language);
@@ -214,8 +215,11 @@ class PageController extends Controller
 
                 if ($model->save()) {
 
-                    Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_');
-                    Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_' . $model->id);
+                    if ($new) {
+                        Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_');
+                    } else {
+                        Yii::$app->session->remove('WEBSITE_PAGE_BACKUP_' . $model->id);
+                    }
 
                     //Update menu items
                     $updateMenuItems = Yii::$app->request->post('menu-items-update');

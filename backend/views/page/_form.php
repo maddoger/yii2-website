@@ -95,7 +95,7 @@ $this->registerJs(
     //Backup
 
     var onBeforeUploadBind = false;
-    var backupInterval;
+    var backupInterval = null;
     $('#page-form').on('change', '*', function(){
         if (!onBeforeUploadBind) {
             onBeforeUploadBind = true;
@@ -104,7 +104,7 @@ $this->registerJs(
             };
         }
         performBackup();
-        if (backupInterval === undefined) {
+        if (!backupInterval) {
             backupInterval = setInterval(performBackup, 60000);
         }
     }).submit(function(){
@@ -114,8 +114,8 @@ $this->registerJs(
 
     function performBackup()
     {
-        var data = $('#page-form').serialize();
-        $.post("{$backupUrl}", data, function(responce){
+        var data = $('#page-form').serializeArray();
+        $.post("{$backupUrl}", data, function(response){
         });
     }
     $(window).keydown(function(event) {
