@@ -165,7 +165,7 @@ class PageI18n extends \yii\db\ActiveRecord
      */
     public function getFormattedText()
     {
-        return Module::getInstance()->getFormattedText($this->text_format, $this->text_source);
+        return Module::getInstance()->getFormattedText($this->text_format, $this->text_source, $this->language);
     }
 
     /**
