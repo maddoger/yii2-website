@@ -53,6 +53,16 @@ class Page extends Widget
     public $moduleId = 'website';
 
     /**
+     * @var bool
+     */
+    public $title = true;
+
+    /**
+     * @var array
+     */
+    public $titleOptions = ['tag' => 'h2'];
+
+    /**
      * @return string
      * @throws ErrorException
      */
@@ -76,7 +86,6 @@ class Page extends Widget
             throw new InvalidParamException('Invalid page identifier.');
         }
 
-
         $language = $this->language;
         if ($language) {
             if (!is_array($language)) {
@@ -85,7 +94,6 @@ class Page extends Widget
         } else {
             $language = I18N::getCurrentLanguage();
         }
-        Yii::$app->language = $language['locale'];
 
         if (!$page) {
             return null;
@@ -100,6 +108,11 @@ class Page extends Widget
         }
 
         $content = $this->view ? $this->render($this->view, ['model' => $page]) : $page->text;
+        if ($this->title) {
+            $options = $this->titleOptions;
+            $tag = ArrayHelper::remove($options, 'tag', 'h2');
+            $content = Html::tag($tag, is_string($this->title) ? $this->title : $page->title, $options) . $content;
+        }
         $options = $this->options;
         $tag = ArrayHelper::remove($options, 'tag', 'div');
         return Html::tag($tag, $content, $options);
