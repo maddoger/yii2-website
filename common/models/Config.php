@@ -37,6 +37,11 @@ class Config extends ConfigModel
     public $defaultLayout;
 
     /**
+     * @var string scripts will be added right after opening body tag
+     */
+    public $beginBodyScripts;
+
+    /**
      * @var string scripts will be added to the end of body tag
      */
     public $endBodyScripts;
@@ -91,7 +96,7 @@ class Config extends ConfigModel
     {
         return [
             [['defaultLayout'], 'string', 'max' => 150],
-            [['endBodyScripts', 'defaultTextFormat'], 'string'],
+            [['endBodyScripts', 'beginBodyScripts', 'defaultTextFormat'], 'string'],
         ];
     }
 
@@ -102,7 +107,8 @@ class Config extends ConfigModel
     {
         return [
             'defaultLayout' => Yii::t('maddoger/website', 'Default layout'),
-            'endBodyScripts' => Yii::t('maddoger/website', 'Counters JavaScript'),
+            'beginBodyScripts' => Yii::t('maddoger/website', 'Counters JavaScript (before body content)'),
+            'endBodyScripts' => Yii::t('maddoger/website', 'Counters JavaScript (after body content)'),
             'defaultTextFormat' => Yii::t('maddoger/website', 'Default text format'),
         ];
     }

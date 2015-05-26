@@ -80,6 +80,9 @@ $textFormats = array_merge(['' => Yii::t('maddoger/website', 'Default')],
                         <?= $form->field($model, 'defaultLayout')->dropDownList($layouts)
                             ->hint(Yii::t('maddoger/website', 'As this page will look like.')) ?>
 
+                        <?= $form->field($model, 'beginBodyScripts')->textarea(['rows' => 7])
+                            ->hint(Yii::t('maddoger/website', 'Google, LiveInternet, etc.')) ?>
+
                         <?= $form->field($model, 'endBodyScripts')->textarea(['rows' => 7])
                             ->hint(Yii::t('maddoger/website', 'Google, LiveInternet, etc.')) ?>
                     </div>
